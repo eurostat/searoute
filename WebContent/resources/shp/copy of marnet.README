@@ -1,0 +1,13 @@
+Oak Ridge National Labs CTA Transportation Network Group, Global Shipping Lane Network, World, 2000
+
+This is a dataset downloaded from the Oak Ridge National Labs CTA Transportation Network Group - specifically their intermodal project - http://www-cta.ornl.gov/transnet/Intermodal_Network.html. From intermodal data set, the global shipping lane data queried out and created in a separate shapefile. We did some all to all routing analysis over it, but the results were a bit questionable. The data does have to and from nodes and can be routed across but there is a weird grid system that goes along with the traditional shipping routes that seems to makes things a bit screwy. Over all a cool look at global commodity routes across the oceans.
+
+Attributes:
+From Node0: From Node - 
+Route Freq: Route Frequency - 
+Impedence0: Impedence - 
+To Node0: To Node - 
+Name0: Name - 
+Length0: Length - 
+
+exported on Wed Nov 07 15:35:41 -0500 2012
