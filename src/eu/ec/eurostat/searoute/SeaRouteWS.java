@@ -43,6 +43,7 @@ public class SeaRouteWS extends HttpServlet {
 	//   /usr/share/tomcat8/bin/catalina.sh start
 	//   /usr/share/tomcat8/bin/catalina.sh stop
 	//   http://localhost:8080/
+	//http://localhost:8080/searoutews/
 	
 	
 	private static final long serialVersionUID = 5326338791791803741L;
