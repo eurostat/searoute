@@ -18,7 +18,7 @@
 	<delete file="${warfile}.war"/>
 </target>
 <target name="cleant">
-	<delete dir="/var/lib/tomcat8/webapps/${warfile}"/>
+	<!-- <delete dir="/var/lib/tomcat8/webapps/${warfile}"/> -->
 	<delete file="/var/lib/tomcat8/webapps/${warfile}.war"/>
 </target>
 <target name="do">
