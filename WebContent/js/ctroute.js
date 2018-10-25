@@ -20,7 +20,7 @@
 
         function follow(){
             $.ajax({
-                url : "ctws",
+                url : "seaws",
                 data : "ser=rou&opos="+olon+","+olat+"&dpos="+dlon+","+dlat
             }).done(function(rou) {
                 $("#waitimg").hide();
