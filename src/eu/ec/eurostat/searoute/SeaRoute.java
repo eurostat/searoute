@@ -39,13 +39,10 @@ import com.vividsolutions.jts.operation.linemerge.LineMerger;
  */
 public class SeaRoute {
 
-	private String shpPath;
 	private Graph g;
 	private EdgeWeighter weighter;
 
 	public SeaRoute(String shpPath) {
-		this.shpPath = shpPath;
-
 		try {
 			//load features from shp file
 			File file = new File(shpPath);
@@ -137,44 +134,41 @@ public class SeaRoute {
 	public MultiLineString getRoute(Coordinate oPos, Coordinate oNPos, Node oN, Coordinate dPos, Coordinate dNPos, Node dN) {
 		//test if route should be based on network
 		//route do not need network if straight line between two points is smaller than teh total distance to reach the network
-		MultiLineString ls;
 		double dist = -1;
 		try { dist = Utils.getDistance(oPos,dPos); } catch (Exception e) {}
 		double distN = -1;
 		try { distN = Utils.getDistance(oPos,oNPos) + Utils.getDistance(dPos,dNPos); } catch (Exception e) {}
+
 		if(dist>=0 && distN>=0 && distN > dist){
 			//return direct
 			GeometryFactory gf = new GeometryFactory();
-			ls = gf.createMultiLineString(new LineString[]{ gf.createLineString(new Coordinate[]{oPos,dPos}) });
-		} else {
-			//Compute dijkstra from start node
-			Path path = null;
-			synchronized (g) {
-				path = getShortestPath(g, oN,dN,weighter);
-			}
-
-			if(path == null) ls=null;
-			else {
-				//build line geometry
-				LineMerger lm = new LineMerger();
-				for(Object o : path.getEdges()){
-					Edge e = (Edge)o;
-					SimpleFeature f = (SimpleFeature) e.getObject();
-					if(f==null) continue;
-					MultiLineString mls = (MultiLineString) f.getDefaultGeometry();
-					lm.add(mls);
-				}
-				//add first and last parts
-				GeometryFactory gf = new GeometryFactory();
-				lm.add(gf.createLineString(new Coordinate[]{oPos,oNPos}));
-				lm.add(gf.createLineString(new Coordinate[]{dPos,dNPos}));
-
-				Collection<?> lss = lm.getMergedLineStrings();
-				ls = gf.createMultiLineString( lss.toArray(new LineString[lss.size()]) );
-			}
-
+			return gf.createMultiLineString(new LineString[]{ gf.createLineString(new Coordinate[]{oPos,dPos}) });
 		}
-		return ls;
+
+		//Compute dijkstra from start node
+		Path path = null;
+		synchronized (g) {
+			path = getShortestPath(g, oN,dN,weighter);
+		}
+
+		if(path == null) return null;
+
+		//build line geometry
+		LineMerger lm = new LineMerger();
+		for(Object o : path.getEdges()){
+			Edge e = (Edge)o;
+			SimpleFeature f = (SimpleFeature) e.getObject();
+			if(f==null) continue;
+			MultiLineString mls = (MultiLineString) f.getDefaultGeometry();
+			lm.add(mls);
+		}
+		//add first and last parts
+		GeometryFactory gf = new GeometryFactory();
+		lm.add(gf.createLineString(new Coordinate[]{oPos,oNPos}));
+		lm.add(gf.createLineString(new Coordinate[]{dPos,dNPos}));
+
+		Collection<?> lss = lm.getMergedLineStrings();
+		return gf.createMultiLineString( lss.toArray(new LineString[lss.size()]) );
 	}
 
 }
