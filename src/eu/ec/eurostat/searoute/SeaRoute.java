@@ -4,6 +4,7 @@
 package eu.ec.eurostat.searoute;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,7 +12,6 @@ import java.util.Map;
 
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
-import org.geotools.data.FeatureSource;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.graph.build.feature.FeatureGraphGenerator;
@@ -46,28 +46,19 @@ public class SeaRoute {
 		try {
 			//load features from shp file
 			File file = new File(shpPath);
+			if(!file.exists()) throw new IOException("File "+shpPath+" does not exist.");
 			Map<String, Serializable> map = new HashMap<>();
 			map.put( "url", file.toURI().toURL() );
-			DataStore dataStore = DataStoreFinder.getDataStore(map);
-			String typeName = dataStore.getTypeNames()[0];
-			FeatureSource source = dataStore.getFeatureSource( typeName );
-			FeatureCollection fc =  source.getFeatures();
-
-			/*File file = new File(shpPath);
-			if(!file.exists()) throw new IOException("File "+shpPath+" does not exist.");
-			FileDataStore store = FileDataStoreFinder.getDataStore(file);
-			fc = store.getFeatureSource().getFeatures();
-			System.out.println(" zzzzzzzzzzzzzzzz " + fc.size());
-			//DefaultFeatureCollection sfs = DataUtilities.collection(fc);
-			store.dispose();*/
+			DataStore store = DataStoreFinder.getDataStore(map);
+			FeatureCollection fc =  store.getFeatureSource(store.getTypeNames()[0]).getFeatures();
 
 			//build graph
-			FeatureGraphGenerator gGen = new FeatureGraphGenerator(new LineStringGraphGenerator());
 			FeatureIterator<?> it = fc.features();
+			FeatureGraphGenerator gGen = new FeatureGraphGenerator(new LineStringGraphGenerator());
 			while(it.hasNext()) gGen.add(it.next());
 			g = gGen.getGraph();
 			it.close();
-			dataStore.dispose();
+			store.dispose();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -170,5 +161,13 @@ public class SeaRoute {
 		Collection<?> lss = lm.getMergedLineStrings();
 		return gf.createMultiLineString( lss.toArray(new LineString[lss.size()]) );
 	}
+
+	/*
+	public static void main(String[] args) {
+		SeaRoute sr = new SeaRoute("WebContent/resources/shp/marnet.shp");
+		System.out.println(sr.g.getNodes().size());
+		System.out.println(sr.g.getEdges().size());
+	}
+	 */
 
 }

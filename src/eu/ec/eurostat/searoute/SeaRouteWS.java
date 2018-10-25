@@ -19,6 +19,8 @@ import com.vividsolutions.jts.geom.MultiLineString;
 
 public class SeaRouteWS extends HttpServlet {
 
+	//TODO upgrade geotools !!!
+
 	//   /usr/share/tomcat8/bin/catalina.sh start
 	//   /usr/share/tomcat8/bin/catalina.sh stop
 	//   http://localhost:8080/
@@ -29,10 +31,10 @@ public class SeaRouteWS extends HttpServlet {
 
 	private static final long serialVersionUID = 5326338791791803741L;
 
-	private SeaRoute sr;
 	private static final String shpPath = "webapps/searoutews/resources/shp/marnet.shp";
 	private static final String ENC_CT = "; charset=utf-8";
 
+	private SeaRoute sr;
 
 	/*/cache
 	private HashMap<String, Object[]> cache;
@@ -71,7 +73,6 @@ public class SeaRouteWS extends HttpServlet {
 		System.out.println("---" + this + " started - " + Utils.df.format(new Date()));
 
 		//cache = new HashMap<String, Object[]>();
-
 		sr = new SeaRoute(shpPath);
 	}
 
