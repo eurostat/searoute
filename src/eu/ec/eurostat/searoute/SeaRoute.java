@@ -46,17 +46,15 @@ public class SeaRoute {
 	public SeaRoute(String shpPath) {
 		this.shpPath = shpPath;
 
-		//load features from shp file
-		FeatureCollection fc = null;
 		try {
+			//load features from shp file
 			File file = new File(shpPath);
 			Map<String, Serializable> map = new HashMap<>();
 			map.put( "url", file.toURI().toURL() );
 			DataStore dataStore = DataStoreFinder.getDataStore(map);
 			String typeName = dataStore.getTypeNames()[0];
 			FeatureSource source = dataStore.getFeatureSource( typeName );
-			fc =  source.getFeatures();
-			dataStore.dispose();
+			FeatureCollection fc =  source.getFeatures();
 
 			/*File file = new File(shpPath);
 			if(!file.exists()) throw new IOException("File "+shpPath+" does not exist.");
@@ -65,16 +63,17 @@ public class SeaRoute {
 			System.out.println(" zzzzzzzzzzzzzzzz " + fc.size());
 			//DefaultFeatureCollection sfs = DataUtilities.collection(fc);
 			store.dispose();*/
+
+			//build graph
+			FeatureGraphGenerator gGen = new FeatureGraphGenerator(new LineStringGraphGenerator());
+			FeatureIterator<?> it = fc.features();
+			while(it.hasNext()) gGen.add(it.next());
+			g = gGen.getGraph();
+			it.close();
+			dataStore.dispose();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		//build graph
-		FeatureGraphGenerator gGen = new FeatureGraphGenerator(new LineStringGraphGenerator());
-		FeatureIterator<?> it = fc.features();
-		while(it.hasNext()) gGen.add(it.next());
-		g = gGen.getGraph();
-		it.close();
 
 		//link nodes around the globe
 		for(Object o : g.getNodes()){
