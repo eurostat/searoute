@@ -18,25 +18,12 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.MultiLineString;
 
 public class SeaRouteWS extends HttpServlet {
-
-	//TODO
-	//default ser=rou
-	//handle several routes on route.html page
-	//export as executable jar?
-	//improve maritime network
-	//use comWS page style
-	//propose web page from CSV file
-	//handle special routes: panama, suez, pole?
-	//propose list of ports, based on locode
-	//cache
-
 	//   /usr/share/tomcat8/bin/catalina.sh start
 	//   /usr/share/tomcat8/bin/catalina.sh stop
 	//   http://localhost:8080/
 	//logs: /var/lib/tomcat8/logs/catalina.out
 	//http://localhost:8080/searoutews/
 	//http://localhost:8080/searoutews/seaws?ser=rou&opos=5.3,43.3&dpos=121.8,31.2
-
 
 	private static final long serialVersionUID = 5326338791791803741L;
 
