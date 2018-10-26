@@ -1,18 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
 <title>SeaRoute API</title>
 <style>
-.block {
-	width: 80%;
-	background-color: white;
-	margin-top: 15px;
-	margin-left: auto; margin-right : auto;
-	padding: 20px;
-	margin-right: auto;
+html {
+font-family: Arial;
 }
-
 table, th, td {
 	border: 1px solid black;
 	border-collapse: collapse;
@@ -22,14 +12,10 @@ th, td {
 }
 </style>
 
-</head>
 
-<body style="background-color: SteelBlue; font-family: Arial;">
+<h2>Maritime route estimation</h2>
 
-	<div class="block">
-		<h2>Maritime route estimation</h2>
-
-		<h3>Examples</h3>
+<h3>Examples</h3>
 		<ul>
 			<li>A single route from geographical coordinates: <a
 				href="seaws?ser=rou&opos=5.3,43.3&dpos=121.8,31.2" target="_blank">seaws?ser=rou&opos=5.3,43.3&dpos=121.8,31.2</a>. <b>See <a href="searoute.html?opos=5.3,43.3&dpos=121.8,31.2">on a map</a></b>.</li>
@@ -38,8 +24,7 @@ th, td {
 				target="_blank">seaws?ser=rou&opos=5.3,43.3,10.0,-1&dpos=121.8,31.2,0,0</a></li>
 		</ul>
 
-		<h3>URL parameters</h3>
-
+<h3>URL parameters</h3>
 
 		<table>
 			<thead>
@@ -85,11 +70,9 @@ th, td {
 			</tbody>
 		</table>
 
-		<h3>Output format</h3>
+<h3>Output format</h3>
 
-		<p>The output is a single object if only one route if requested,
-			or a list if several routes are asked. For each route, the attributes
-			are the following:</p>
+<p>The output is a single object if only one route if requested, or a list if several routes are asked. For each route, the attributes are the following:</p>
 		<ul>
 			<li><b>status</b>: The status of the answer. Values are <i>ok</i>,
 				<i>empty</i>, or <i>error</i>.</li>
@@ -100,8 +83,3 @@ th, td {
 			<li><b>message</b>: In case of error, a textual message
 				explaining it.</li>
 		</ul>
-
-	</div>
-
-</body>
-</html>
