@@ -42,6 +42,7 @@ public class SeaRoute {
 	private Graph g;
 	private EdgeWeighter weighter;
 
+	public SeaRoute() { this("WebContent/resources/shp/marnet.shp"); }
 	public SeaRoute(String shpPath) {
 		try {
 			//load features from shp file
@@ -93,6 +94,7 @@ public class SeaRoute {
 	}
 
 
+
 	private Path getShortestPath(Graph g, Node sN, Node dN, EdgeWeighter weighter){
 		DijkstraShortestPathFinder pf = new DijkstraShortestPathFinder(g, sN, weighter);
 		pf.calculate();
@@ -124,7 +126,7 @@ public class SeaRoute {
 
 	public MultiLineString getRoute(Coordinate oPos, Coordinate oNPos, Node oN, Coordinate dPos, Coordinate dNPos, Node dN) {
 		//test if route should be based on network
-		//route do not need network if straight line between two points is smaller than teh total distance to reach the network
+		//route do not need network if straight line between two points is smaller than the total distance to reach the network
 		double dist = -1;
 		try { dist = Utils.getDistance(oPos,dPos); } catch (Exception e) {}
 		double distN = -1;
@@ -162,12 +164,10 @@ public class SeaRoute {
 		return gf.createMultiLineString( lss.toArray(new LineString[lss.size()]) );
 	}
 
-	/*
 	public static void main(String[] args) {
-		SeaRoute sr = new SeaRoute("WebContent/resources/shp/marnet.shp");
+		SeaRoute sr = new SeaRoute();
 		System.out.println(sr.g.getNodes().size());
 		System.out.println(sr.g.getEdges().size());
 	}
-	 */
 
 }
