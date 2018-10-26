@@ -123,8 +123,18 @@ public class SeaRouting {
 		return nMin;
 	}
 
+	//return the route geometry from origin/destination coordinates
+	public MultiLineString getRoute(double oLon, double oLat, double dLon, double dLat) {
+		return getRoute(new Coordinate(oLon,oLat), new Coordinate(dLon,dLat));
+	}
+	public MultiLineString getRoute(Coordinate oPos, Coordinate dPos) {
+		return getRoute(oPos, getNode(oPos), dPos, getNode(dPos));
+	}
+	//get the route when the node are known
+	public MultiLineString getRoute(Coordinate oPos, Node oN, Coordinate dPos, Node dN) {
+		//get node positions
+		Coordinate oNPos = getPosition(oN), dNPos = getPosition(dN);
 
-	public MultiLineString getRoute(Coordinate oPos, Coordinate oNPos, Node oN, Coordinate dPos, Coordinate dNPos, Node dN) {
 		//test if route should be based on network
 		//route do not need network if straight line between two points is smaller than the total distance to reach the network
 		double dist = -1;
@@ -164,10 +174,13 @@ public class SeaRouting {
 		return gf.createMultiLineString( lss.toArray(new LineString[lss.size()]) );
 	}
 
+	/*
 	public static void main(String[] args) {
 		SeaRouting sr = new SeaRouting();
 		System.out.println(sr.g.getNodes().size());
 		System.out.println(sr.g.getEdges().size());
-	}
+		MultiLineString mr = sr.getRoute(5.3, 43.3, 121.8,31.2);
+		System.out.println(mr);
+	}*/
 
 }

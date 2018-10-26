@@ -241,11 +241,9 @@ public class SeaRouteWS extends HttpServlet {
 			//get origin node/positions
 			Coordinate oPos = new Coordinate(oLon,oLat);
 			Node oN = sr.getNode(oPos);
-			Coordinate oNPos = sr.getPosition(oN);
 			//get destination node/positions
 			Coordinate dPos = new Coordinate(dLon,dLat);
 			Node dN = sr.getNode(dPos);
-			Coordinate dNPos = sr.getPosition(dN);
 
 			if(oN == null || dN == null){
 				st = "{\"status\":\"error\",\"message\":\"Could not find start/end node\"";
@@ -256,7 +254,7 @@ public class SeaRouteWS extends HttpServlet {
 			}
 
 			//the maritime route geometry
-			MultiLineString ls = sr.getRoute(oPos, oNPos, oN, dPos, dNPos, dN);
+			MultiLineString ls = sr.getRoute(oPos, oN, dPos, dN);
 
 			if(ls==null){
 				st = "{\"status\":\"error\",\"message\":\"Shortest path not found\"";
