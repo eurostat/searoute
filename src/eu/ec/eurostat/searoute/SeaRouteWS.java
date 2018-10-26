@@ -3,6 +3,9 @@ package eu.ec.eurostat.searoute;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 import javax.servlet.ServletException;
@@ -69,7 +72,6 @@ public class SeaRouteWS extends HttpServlet {
 	public void init() throws ServletException {
 		super.init();
 		System.out.println("---" + this + " started - " + Utils.df.format(new Date()));
-
 		//cache = new HashMap<String, Object[]>();
 		sr = new SeaRouting(shpPath);
 	}
@@ -96,11 +98,12 @@ public class SeaRouteWS extends HttpServlet {
 				return;
 			}
 
-			/*if("rouinfo".equals(ser)){
+			if("rouinfo".equals(ser)){
 				response.setContentType("text/html"+ENC_CT);
 				out.print("<html>");
+				out.print("Service running.");
 
-				out.print("Cache size: "+ cache.size() + " of "+CACHE_MAX_SIZE);
+				/*out.print("Cache size: "+ cache.size() + " of "+CACHE_MAX_SIZE);
 
 				//show cache content
 				ArrayList<String> list = new ArrayList<String>();
@@ -120,11 +123,11 @@ public class SeaRouteWS extends HttpServlet {
 					out.print("<td>" + st.substring(0, Math.min(150, st.length())) + " ...</td>");
 					out.print("</tr>");
 				}
-				out.print("</table>");
+				out.print("</table>");*/
 
 				out.print("</html>");
 				return;
-			}*/
+			}
 
 			//geometry asked
 			boolean geomP = !("0".equals( request.getParameter("g") ));
