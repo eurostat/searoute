@@ -37,13 +37,13 @@ import com.vividsolutions.jts.operation.linemerge.LineMerger;
  * @author julien Gaffuri
  *
  */
-public class SeaRoute {
+public class SeaRouting {
 
 	private Graph g;
 	private EdgeWeighter weighter;
 
-	public SeaRoute() { this("WebContent/resources/shp/marnet.shp"); }
-	public SeaRoute(String shpPath) {
+	public SeaRouting() { this("WebContent/resources/shp/marnet.shp"); }
+	public SeaRouting(String shpPath) {
 		try {
 			//load features from shp file
 			File file = new File(shpPath);
@@ -165,7 +165,7 @@ public class SeaRoute {
 	}
 
 	public static void main(String[] args) {
-		SeaRoute sr = new SeaRoute();
+		SeaRouting sr = new SeaRouting();
 		System.out.println(sr.g.getNodes().size());
 		System.out.println(sr.g.getEdges().size());
 	}
