@@ -3,9 +3,6 @@ package eu.ec.eurostat.searoute;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 
 import javax.servlet.ServletException;
@@ -21,6 +18,17 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.MultiLineString;
 
 public class SeaRouteWS extends HttpServlet {
+
+	//TODO
+	//default ser=rou
+	//handle several routes on route.html page
+	//export as executable jar?
+	//improve maritime network
+	//use comWS page style
+	//propose web page from CSV file
+	//handle special routes: panama, suez, pole?
+	//propose list of ports, based on locode
+	//cache
 
 	//   /usr/share/tomcat8/bin/catalina.sh start
 	//   /usr/share/tomcat8/bin/catalina.sh stop
