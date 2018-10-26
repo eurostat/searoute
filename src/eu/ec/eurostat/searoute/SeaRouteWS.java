@@ -100,7 +100,7 @@ public class SeaRouteWS extends HttpServlet {
 
 			if("rouinfo".equals(ser)){
 				response.setContentType("text/html"+ENC_CT);
-				out.print("<html>");
+				//out.print("<html>");
 				out.print("Service running.");
 
 				/*out.print("Cache size: "+ cache.size() + " of "+CACHE_MAX_SIZE);
@@ -125,7 +125,7 @@ public class SeaRouteWS extends HttpServlet {
 				}
 				out.print("</table>");*/
 
-				out.print("</html>");
+				//out.print("</html>");
 				return;
 			}
 
