@@ -8,8 +8,7 @@
 <link rel="stylesheet"
 	href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
 <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-<script src="resources/js/Leaflet.Geodesic.js"></script>
-<script src="resources/js/lib.js"></script>
+<script src="resources/Leaflet.Geodesic.js"></script>
 
 </head>
 
@@ -20,7 +19,7 @@
 
 		<h3 id="title">Sea route estimation</h3>
 
-		<img id="waitimg" src="resources/img/wait.gif" height="16" width="16" />
+		<img id="waitimg" src="resources/wait.gif" height="16" width="16" />
 		<div id="map" style="height: 400px; display: none;"></div>
 		<div id="infos"></div>
 
@@ -36,9 +35,16 @@
         var olat, olon, dlat, dlon;
         var oriHTML, destHTML;
 
+        var getParameterByName = function(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return !results? null : decodeURIComponent(results[1].replace(/\+/g, " "));
+        };
+
         //get geographical positions
-        var opos = CTr.getParameterByName("opos");
-        var dpos = CTr.getParameterByName("dpos");
+        var opos = getParameterByName("opos");
+        var dpos = getParameterByName("dpos");
 
         if(opos && dpos){
             opos = opos.split(","); olat = opos[1]; olon = opos[0];
