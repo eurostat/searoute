@@ -18,7 +18,7 @@ import com.vividsolutions.jts.geom.MultiLineString;
  * @author julien Gaffuri
  *
  */
-public class Util {
+public class Utils {
 
 
 

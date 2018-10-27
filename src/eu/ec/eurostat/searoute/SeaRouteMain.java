@@ -62,11 +62,11 @@ public class SeaRouteMain {
 
 			//compute route
 			MultiLineString g = sr.getRoute(oLon, oLat, dLon, dLat);
-			o.put("route", Util.toGeoJSON(g));
+			o.put("route", Utils.toGeoJSON(g));
 
 			//compute distance
-			double d = Util.getLengthGeo(g);
-			o.put("dist", ""+Util.round(d, 2));
+			double d = Utils.getLengthGeo(g);
+			o.put("dist", ""+Utils.round(d, 2));
 		}
 
 		//export

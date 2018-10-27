@@ -232,13 +232,13 @@ public class SeaRouteWS extends HttpServlet {
 			String st;
 			st = "{\"status\":\"ok\"";
 			if(distP){
-				double d = Util.getLengthGeo(ls);
-				d = Util.round(d, 2);
+				double d = Utils.getLengthGeo(ls);
+				d = Utils.round(d, 2);
 				st += ",\"dist\":"+d;
 			}
 			if(geomP){
 				//export as geojson
-				st += ",\"geom\":" + Util.toGeoJSON(ls);
+				st += ",\"geom\":" + Utils.toGeoJSON(ls);
 			}
 			st += "}";
 

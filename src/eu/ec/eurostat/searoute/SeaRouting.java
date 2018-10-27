@@ -87,7 +87,7 @@ public class SeaRouting {
 				SimpleFeature f = (SimpleFeature) e.getObject();
 				MultiLineString line = (MultiLineString) f.getDefaultGeometry();
 				//return line.getLength();
-				return Util.getLengthGeo(line);
+				return Utils.getLengthGeo(line);
 			}
 		};
 
@@ -139,9 +139,9 @@ public class SeaRouting {
 		//test if route should be based on network
 		//route do not need network if straight line between two points is smaller than the total distance to reach the network
 		double dist = -1;
-		dist = Util.getDistance(oPos, dPos);
+		dist = Utils.getDistance(oPos, dPos);
 		double distN = -1;
-		distN = Util.getDistance(oPos, oNPos) + Util.getDistance(dPos, dNPos);
+		distN = Utils.getDistance(oPos, oNPos) + Utils.getDistance(dPos, dNPos);
 
 		if(dist>=0 && distN>=0 && distN > dist){
 			//return direct route
@@ -181,9 +181,9 @@ public class SeaRouting {
 		//get from origin () to destination ()
 		MultiLineString geom = sr.getRoute(5.3, 43.3, 121.8, 31.2);
 		System.out.println(geom);
-		double dist = Util.getLengthGeo(geom);
+		double dist = Utils.getLengthGeo(geom);
 		System.out.println(dist);
-		String gj = Util.toGeoJSON(geom);
+		String gj = Utils.toGeoJSON(geom);
 		System.out.println(gj);
 	}
 
