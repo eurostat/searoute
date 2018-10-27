@@ -22,8 +22,6 @@ public class Utils {
 	public static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 
-
-
 	//in km
 	public static double getDistance(double slon, double slat, double dlon, double dlat){
 		GeodeticCalculator gc = new GeodeticCalculator();
@@ -60,11 +58,10 @@ public class Utils {
 		StringWriter writer = new StringWriter();
 		try {
 			new GeometryJSON().write(geom, writer);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} catch (IOException e) { e.printStackTrace(); }
 		return writer.toString();
 	}
+
 
 
 	/*public static String toUTF8(String st){

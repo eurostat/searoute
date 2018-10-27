@@ -2,7 +2,6 @@ package eu.ec.eurostat.searoute;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Date;
 
 import javax.servlet.ServletException;
@@ -10,7 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.geotools.geojson.geom.GeometryJSON;
 import org.geotools.graph.structure.Node;
 import org.opencarto.util.Util;
 
@@ -267,15 +265,13 @@ public class SeaRouteWS extends HttpServlet {
 			}
 			if(geomP){
 				//export as geojson
-				StringWriter writer = new StringWriter();
-				//new GeometryJSON().writeLine(ls, writer);
-				new GeometryJSON().writeMultiLine(ls, writer);
-				String geojson = writer.toString();
-				st += ",\"geom\":"+geojson;
+				st += ",\"geom\":" + Utils.toGeoJSON(ls);
 			}
 			st += "}";
 			out.print(st);
 			//setInCache(oLocid, dLocid, st);
+
+
 
 			//improve network / add inland transport / take into account impedance
 
