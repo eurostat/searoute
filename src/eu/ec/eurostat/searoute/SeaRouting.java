@@ -140,12 +140,12 @@ public class SeaRouting {
 		//test if route should be based on network
 		//route do not need network if straight line between two points is smaller than the total distance to reach the network
 		double dist = -1;
-		try { dist = ProjectionUtil.getDistance(oPos,dPos); } catch (Exception e) {}
+		dist = ProjectionUtil.getDistance(oPos,dPos);
 		double distN = -1;
-		try { distN = ProjectionUtil.getDistance(oPos,oNPos) + ProjectionUtil.getDistance(dPos,dNPos); } catch (Exception e) {}
+		distN = ProjectionUtil.getDistance(oPos,oNPos) + ProjectionUtil.getDistance(dPos,dNPos);
 
 		if(dist>=0 && distN>=0 && distN > dist){
-			//return direct
+			//return direct route
 			GeometryFactory gf = new GeometryFactory();
 			return gf.createMultiLineString(new LineString[]{ gf.createLineString(new Coordinate[]{oPos,dPos}) });
 		}
@@ -176,7 +176,6 @@ public class SeaRouting {
 		return gf.createMultiLineString( lss.toArray(new LineString[lss.size()]) );
 	}
 
-
 	public static void main(String[] args) {
 		SeaRouting sr = new SeaRouting();
 		//get from origin () to destination ()
@@ -187,6 +186,5 @@ public class SeaRouting {
 		String gj = GeoJSONUtil.toGeoJSON(geom);
 		System.out.println(gj);
 	}
-
 
 }

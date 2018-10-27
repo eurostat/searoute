@@ -23,7 +23,7 @@ public class SeaRouteWS extends HttpServlet {
 	//   /usr/share/tomcat8/bin/catalina.sh start
 	//   /usr/share/tomcat8/bin/catalina.sh stop
 	//   http://localhost:8080/
-	//logs: /var/lib/tomcat8/logs/catalina.out
+	//logs: /var/lib/tomcat8/logs/
 	//http://localhost:8080/searoutews/
 	//http://localhost:8080/searoutews/seaws?ser=rou&opos=5.3,43.3&dpos=121.8,31.2
 
@@ -184,8 +184,6 @@ public class SeaRouteWS extends HttpServlet {
 
 	}
 
-
-
 	private void returnRoute(PrintWriter out, double oLon, double oLat, double dLon, double dLat, boolean distP, boolean geomP) {
 		try {
 			if(oLon==Double.NaN || oLat==Double.NaN){
@@ -203,7 +201,6 @@ public class SeaRouteWS extends HttpServlet {
 				out.print("}");
 				return;
 			}
-
 
 			/*/try to find in cache
 			st = getFromCache(oLocid, dLocid);
@@ -226,7 +223,9 @@ public class SeaRouteWS extends HttpServlet {
 			}
 
 			//the maritime route geometry
+			out.println(" g");
 			MultiLineString ls = sr.getRoute(oPos, oN, dPos, dN);
+			out.println(" h");
 
 			if(ls==null){
 				out.print( "{\"status\":\"error\",\"message\":\"Shortest path not found\"}" );
