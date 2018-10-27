@@ -211,8 +211,6 @@ public class SeaRouteWS extends HttpServlet {
 			}
 
 
-			String st;
-
 			/*/try to find in cache
 			st = getFromCache(oLocid, dLocid);
 			if(st != null){
@@ -228,9 +226,7 @@ public class SeaRouteWS extends HttpServlet {
 			Node dN = sr.getNode(dPos);
 
 			if(oN == null || dN == null){
-				st = "{\"status\":\"error\",\"message\":\"Could not find start/end node\"";
-				st += "}";
-				out.print(st);
+				out.print( "{\"status\":\"error\",\"message\":\"Could not find start/end node\"}" );
 				//setInCache(oLocid, dLocid, st);
 				return;
 			}
@@ -239,13 +235,12 @@ public class SeaRouteWS extends HttpServlet {
 			MultiLineString ls = sr.getRoute(oPos, oN, dPos, dN);
 
 			if(ls==null){
-				st = "{\"status\":\"error\",\"message\":\"Shortest path not found\"";
-				st += "}";
-				out.print(st);
+				out.print( "{\"status\":\"error\",\"message\":\"Shortest path not found\"}" );
 				//setInCache(oLocid, dLocid, st);
 				return;
 			}
 
+			String st;
 			st = "{\"status\":\"ok\"";
 			if(distP){
 				double d = Utils.getLengthGeo(ls);
@@ -257,10 +252,9 @@ public class SeaRouteWS extends HttpServlet {
 				st += ",\"geom\":" + Utils.toGeoJSON(ls);
 			}
 			st += "}";
+
 			out.print(st);
 			//setInCache(oLocid, dLocid, st);
-
-
 
 			//improve network / add inland transport / take into account impedance
 
