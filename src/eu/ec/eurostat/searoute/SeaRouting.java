@@ -24,6 +24,8 @@ import org.geotools.graph.structure.Node;
 import org.geotools.graph.structure.basic.BasicEdge;
 import org.geotools.graph.traverse.standard.DijkstraIterator;
 import org.geotools.graph.traverse.standard.DijkstraIterator.EdgeWeighter;
+import org.opencarto.io.GeoJSONUtil;
+import org.opencarto.util.ProjectionUtil;
 import org.opengis.feature.simple.SimpleFeature;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -32,8 +34,6 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.operation.linemerge.LineMerger;
-
-import eu.ec.eurostat.searoute.utils.Utils;
 
 /**
  * @author julien Gaffuri
@@ -89,7 +89,7 @@ public class SeaRouting {
 				SimpleFeature f = (SimpleFeature) e.getObject();
 				MultiLineString line = (MultiLineString) f.getDefaultGeometry();
 				//return line.getLength();
-				return Utils.getLengthGeo(line);
+				return ProjectionUtil.getLengthGeo(line);
 			}
 		};
 
@@ -140,9 +140,9 @@ public class SeaRouting {
 		//test if route should be based on network
 		//route do not need network if straight line between two points is smaller than the total distance to reach the network
 		double dist = -1;
-		try { dist = Utils.getDistance(oPos,dPos); } catch (Exception e) {}
+		try { dist = ProjectionUtil.getDistance(oPos,dPos); } catch (Exception e) {}
 		double distN = -1;
-		try { distN = Utils.getDistance(oPos,oNPos) + Utils.getDistance(dPos,dNPos); } catch (Exception e) {}
+		try { distN = ProjectionUtil.getDistance(oPos,oNPos) + ProjectionUtil.getDistance(dPos,dNPos); } catch (Exception e) {}
 
 		if(dist>=0 && distN>=0 && distN > dist){
 			//return direct
@@ -176,17 +176,17 @@ public class SeaRouting {
 		return gf.createMultiLineString( lss.toArray(new LineString[lss.size()]) );
 	}
 
-/*
+
 	public static void main(String[] args) {
 		SeaRouting sr = new SeaRouting();
 		//get from origin () to destination ()
 		MultiLineString geom = sr.getRoute(5.3, 43.3, 121.8, 31.2);
 		System.out.println(geom);
-		double dist = Utils.getLengthGeo(geom);
+		double dist = ProjectionUtil.getLengthGeo(geom);
 		System.out.println(dist);
-		String gj = Utils.toGeoJSON(geom);
+		String gj = GeoJSONUtil.toGeoJSON(geom);
 		System.out.println(gj);
 	}
-*/
+
 
 }

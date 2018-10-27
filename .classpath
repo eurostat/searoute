@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="eu/ec/eurostat/searoute/MarContextListener.java|eu/ec/eurostat/searoute/MarnetCheck.java|eu/ec/eurostat/searoute/tools/" kind="src" path="src"/>
+	<classpathentry excluding="eu/ec/eurostat/searoute/MarContextListener.java|eu/ec/eurostat/searoute/MarnetCheck.java|eu/ec/eurostat/searoute/tools/|eu/ec/eurostat/searoute/utils/CSVUtil.java|eu/ec/eurostat/searoute/utils/Utils.java" kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-8-openjdk-amd64">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>

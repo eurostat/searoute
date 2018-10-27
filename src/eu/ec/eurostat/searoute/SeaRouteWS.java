@@ -2,6 +2,8 @@ package eu.ec.eurostat.searoute;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.servlet.ServletException;
@@ -10,12 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.geotools.graph.structure.Node;
+import org.opencarto.io.GeoJSONUtil;
+import org.opencarto.util.ProjectionUtil;
 import org.opencarto.util.Util;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.MultiLineString;
-
-import eu.ec.eurostat.searoute.utils.Utils;
 
 public class SeaRouteWS extends HttpServlet {
 	//   /usr/share/tomcat8/bin/catalina.sh start
@@ -25,6 +27,7 @@ public class SeaRouteWS extends HttpServlet {
 	//http://localhost:8080/searoutews/
 	//http://localhost:8080/searoutews/seaws?ser=rou&opos=5.3,43.3&dpos=121.8,31.2
 
+	private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static final long serialVersionUID = 5326338791791803741L;
 
 	private static final String shpPath = "webapps/searoutews/resources/shp/marnet.shp";
@@ -66,7 +69,7 @@ public class SeaRouteWS extends HttpServlet {
 
 	public void init() throws ServletException {
 		super.init();
-		System.out.println("---" + this + " started - " + Utils.df.format(new Date()));
+		System.out.println("---" + this + " started - " + df.format(new Date()));
 		//cache = new HashMap<String, Object[]>();
 		sr = new SeaRouting(shpPath);
 	}
@@ -245,13 +248,13 @@ public class SeaRouteWS extends HttpServlet {
 			String st;
 			st = "{\"status\":\"ok\"";
 			if(distP){
-				double d = Utils.getLengthGeo(ls);
+				double d = ProjectionUtil.getLengthGeo(ls);
 				d = Util.round(d, 2);
 				st += ",\"dist\":"+d;
 			}
 			if(geomP){
 				//export as geojson
-				st += ",\"geom\":" + Utils.toGeoJSON(ls);
+				st += ",\"geom\":" + GeoJSONUtil.toGeoJSON(ls);
 			}
 			st += "}";
 
@@ -271,7 +274,7 @@ public class SeaRouteWS extends HttpServlet {
 
 	public void destroy() {
 		super.destroy();
-		System.out.println("---" + this + " stopped - " + Utils.df.format(new Date()));
+		System.out.println("---" + this + " stopped - " + df.format(new Date()));
 	}
 
 }
