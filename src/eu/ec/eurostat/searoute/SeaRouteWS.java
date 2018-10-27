@@ -120,6 +120,7 @@ public class SeaRouteWS extends HttpServlet {
 
 				//out.print("</html>");
 
+				break;
 			case "rou":
 				//geometry asked
 				boolean geomP = !("0".equals( request.getParameter("g") ));
@@ -152,11 +153,21 @@ public class SeaRouteWS extends HttpServlet {
 					}
 				}
 
-				if(oLon != null && oLat!= null ){
-					response.setContentType("text/json"+ENC_CT);
-					returnRoute(out, oLon, oLat, dLon, dLat, distP, geomP);
-					break;
+				response.setContentType("text/json"+ENC_CT);
+				if(oLon==null)
+					out.print("{\"status\":\"empty\"}");
+				if(oLon.length==0)
+					out.print("{\"status\":\"empty\"}");
+				else {
+					if(oLon.length>1) out.print("[");
+					returnRoute(out, oLon[0], oLat[0], dLon[0], dLat[0], distP, geomP);
+					for(int i=1; i<oLon.length; i++){
+						out.print(",");
+						returnRoute(out, oLon[i], oLat[i], dLon[i], dLat[i], distP, geomP);
+					}
+					if(oLon.length>1) out.print("]");
 				}
+				break;
 			default :
 				response.setContentType("text/json"+ENC_CT);
 				out.println("{\"res\":\"error\",\"message\":\"Unknown service: "+ser+"\"}");
@@ -174,28 +185,6 @@ public class SeaRouteWS extends HttpServlet {
 	}
 
 
-	private void returnRoute(PrintWriter out, double[] oLon, double[] oLat, double[] dLon, double[] dLat, boolean distP, boolean geomP) {
-		if(oLon==null){
-			out.print("{\"status\":\"empty\"}");
-			return;
-		}
-		if(oLon.length==0){
-			out.print("{\"status\":\"empty\"}");
-			return;
-		}
-		if(oLon.length==1){
-			returnRoute(out, oLon[0], oLat[0], dLon[0], dLat[0], distP, geomP);
-			return;
-		}
-
-		out.print("[");
-		returnRoute(out, oLon[0], oLat[0], dLon[0], dLat[0], distP, geomP);
-		for(int i=1; i<oLon.length; i++){
-			out.print(",");
-			returnRoute(out, oLon[i], oLat[i], dLon[i], dLat[i], distP, geomP);
-		}
-		out.print("]");
-	}
 
 	private void returnRoute(PrintWriter out, double oLon, double oLat, double dLon, double dLat, boolean distP, boolean geomP) {
 		try {
@@ -267,6 +256,7 @@ public class SeaRouteWS extends HttpServlet {
 			String st = "{\"status\":\"error\",\"message\":\"Unknown error\"";
 			st += "}";
 			out.print(st);
+			//out.print(e.getMessage());
 			//setInCache(oLocid, dLocid, st);
 			e.printStackTrace();
 		}
