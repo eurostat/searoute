@@ -52,7 +52,7 @@ font-family: Arial;
         function follow(){
             $.ajax({
                 url : "seaws",
-                data : "ser=rou&opos="+olon+","+olat+"&dpos="+dlon+","+dlat
+                data : "opos="+olon+","+olat+"&dpos="+dlon+","+dlat
             }).done(function(rou) {
                 $("#waitimg").hide();
 

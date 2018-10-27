@@ -80,18 +80,13 @@ public class SeaRouteWS extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		try {
-
-			//service
+			//get service
 			String ser = request.getParameter("ser");
+			if(ser == null || "".equals(ser)) ser = "rou";
 
-			//service
-			if(ser == null || "".equals(ser)){
-				response.setContentType("text/json"+ENC_CT);
-				out.println("{\"res\":\"error\",\"message\":\"No service specified\"}");
-				return;
-			}
+			switch (ser) {
 
-			if("rouinfo".equals(ser)){
+			case "rouinfo":
 				response.setContentType("text/html"+ENC_CT);
 				//out.print("<html>");
 				out.print("Service running.");
@@ -119,45 +114,39 @@ public class SeaRouteWS extends HttpServlet {
 				out.print("</table>");*/
 
 				//out.print("</html>");
-				return;
-			}
-
-			//geometry asked
-			boolean geomP = !("0".equals( request.getParameter("g") ));
-
-			//distance asked
-			boolean distP = !("0".equals( request.getParameter("d") ));
-
-			//lat lon
-			double[] oLon=null,oLat=null,dLon=null,dLat=null;
-
-			//load directly position (lon,lat)
-			String oPos = request.getParameter("opos");
-			if(oPos!=null && !"".equals(oPos)){
-				String[] s = oPos.split("\\s*,\\s*");
-				int nb = s.length/2;
-				oLon = new double[nb]; oLat = new double[nb];
-				for(int i=0;i<nb;i++){
-					oLon[i] = Double.parseDouble(s[2*i]);
-					oLat[i] = Double.parseDouble(s[2*i+1]);
-				}
-			}
-			String dPos = request.getParameter("dpos");
-			if(dPos!=null && !"".equals(dPos)){
-				String[] s = dPos.split("\\s*,\\s*");
-				int nb = s.length/2;
-				dLon = new double[nb]; dLat = new double[nb];
-				for(int i=0;i<nb;i++){
-					dLon[i] = Double.parseDouble(s[2*i]);
-					dLat[i] = Double.parseDouble(s[2*i+1]);
-				}
-			}
-
-
-
-			switch (ser) {
 
 			case "rou":
+				//geometry asked
+				boolean geomP = !("0".equals( request.getParameter("g") ));
+
+				//distance asked
+				boolean distP = !("0".equals( request.getParameter("d") ));
+
+				//lat lon
+				double[] oLon=null,oLat=null,dLon=null,dLat=null;
+
+				//load directly position (lon,lat)
+				String oPos = request.getParameter("opos");
+				if(oPos!=null && !"".equals(oPos)){
+					String[] s = oPos.split("\\s*,\\s*");
+					int nb = s.length/2;
+					oLon = new double[nb]; oLat = new double[nb];
+					for(int i=0;i<nb;i++){
+						oLon[i] = Double.parseDouble(s[2*i]);
+						oLat[i] = Double.parseDouble(s[2*i+1]);
+					}
+				}
+				String dPos = request.getParameter("dpos");
+				if(dPos!=null && !"".equals(dPos)){
+					String[] s = dPos.split("\\s*,\\s*");
+					int nb = s.length/2;
+					dLon = new double[nb]; dLat = new double[nb];
+					for(int i=0;i<nb;i++){
+						dLon[i] = Double.parseDouble(s[2*i]);
+						dLat[i] = Double.parseDouble(s[2*i+1]);
+					}
+				}
+
 				if(oLon != null && oLat!= null ){
 					response.setContentType("text/json"+ENC_CT);
 					returnRoute(out, oLon, oLat, dLon, dLat, distP, geomP);
