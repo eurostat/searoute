@@ -15,6 +15,8 @@ import org.opencarto.util.Util;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.MultiLineString;
 
+import eu.ec.eurostat.searoute.utils.Utils;
+
 public class SeaRouteWS extends HttpServlet {
 	//   /usr/share/tomcat8/bin/catalina.sh start
 	//   /usr/share/tomcat8/bin/catalina.sh stop

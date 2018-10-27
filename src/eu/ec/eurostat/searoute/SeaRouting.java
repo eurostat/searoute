@@ -33,6 +33,8 @@ import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.operation.linemerge.LineMerger;
 
+import eu.ec.eurostat.searoute.utils.Utils;
+
 /**
  * @author julien Gaffuri
  *
