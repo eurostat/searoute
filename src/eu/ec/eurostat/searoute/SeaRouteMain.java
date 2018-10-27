@@ -10,11 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.opencarto.io.CSVUtil;
-import org.opencarto.io.GeoJSONUtil;
-import org.opencarto.util.ProjectionUtil;
-import org.opencarto.util.Util;
-
 import com.vividsolutions.jts.geom.MultiLineString;
 
 /**
@@ -67,10 +62,10 @@ public class SeaRouteMain {
 
 			//compute route
 			MultiLineString g = sr.getRoute(oLon, oLat, dLon, dLat);
-			o.put("route", GeoJSONUtil.toGeoJSON(g));
+			o.put("route", Util.toGeoJSON(g));
 
 			//compute distance
-			double d = ProjectionUtil.getLengthGeo(g);
+			double d = Util.getLengthGeo(g);
 			o.put("dist", ""+Util.round(d, 2));
 		}
 

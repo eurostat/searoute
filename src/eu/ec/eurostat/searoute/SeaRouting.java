@@ -24,8 +24,6 @@ import org.geotools.graph.structure.Node;
 import org.geotools.graph.structure.basic.BasicEdge;
 import org.geotools.graph.traverse.standard.DijkstraIterator;
 import org.geotools.graph.traverse.standard.DijkstraIterator.EdgeWeighter;
-import org.opencarto.io.GeoJSONUtil;
-import org.opencarto.util.ProjectionUtil;
 import org.opengis.feature.simple.SimpleFeature;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -89,7 +87,7 @@ public class SeaRouting {
 				SimpleFeature f = (SimpleFeature) e.getObject();
 				MultiLineString line = (MultiLineString) f.getDefaultGeometry();
 				//return line.getLength();
-				return ProjectionUtil.getLengthGeo(line);
+				return Util.getLengthGeo(line);
 			}
 		};
 
@@ -134,15 +132,16 @@ public class SeaRouting {
 	}
 	//get the route when the node are known
 	public MultiLineString getRoute(Coordinate oPos, Node oN, Coordinate dPos, Node dN) {
+
 		//get node positions
 		Coordinate oNPos = getPosition(oN), dNPos = getPosition(dN);
 
 		//test if route should be based on network
 		//route do not need network if straight line between two points is smaller than the total distance to reach the network
 		double dist = -1;
-		dist = ProjectionUtil.getDistance(oPos,dPos);
+		dist = Util.getDistance(oPos, dPos);
 		double distN = -1;
-		distN = ProjectionUtil.getDistance(oPos,oNPos) + ProjectionUtil.getDistance(dPos,dNPos);
+		distN = Util.getDistance(oPos, oNPos) + Util.getDistance(dPos, dNPos);
 
 		if(dist>=0 && distN>=0 && distN > dist){
 			//return direct route
@@ -155,6 +154,7 @@ public class SeaRouting {
 		synchronized (g) {
 			path = getShortestPath(g, oN,dN,weighter);
 		}
+
 
 		if(path == null) return null;
 
@@ -181,9 +181,9 @@ public class SeaRouting {
 		//get from origin () to destination ()
 		MultiLineString geom = sr.getRoute(5.3, 43.3, 121.8, 31.2);
 		System.out.println(geom);
-		double dist = ProjectionUtil.getLengthGeo(geom);
+		double dist = Util.getLengthGeo(geom);
 		System.out.println(dist);
-		String gj = GeoJSONUtil.toGeoJSON(geom);
+		String gj = Util.toGeoJSON(geom);
 		System.out.println(gj);
 	}
 

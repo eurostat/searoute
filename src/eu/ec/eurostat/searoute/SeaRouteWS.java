@@ -12,9 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.geotools.graph.structure.Node;
-import org.opencarto.io.GeoJSONUtil;
-import org.opencarto.util.ProjectionUtil;
-import org.opencarto.util.Util;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.MultiLineString;
@@ -223,9 +220,8 @@ public class SeaRouteWS extends HttpServlet {
 			}
 
 			//the maritime route geometry
-			out.println(" g");
 			MultiLineString ls = sr.getRoute(oPos, oN, dPos, dN);
-			out.println(" h");
+			//MultiLineString ls = sr.getRoute(oLon, oLat, dLon, dLat);
 
 			if(ls==null){
 				out.print( "{\"status\":\"error\",\"message\":\"Shortest path not found\"}" );
@@ -236,13 +232,13 @@ public class SeaRouteWS extends HttpServlet {
 			String st;
 			st = "{\"status\":\"ok\"";
 			if(distP){
-				double d = ProjectionUtil.getLengthGeo(ls);
+				double d = Util.getLengthGeo(ls);
 				d = Util.round(d, 2);
 				st += ",\"dist\":"+d;
 			}
 			if(geomP){
 				//export as geojson
-				st += ",\"geom\":" + GeoJSONUtil.toGeoJSON(ls);
+				st += ",\"geom\":" + Util.toGeoJSON(ls);
 			}
 			st += "}";
 
