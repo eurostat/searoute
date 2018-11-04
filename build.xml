@@ -1,47 +1,51 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="dep" default="do" basedir=".">
-<property name="warfile" value="searoutews"/>
-<property name="jarversion" value="0.1"/>
-<target name="war">
-	<war destfile="${warfile}.war" webxml="WebContent/WEB-INF/web.xml" update="true">
-		<classes dir="build\classes"/>
-		<fileset dir="WebContent">
-		<exclude name="WEB-INF/web.xml"/>
-		</fileset>
-	</war>
-</target>
-<target name="movewar">
-	<copy todir="/var/lib/tomcat8/webapps" overwrite="true">
-		<fileset dir=".">
-		<include name="*.war"/>
-		</fileset>
-	</copy>
-	<delete file="${warfile}.war"/>
-</target>
-<target name="cleant">
-	<!-- <delete dir="/var/lib/tomcat8/webapps/${warfile}"/> -->
-	<delete file="/var/lib/tomcat8/webapps/${warfile}.war"/>
-</target>
-<target name="do">
-	<antcall target="cleant"/>
-	<antcall target="war"/>
-	<antcall target="movewar"/>
-</target>
-<target name="unpack">
-	<unwar src="${warfile}.war" dest="${warfile}" />
-</target>
+<project name="dep" default="dowar" basedir=".">
+	<property name="warfile" value="searoutews" />
+	<property name="jarversion" value="0.1" />
 
-    <target name="jar">
-        <jar destfile="./releases/searoute-${jarversion}/searoute.jar" filesetmanifest="mergewithoutmain">
-            <manifest>
-                <attribute name="Main-Class" value="eu.ec.eurostat.searoute.SeaRouteMain"/>
-                <attribute name="Class-Path" value="."/>
-            </manifest>
-            <fileset dir="./build/classes"/>
-            <zipfileset excludes="META-INF/*.SF" src="./WebContent/WEB-INF/lib/opencarto.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="./WebContent/WEB-INF/lib/commons-cli-1.4.jar"/>
-            <fileset dir="./WebContent/resources/shp"/>
-        </jar>
-    </target>
+	<target name="war">
+		<war destfile="${warfile}.war" webxml="WebContent/WEB-INF/web.xml" update="true">
+			<classes dir="build\classes" />
+			<fileset dir="WebContent">
+				<exclude name="WEB-INF/web.xml" />
+			</fileset>
+		</war>
+	</target>
+
+	<target name="deploy">
+		<copy todir="/var/lib/tomcat8/webapps" overwrite="true">
+			<fileset dir=".">
+				<include name="*.war" />
+			</fileset>
+		</copy>
+		<delete file="${warfile}.war" />
+	</target>
+	<target name="cleant">
+		<!-- <delete dir="/var/lib/tomcat8/webapps/${warfile}"/> -->
+		<delete file="/var/lib/tomcat8/webapps/${warfile}.war" />
+	</target>
+
+	<target name="dowar">
+		<antcall target="cleant" />
+		<antcall target="war" />
+		<antcall target="deploy" />
+	</target>
+
+	<target name="unpackwar">
+		<unwar src="${warfile}.war" dest="${warfile}" />
+	</target>
+
+	<target name="jar">
+		<jar destfile="./releases/searoute-${jarversion}/searoute.jar" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="eu.ec.eurostat.searoute.SeaRouteMain" />
+				<attribute name="Class-Path" value="." />
+			</manifest>
+			<fileset dir="./build/classes" />
+			<zipfileset excludes="META-INF/*.SF" src="./WebContent/WEB-INF/lib/opencarto.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="./WebContent/WEB-INF/lib/commons-cli-1.4.jar" />
+			<fileset dir="./WebContent/resources/shp" />
+		</jar>
+	</target>
 
 </project>
