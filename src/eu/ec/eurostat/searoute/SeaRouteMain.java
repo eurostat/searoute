@@ -32,9 +32,17 @@ public class SeaRouteMain {
 	public static void main(String[] args) {
 
 		Options options = new Options();
-		options.addOption(Option.builder("i").longOpt("inputFile").desc("Input file (SHP format).")
+		options.addOption(Option.builder("i").longOpt("inputFile").desc("Input file (CSV format).")
 				.hasArg().argName("file").build());
-		options.addOption(Option.builder("o").longOpt("outputFile").desc("Optional. Output file (SHP format). Default: 'out.shp'.")
+		options.addOption(Option.builder("o").longOpt("outputFile").desc("Optional. Output file (CSV format). Default: 'out.csv'.")
+				.hasArg().argName("file").build());
+		options.addOption(Option.builder("olonCol").desc("Optional. The name of the column in the input file where the origin longitude is specified. Default: 'olon'.")
+				.hasArg().argName("file").build());
+		options.addOption(Option.builder("olatCol").desc("Optional. The name of the column in the input file where the origin latitude is specified. Default: 'olat'.")
+				.hasArg().argName("file").build());
+		options.addOption(Option.builder("dlonCol").desc("Optional. The name of the column in the input file where the destination longitude is specified. Default: 'dlon'.")
+				.hasArg().argName("file").build());
+		options.addOption(Option.builder("dlatCol").desc("Optional. The name of the column in the input file where the destination latitude is specified. Default: 'dlat'.")
 				.hasArg().argName("file").build());
 		options.addOption(Option.builder("h").desc("Show this help message").build());
 
@@ -50,6 +58,7 @@ public class SeaRouteMain {
 			return;
 		}
 
+		//input file
 		String inFile = cmd.getOptionValue("i");
 		if(inFile==null) {
 			System.err.println("An input file should be specified with -i option. Use -h option to show the help message.");
@@ -58,16 +67,19 @@ public class SeaRouteMain {
 			System.err.println("Input file does not exist: "+inFile);
 			return;
 		}
+
+		//output file
 		String outFile = cmd.getOptionValue("o");
 		if(outFile == null) outFile = Paths.get("").toAbsolutePath().toString()+"/out.csv";
 
+		//column names
+		String olonCol = cmd.getOptionValue("olonCol");   if(olonCol == null) olonCol = "olon";
+		String olatCol = cmd.getOptionValue("olatCol");   if(olatCol == null) olatCol = "olat";
+		String dlonCol = cmd.getOptionValue("dlonCol");   if(dlonCol == null) dlonCol = "dlon";
+		String dlatCol = cmd.getOptionValue("dlatCol");   if(dlatCol == null) dlatCol = "dlat";
 
-		//check file existence
-		File f = new File(inFile);
-		if(!f.exists()) {
-			System.out.println("Could not find input file "+inFile);
-			return;
-		}
+
+
 
 		//load data
 		ArrayList<HashMap<String, String>> data = CSVUtil.load(inFile);
@@ -77,9 +89,10 @@ public class SeaRouteMain {
 			System.out.println("Empty file "+inFile);
 			return;
 		}
+
 		Set<String> keys = data.get(0).keySet();
-		if(!keys.contains("olon") || !keys.contains("olat") || !keys.contains("dlon") || !keys.contains("dlat")) {
-			System.out.println("Input file should contain olon,olat,dlon,dlat columns " + inFile);
+		if(!keys.contains(olonCol) || !keys.contains(olatCol) || !keys.contains(dlonCol) || !keys.contains(dlatCol)) {
+			System.out.println("Input file should contain "+olonCol+","+olatCol+","+dlonCol+","+dlatCol+" columns " + inFile);
 			return;
 		}
 
@@ -89,10 +102,10 @@ public class SeaRouteMain {
 			o.put("route", "na");
 			o.put("dist", "na");
 
-			double oLon = get(o, "olon");
-			double oLat = get(o, "olat");
-			double dLon = get(o, "dlon");
-			double dLat = get(o, "dlat");
+			double oLon = get(o, olonCol);
+			double oLat = get(o, olatCol);
+			double dLon = get(o, dlonCol);
+			double dLat = get(o, dlatCol);
 
 			if(Double.isNaN(oLon) || Double.isNaN(oLat) || Double.isNaN(dLon) || Double.isNaN(dLat))
 				continue;
