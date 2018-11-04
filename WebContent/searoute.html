@@ -11,7 +11,7 @@ html { font-family: Arial; }
 
 <h3 id="title">Sea route estimation</h3>
 <img id="waitimg" src="resources/wait.gif" height="16" width="16" />
-<div id="map" style="height: 400px; display: none;"></div>
+<div id="map" style="width: 600px; height: 400px; display: none;"></div>
 <div id="infos"></div>
 <p><a href="index.html">Back to API documentation.</a></p>
 
@@ -46,31 +46,24 @@ html { font-family: Arial; }
 						//create map
 						$("#map").show();
 						var map = L.map("map", {
-							center : [ 30, 0 ], zoom : 2,
-							minZoom : 0, maxZoom : 10,
+							center:[30,0], zoom:1,
+							minZoom:0, maxZoom:10,
 							attributionControl : false
 						});
 						L.control.scale({ imperial : false }).addTo(map);
 
 						//locations layer
 						var locations = new L.LayerGroup();
-						var style = { color : 'red', fillColor : '#f03', fillOpacity : 0.5 };
-						var circleRadius = 2000;
+						var circleRadius = 1000;
+						var style = { color : "black", fillColor : "black" };
 
 						//maritime route layer
 						var mRouteLayer = new L.LayerGroup();
-						var sm = { color : "red", weight : 2, opacity : 1 };
+						var sm = { color : "black", weight : 2, opacity : 1 };
 
 						//geodetic route layer
 						var gRouteLayer = new L.LayerGroup();
-						var sg = { color : "black", weight : 2, opacity : 1 };
-
-						//add layer control
-						L.control.layers(bls, {
-							"Origin and destination" : locations,
-							"Maritime route" : mRouteLayer,
-							"Geodetic route" : gRouteLayer
-						}, { position : "topleft", collapsed : true }).addTo(map);
+						var sg = { color : "gray", weight : 2, opacity : 1 };
 
 						//add layers to map
 						var bls = {
@@ -82,6 +75,13 @@ html { font-family: Arial; }
 						gRouteLayer.addTo(map);
 						mRouteLayer.addTo(map);
 						locations.addTo(map);
+
+						//add layer control
+						L.control.layers(bls, {
+							"Maritime route" : mRouteLayer,
+							"Geodetic route" : gRouteLayer,
+							"Origin and destination" : locations
+						}, { position : "topleft", collapsed : true }).addTo(map);
 
 						//fit map
 						//map.fitBounds( mrl.getBounds() );
@@ -107,15 +107,14 @@ html { font-family: Arial; }
 								dlat = dpos[2*i+1]
 							;
 
-							if(nb==1) $("#title").text("Sea route estimation from (Lon=" + olon + ",Lat=" + olat + ") to (Lon=" + dlon + ",Lat=" + dlat + ")");
-							else $("#title").text("Sea route estimation");
-
 							var d = rou_.dist;
-							if(nb==1) $("#infos").append("<p>Estimated distance: " + d.toFixed(2) + " km</p>");
-
-							//add origin and destination locations
-							L.circle([ olat, olon ], circleRadius, style).bindPopup("(Lon=" + olon + ",Lat=" + olat + ")").addTo(locations);
-							L.circle([ dlat, dlon ], circleRadius, style).bindPopup("(Lon=" + dlon + ",Lat=" + dlat + ")").addTo(locations);
+							if(nb==1) {
+								$("#title").text("Sea route estimation from (Lon=" + olon + ",Lat=" + olat + ") to (Lon=" + dlon + ",Lat=" + dlat + ")");
+								$("#infos").append("<p>Estimated distance: " + d.toFixed(2) + " km</p>");
+							} else {
+								$("#title").text("Sea route estimation");
+								$("#infos").append("<p>From (Lon=" + olon + ",Lat=" + olat + ") to (Lon=" + dlon + ",Lat=" + dlat + ") - Estimated distance: " + d.toFixed(2) + " km</p>");
+							}
 
 							//add maritime route
 							var mrl = new L.GeoJSON([], {
@@ -130,6 +129,10 @@ html { font-family: Arial; }
 								var line = new L.Geodesic([ [L.latLng(olat, olon), L.latLng(dlat, dlon) ] ], sg);
 								gRouteLayer.addLayer(line);
 							}
+
+							//add origin and destination locations
+							L.circle([ olat, olon ], circleRadius, style).bindPopup("Origin (Lon=" + olon + ",Lat=" + olat + ")").addTo(locations);
+							L.circle([ dlat, dlon ], circleRadius, style).bindPopup("Destination (Lon=" + dlon + ",Lat=" + dlat + ")").addTo(locations);
 						}
 
 					}).fail(function(XMLHttpRequest, textStatus) {
