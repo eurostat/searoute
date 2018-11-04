@@ -4,8 +4,9 @@
 package eu.ec.eurostat.searoute;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,14 +43,13 @@ public class SeaRouting {
 	private Graph g;
 	private EdgeWeighter weighter;
 
-	public SeaRouting() { this("WebContent/resources/shp/marnet.shp"); }
-	public SeaRouting(String shpPath) {
+	public SeaRouting() throws MalformedURLException { this("WebContent/resources/shp/marnet.shp"); }
+	public SeaRouting(String shpPath) throws MalformedURLException { this(new File(shpPath)); }
+	public SeaRouting(File marnetFile) throws MalformedURLException { this(marnetFile.toURI().toURL()); }
+	public SeaRouting(URL marnetFileURL) {
 		try {
-			//load features from shp file
-			File file = new File(shpPath);
-			if(!file.exists()) throw new IOException("File "+shpPath+" does not exist.");
 			Map<String, Serializable> map = new HashMap<>();
-			map.put( "url", file.toURI().toURL() );
+			map.put( "url", marnetFileURL );
 			DataStore store = DataStoreFinder.getDataStore(map);
 			FeatureCollection fc =  store.getFeatureSource(store.getTypeNames()[0]).getFeatures();
 
@@ -60,9 +60,7 @@ public class SeaRouting {
 			g = gGen.getGraph();
 			it.close();
 			store.dispose();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (Exception e) { e.printStackTrace(); }
 
 		//link nodes around the globe
 		for(Object o : g.getNodes()){
@@ -176,7 +174,7 @@ public class SeaRouting {
 		return gf.createMultiLineString( lss.toArray(new LineString[lss.size()]) );
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws MalformedURLException {
 		SeaRouting sr = new SeaRouting();
 		//get from origin () to destination ()
 		MultiLineString geom = sr.getRoute(5.3, 43.3, 121.8, 31.2);

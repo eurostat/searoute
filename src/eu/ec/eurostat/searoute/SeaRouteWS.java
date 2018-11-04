@@ -2,6 +2,7 @@ package eu.ec.eurostat.searoute;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -68,7 +69,12 @@ public class SeaRouteWS extends HttpServlet {
 		super.init();
 		System.out.println("---" + this + " started - " + df.format(new Date()));
 		//cache = new HashMap<String, Object[]>();
-		sr = new SeaRouting(shpPath);
+		try {
+			sr = new SeaRouting(shpPath);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 

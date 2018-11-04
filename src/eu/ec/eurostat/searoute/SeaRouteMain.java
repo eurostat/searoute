@@ -4,6 +4,7 @@
 package eu.ec.eurostat.searoute;
 
 import java.io.File;
+import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,7 +30,7 @@ import com.vividsolutions.jts.geom.MultiLineString;
  */
 public class SeaRouteMain {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 
 		Options options = new Options();
 		options.addOption(Option.builder("i").longOpt("inputFile").desc("Input file (CSV format).")
@@ -79,8 +80,6 @@ public class SeaRouteMain {
 		String dlatCol = cmd.getOptionValue("dlatCol");   if(dlatCol == null) dlatCol = "dlat";
 
 
-
-
 		//load data
 		ArrayList<HashMap<String, String>> data = CSVUtil.load(inFile);
 
@@ -96,8 +95,12 @@ public class SeaRouteMain {
 			return;
 		}
 
+		//build maritime network
+		//String marnetSHP = "/marnet.shp";
+		URL marnetURL = new SeaRouteMain().getClass().getResource("/marnet.shp").toURI().toURL();
+		SeaRouting sr = new SeaRouting(marnetURL);
+
 		//compute routes
-		SeaRouting sr = new SeaRouting();
 		for( HashMap<String, String> o : data ) {
 			o.put("route", "na");
 			o.put("dist", "na");
