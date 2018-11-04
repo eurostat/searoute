@@ -41,100 +41,101 @@ html { font-family: Arial; }
 
 		$.ajax({url : "seaws",data : "opos=" + opos + "&dpos=" + dpos
 		}).done( function(rou) {
-							$("#waitimg").hide();
+						$("#waitimg").hide();
 
-							if (rou.status != "ok") {
-								console.warn("Could not retrieve maritime route.");
-								return;
-							}
+						if (rou.status != "ok") {
+							console.warn("Could not retrieve maritime route.");
+							return;
+						}
 
-							opos = opos.split(",");
-							dpos = dpos.split(",");
+						//create map
+						$("#map").show();
+						var map = L.map("map", {
+							center : [ 30, 0 ], zoom : 2,
+							minZoom : 0, maxZoom : 10,
+							attributionControl : false
+						});
+						L.control.scale({ imperial : false }).addTo(map);
 
-							var nb = opos.length/2;
+						//locations layer
+						var locations = new L.LayerGroup();
+						var style = { color : 'red', fillColor : '#f03', fillOpacity : 0.5 };
+						var circleRadius = 2000;
+
+						//maritime route layer
+						var mRouteLayer = new L.LayerGroup();
+						var sm = { color : "red", weight : 2, opacity : 1 };
+
+						//geodetic route layer
+						var gRouteLayer = new L.LayerGroup();
+						var sg = { color : "black", weight : 2, opacity : 1 };
+
+						//add layer control
+						L.control.layers(bls, {
+							"Origin and destination" : locations,
+							"Maritime route" : mRouteLayer,
+							"Geodetic route" : gRouteLayer
+						}, { position : "topleft", collapsed : true }).addTo(map);
+
+						//add layers to map
+						var bls = {
+							Light : L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}'),
+							Dark : L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}'),
+							Topography : L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}')
+						};
+						map.addLayer(bls.Light);
+						gRouteLayer.addTo(map);
+						mRouteLayer.addTo(map);
+						locations.addTo(map);
+
+						//fit map
+						//map.fitBounds( mrl.getBounds() );
+
+						var samePositionPos = function(lat1, lon1, lat2, lon2) {
+							return (lat1 === lat2 && lon1 === lon2);
+						};
+
+						opos = opos.split(",");
+						dpos = dpos.split(",");
+
+						var nb = opos.length/2;
 						
-							//TODO loop here
+						for(var i=0; i<nb; i++) {
 
-							var olon = opos[2*(nb-1)],
-								olat = opos[2*(nb-1)+1],
-								dlon = dpos[2*(nb-1)],
-								dlat = dpos[2*(nb-1)+1]
+							var olon = opos[2*i],
+								olat = opos[2*i+1],
+								dlon = dpos[2*i],
+								dlat = dpos[2*i+1]
 							;
 
-							$("#title").text("Sea route estimation from (Lon=" + olon + ",Lat=" + olat + ") to (Lon=" + dlon + ",Lat=" + dlat + ")");
+							//$("#title").text("Sea route estimation from (Lon=" + olon + ",Lat=" + olat + ") to (Lon=" + dlon + ",Lat=" + dlat + ")");
+							$("#title").text("Sea route estimation");
 
 							var d = rou.dist;
-							$("#infos").append("<p>Estimated distance: " + d.toFixed(2) + " km</p>");
+							//$("#infos").append("<p>Estimated distance: " + d.toFixed(2) + " km</p>");
 
-							//create map
-							$("#map").show();
-							var map = L.map("map", {
-								center : [ 30, 0 ], zoom : 2,
-								minZoom : 0, maxZoom : 10,
-								attributionControl : false
-							});
-							L.control.scale({ imperial : false }).addTo(map);
-
-							var samePositionPos = function(lat1, lon1, lat2, lon2) {
-								return (lat1 === lat2 && lon1 === lon2);
-							};
-
-							//locations layer
-							var locations = new L.LayerGroup();
-							var style = { color : 'red', fillColor : '#f03', fillOpacity : 0.5 };
-							var circleRadius = 2000;
+							//add locations
 							L.circle([ olat, olon ], circleRadius, style).bindPopup(
 									"(Lon=" + olon + ",Lat=" + olat + ")").addTo(locations);
 							L.circle([ dlat, dlon ], circleRadius, style).bindPopup(
 									"(Lon=" + dlon + ",Lat=" + dlat + ")").addTo(locations);
 
-							//maritime route
-							var mRouteLayer = new L.LayerGroup();
-							var sm = {
-								color : "red",
-								weight : 2,
-								opacity : 1
-							};
+							//add maritime route
 							var mrl = new L.GeoJSON([], {
 								style : sm,
-								onEachFeature : function(feature, layer) {
-									layer.bindPopup("Maritime route - " + d
-											+ " km");
-								}
+								onEachFeature : function(feature, layer) {layer.bindPopup("Maritime route - " + d + " km"); }
 							});
 							if (rou.status === "ok") mrl.addData(rou.geom);
 							if (!samePositionPos(olat, olon, dlat, dlon)) mRouteLayer.addLayer(mrl);
 
-							//geodetic route
-							var gRouteLayer = new L.LayerGroup();
-							var sg = { color : "black", weight : 2, opacity : 1 };
+							//add geodetic route
 							if (!samePositionPos(olat, olon, dlat, dlon)) {
 								var line = new L.Geodesic([ [L.latLng(olat, olon), L.latLng(dlat, dlon) ] ], sg);
 								gRouteLayer.addLayer(line);
 							}
+						}
 
-							//add layers to map
-							var bls = {
-								Light : L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}'),
-								Dark : L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}'),
-								Topography : L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}')
-							};
-							map.addLayer(bls.Light);
-							gRouteLayer.addTo(map);
-							mRouteLayer.addTo(map);
-							locations.addTo(map);
-
-							//add layer control
-							L.control.layers(bls, {
-								"Origin and destination" : locations,
-								"Maritime route" : mRouteLayer,
-								"Geodetic route" : gRouteLayer
-							}, { position : "topleft", collapsed : true }).addTo(map);
-
-							//fit map
-							//map.fitBounds( mrl.getBounds() );
-
-						}).fail(function(XMLHttpRequest, textStatus) {
+					}).fail(function(XMLHttpRequest, textStatus) {
 					console.warn(textStatus);
 				});
 	});
