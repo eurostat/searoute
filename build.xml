@@ -38,8 +38,6 @@
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="./build/classes"/>
-            <zipfileset excludes="META-INF/*.SF" src="/usr/share/java/servlet-api-3.1.jar"/>
-            <fileset dir="./WebContent/WEB-INF/lib"/>
             <zipfileset excludes="META-INF/*.SF" src="./WebContent/WEB-INF/lib/opencarto.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="./WebContent/WEB-INF/lib/commons-cli-1.4.jar"/>
             <fileset dir="./WebContent/resources/shp"/>
