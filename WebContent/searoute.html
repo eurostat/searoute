@@ -43,11 +43,6 @@ html { font-family: Arial; }
 		}).done( function(rou) {
 						$("#waitimg").hide();
 
-						if (rou.status != "ok") {
-							console.warn("Could not retrieve maritime route.");
-							return;
-						}
-
 						//create map
 						$("#map").show();
 						var map = L.map("map", {
@@ -102,30 +97,32 @@ html { font-family: Arial; }
 						
 						for(var i=0; i<nb; i++) {
 
+							var rou_ = nb==1?rou:rou[i];
+
+							if (rou_.status != "ok") continue;
+
 							var olon = opos[2*i],
 								olat = opos[2*i+1],
 								dlon = dpos[2*i],
 								dlat = dpos[2*i+1]
 							;
 
-							//$("#title").text("Sea route estimation from (Lon=" + olon + ",Lat=" + olat + ") to (Lon=" + dlon + ",Lat=" + dlat + ")");
-							$("#title").text("Sea route estimation");
+							if(nb==1) $("#title").text("Sea route estimation from (Lon=" + olon + ",Lat=" + olat + ") to (Lon=" + dlon + ",Lat=" + dlat + ")");
+							else $("#title").text("Sea route estimation");
 
-							var d = rou.dist;
-							//$("#infos").append("<p>Estimated distance: " + d.toFixed(2) + " km</p>");
+							var d = rou_.dist;
+							if(nb==1) $("#infos").append("<p>Estimated distance: " + d.toFixed(2) + " km</p>");
 
-							//add locations
-							L.circle([ olat, olon ], circleRadius, style).bindPopup(
-									"(Lon=" + olon + ",Lat=" + olat + ")").addTo(locations);
-							L.circle([ dlat, dlon ], circleRadius, style).bindPopup(
-									"(Lon=" + dlon + ",Lat=" + dlat + ")").addTo(locations);
+							//add origin and destination locations
+							L.circle([ olat, olon ], circleRadius, style).bindPopup("(Lon=" + olon + ",Lat=" + olat + ")").addTo(locations);
+							L.circle([ dlat, dlon ], circleRadius, style).bindPopup("(Lon=" + dlon + ",Lat=" + dlat + ")").addTo(locations);
 
 							//add maritime route
 							var mrl = new L.GeoJSON([], {
 								style : sm,
 								onEachFeature : function(feature, layer) {layer.bindPopup("Maritime route - " + d + " km"); }
 							});
-							if (rou.status === "ok") mrl.addData(rou.geom);
+							if (rou_.status === "ok") mrl.addData(rou_.geom);
 							if (!samePositionPos(olat, olon, dlat, dlon)) mRouteLayer.addLayer(mrl);
 
 							//add geodetic route
