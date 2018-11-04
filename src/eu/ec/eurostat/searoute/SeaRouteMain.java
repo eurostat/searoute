@@ -37,13 +37,13 @@ public class SeaRouteMain {
 		options.addOption(Option.builder("o").longOpt("outputFile").desc("Optional. Output file (CSV format). Default: 'out.csv'.")
 				.hasArg().argName("file").build());
 		options.addOption(Option.builder("olonCol").desc("Optional. The name of the column in the input file where the origin longitude is specified. Default: 'olon'.")
-				.hasArg().argName("file").build());
+				.hasArg().argName("Column name").build());
 		options.addOption(Option.builder("olatCol").desc("Optional. The name of the column in the input file where the origin latitude is specified. Default: 'olat'.")
-				.hasArg().argName("file").build());
+				.hasArg().argName("Column name").build());
 		options.addOption(Option.builder("dlonCol").desc("Optional. The name of the column in the input file where the destination longitude is specified. Default: 'dlon'.")
-				.hasArg().argName("file").build());
+				.hasArg().argName("Column name").build());
 		options.addOption(Option.builder("dlatCol").desc("Optional. The name of the column in the input file where the destination latitude is specified. Default: 'dlat'.")
-				.hasArg().argName("file").build());
+				.hasArg().argName("Column name").build());
 		options.addOption(Option.builder("h").desc("Show this help message").build());
 
 		CommandLine cmd = null;
