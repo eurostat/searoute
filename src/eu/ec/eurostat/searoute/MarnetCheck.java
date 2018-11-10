@@ -1,20 +1,19 @@
 package eu.ec.eurostat.searoute;
 
-import java.util.ArrayList;
-
-import org.opencarto.io.SHPUtil;
-import org.opencarto.io.SHPUtil.SHPData;
-import org.opengis.feature.simple.SimpleFeature;
-
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.MultiLineString;
-
 public class MarnetCheck {
 
 	public static void main(String[] args) {
 		try {
 			System.out.println("Start.");
 
+			//make noding
+			//remove duplicate network edges - always keep shorter
+			//make network planar
+			//check number of connex components
+			//check 180/-180 compatibility
+
+
+			/*
 			//load features from shp file
 			SHPData shpIn = SHPUtil.loadSHP("/home/julien/ctrweb/contraffic-ws/WebContent/resources/shp/marnet2.shp");
 
@@ -48,6 +47,7 @@ public class MarnetCheck {
 			System.out.println("Saving...");
 			SHPUtil.saveSHP(shpIn.ft, shpIn.fs, "/home/julien/ctrweb/contraffic-ws/WebContent/resources/shp/", "marnet_fil.shp");
 			//SHPUtil.saveSHP(lines, 4326, "/home/julien/ctrweb/contraffic-ws/WebContent/resources/shp/", "marnet_fil.shp");
+			 */
 
 			System.out.println("Done.");
 		} catch (Exception e) { e.printStackTrace(); }
