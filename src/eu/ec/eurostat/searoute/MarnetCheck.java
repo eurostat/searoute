@@ -6,6 +6,9 @@ public class MarnetCheck {
 		try {
 			System.out.println("Start.");
 
+			//load input
+			
+			
 			//make noding
 			//remove duplicate network edges - always keep shorter
 			//make network planar
