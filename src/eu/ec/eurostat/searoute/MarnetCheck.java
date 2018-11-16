@@ -105,19 +105,17 @@ public class MarnetCheck {
 
 
 
+			//TODO
+			//erm,inland
 			//remove duplicate edges (necessary ?)
 			//noding
-
-
-
+			//check 180/-180 compatibility
 			/*/check number of connex components
 			Collection<Graph> ccs = GraphConnexComponents.get(g);
 			for(Graph cc : ccs) {
 				System.out.println(" "+cc.getNodes().size());
 			}*/
 
-			//TODO
-			//check 180/-180 compatibility
 
 			//save output
 			GeoJSONUtil.save(linesToFeatures(lines), "resources/marnet/marnet_working_out.geojson", DefaultGeographicCRS.WGS84);
