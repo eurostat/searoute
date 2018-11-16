@@ -2,6 +2,7 @@ package eu.ec.eurostat.searoute;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opencarto.algo.base.Union;
@@ -15,6 +16,12 @@ import com.vividsolutions.jts.operation.linemerge.LineMerger;
 
 public class MarnetCheck {
 
+	private static Collection lineMerge(Collection in) {
+		LineMerger lm = new LineMerger();
+		for(Object g : in) lm.add((Geometry)g);
+		return lm.getMergedLineStrings();
+	}
+
 	public static void main(String[] args) {
 		try {
 			System.out.println("Start.");
@@ -24,10 +31,11 @@ public class MarnetCheck {
 			ArrayList<Feature> fs = GeoJSONUtil.load("resources/marnet/marnet_densified.geojson");
 			System.out.println(fs.size());
 
-			//test linemerger
-			LineMerger lm = new LineMerger();
-			for(Feature f : fs) lm.add(f.getGeom());
-			Collection<Geometry> lines = lm.getMergedLineStrings();
+			Collection<Geometry> lines = new HashSet<Geometry>();
+			for(Feature f : fs) lines.add(f.getGeom());
+			System.out.println(lines.size());
+
+			lines = lineMerge(lines);
 			System.out.println(lines.size());
 
 			Geometry u = Union.getLineUnion(lines);
@@ -36,9 +44,7 @@ public class MarnetCheck {
 			Collection<LineString> lines_ = JTSGeomUtil.getLineStringGeometries(u);
 			System.out.println(lines_.size());
 
-			lm = new LineMerger();
-			lm.add(lines_);
-			lines = lm.getMergedLineStrings();
+			lines = lineMerge(lines_);
 			System.out.println(lines.size());
 
 
