@@ -1,12 +1,15 @@
 package eu.ec.eurostat.searoute;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opencarto.algo.base.Union;
 import org.opencarto.datamodel.Feature;
+import org.opencarto.datamodel.graph.Edge;
+import org.opencarto.datamodel.graph.Graph;
+import org.opencarto.datamodel.graph.GraphBuilder;
+import org.opencarto.datamodel.graph.Node;
 import org.opencarto.io.GeoJSONUtil;
 import org.opencarto.util.JTSGeomUtil;
 
@@ -40,6 +43,7 @@ public class MarnetCheck {
 		lines = planifyLines(lines);
 		int sI=1,sF=0;
 		while(sF<sI) {
+			System.out.println(" resPlanifyLines loop");
 			sI=lines.size();
 			lines = resApplyLines(lines, res);
 			lines = planifyLines(lines);
@@ -48,18 +52,34 @@ public class MarnetCheck {
 		return lines;
 	}
 
+	private static Collection featuresToLines(Collection fs) {
+		Collection lines = new HashSet<Geometry>();
+		for(Object f : fs) lines.add(((Feature)f).getGeom());
+		return lines;
+	}
+
+	private static HashSet<Feature> linesToFeatures(Collection lines) {
+		HashSet<Feature> fs = new HashSet<Feature>();
+		int i=0;
+		for(Object ls : lines) {
+			Feature f = new Feature();
+			f.id = ""+(i++);
+			f.setGeom((Geometry)ls);
+			fs.add(f);
+		}
+		return fs;
+	}
 
 	public static void main(String[] args) {
 		try {
 			System.out.println("Start.");
 
-			double res = 0.2;
+			double res = 0.05;
 
 			//load input lines
-			ArrayList<Feature> fs = GeoJSONUtil.load("resources/marnet/marnet_densified.geojson");
 			Collection lines = new HashSet<Geometry>();
-			for(Feature f : fs) lines.add(f.getGeom());
-			fs.clear(); fs = null;
+			lines.addAll( featuresToLines( GeoJSONUtil.load("resources/marnet/marnet_densified.geojson") ));
+			//lines.addAll( GeoJSONUtil.load("/home/juju/geodata/mar_ais_gisco/mar_ais_gisco.geojson") );
 			System.out.println(lines.size());
 
 			lines = resPlanifyLines(lines, res);
@@ -77,33 +97,79 @@ public class MarnetCheck {
 			lines = lineMerge(lines);
 			System.out.println(lines.size() + " lineMerge");
 
+
+			HashSet<Feature> fs = linesToFeatures(lines);
+
 			//create graph
-			/*Graph g = GraphBuilder.buildForNetworkFromLinearFeatures(fsOut);
+			Graph g = GraphBuilder.buildForNetworkFromLinearFeaturesNonPlanar(fs);
+			System.out.println("graph: " + g.getNodes().size()+" "+g.getEdges().size()+" "+g.getFaces().size());
+
+			Edge e = findTooShortEdge(g, res*4);
+			while(e != null) {
+				System.out.println(e);
+				removeEdge(g, e);
+				e = findTooShortEdge(g, res*4);
+			}
+
+			System.out.println("graph: " + g.getNodes().size()+" "+g.getEdges().size()+" "+g.getFaces().size());
+
+			//remove duplicate edges (necessary ?)
+			//collapse too short edges
+			//deal with too small/narrow faces
+			//noding
+
+
+
+			/*/check number of connex components
 			Collection<Graph> ccs = GraphConnexComponents.get(g);
 			for(Graph cc : ccs) {
 				System.out.println(" "+cc.getNodes().size());
 			}*/
 
 			//TODO
-			//check number of connex components
-			//remove duplicate network edges - always keep shorter
 			//check 180/-180 compatibility
 
-			ArrayList<Feature> fsOut = new ArrayList<Feature>();
-			int i=0;
-			for(Object ls : lines) {
-				Feature f = new Feature();
-				f.id = ""+(i++);
-				f.setGeom((Geometry)ls);
-				fsOut.add(f);
-			}
-
 			//save output
-			GeoJSONUtil.save(fsOut, "resources/marnet/marnet_working_out.geojson", DefaultGeographicCRS.WGS84);
+			GeoJSONUtil.save(fs, "resources/marnet/marnet_working_out.geojson", DefaultGeographicCRS.WGS84);
 
 			System.out.println("Done.");
 		} catch (Exception e) { e.printStackTrace(); }
 	}
+
+
+
+
+
+	public static Edge findTooShortEdge(Graph g, double d) {
+		for(Edge e : g.getEdges())
+			if(e.getGeometry().getLength() < d) return e;
+		return null;
+	}
+
+	public static void removeEdge(Graph g, Edge e) {
+		Node n = e.getN1(), n_ = e.getN2();
+
+		//break link edge/faces
+		if(e.f1 != null) { e.f1.getEdges().remove(e); e.f1=null; }
+		if(e.f2 != null) { e.f2.getEdges().remove(e); e.f2=null; }
+
+		//delete edge from graph
+		g.remove(e);
+
+		//move node n to edge center
+		n.moveTo( 0.5*(n.getC().x+n_.getC().x), 0.5*(n.getC().y+n_.getC().y) );
+
+		//make node n origin of all edges starting from node n_
+		for(Edge e_:n_.getOutEdges()) e_.setN1(n);
+		//make node n destination of all edges going to node n_
+		for(Edge e_:n_.getInEdges()) e_.setN2(n);
+
+		//delete node n_ from graph
+		g.remove(n_);
+	}
+
+
+
 
 
 
