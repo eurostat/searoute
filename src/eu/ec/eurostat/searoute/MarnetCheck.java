@@ -59,12 +59,12 @@ public class MarnetCheck {
 		try {
 			System.out.println("Start.");
 
-			double res = 0.1;
+			double res = 0.05;
 
 			//load input lines
 			Collection lines = new HashSet<Geometry>();
-			//lines.addAll( featuresToLines( GeoJSONUtil.load("resources/marnet/marnet_densified.geojson") ));
-			lines.addAll( featuresToLines( GeoJSONUtil.load("/home/juju/geodata/mar_ais_gisco/mar_ais_gisco.geojson") ));
+			lines.addAll( featuresToLines( GeoJSONUtil.load("resources/marnet/marnet_densified.geojson") ));
+			//lines.addAll( featuresToLines( GeoJSONUtil.load("/home/juju/geodata/mar_ais_gisco/mar_ais_gisco.geojson") ));
 			System.out.println(lines.size());
 
 			lines = planifyLines(lines);
@@ -105,11 +105,7 @@ public class MarnetCheck {
 
 
 
-
-
 			//remove duplicate edges (necessary ?)
-			//collapse too short edges
-			//deal with too small/narrow faces
 			//noding
 
 
