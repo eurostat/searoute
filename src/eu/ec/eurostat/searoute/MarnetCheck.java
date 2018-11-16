@@ -11,56 +11,69 @@ import org.opencarto.io.GeoJSONUtil;
 import org.opencarto.util.JTSGeomUtil;
 
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.operation.linemerge.LineMerger;
+import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 public class MarnetCheck {
 
-	private static Collection lineMerge(Collection in) {
+	private static Collection lineMerge(Collection lines) {
 		LineMerger lm = new LineMerger();
-		for(Object g : in) lm.add((Geometry)g);
+		lm.add(lines);
 		return lm.getMergedLineStrings();
+	}
+
+	private static Collection planifyLines(Collection lines) {
+		Geometry u = Union.getLineUnion(lines);
+		return JTSGeomUtil.getLineStringGeometries(u);
+	}
+
+	private static Collection filterGeom(Collection lines, double d) {
+		Collection out = new HashSet<Geometry>();
+		for(Object line : lines) out.add( DouglasPeuckerSimplifier.simplify((Geometry)line, d) );
+		return out;
 	}
 
 	public static void main(String[] args) {
 		try {
 			System.out.println("Start.");
 
+			double res = 0.1;
 
-			//load input
+			//load input lines
 			ArrayList<Feature> fs = GeoJSONUtil.load("resources/marnet/marnet_densified.geojson");
-			System.out.println(fs.size());
-
-			Collection<Geometry> lines = new HashSet<Geometry>();
+			Collection lines = new HashSet<Geometry>();
 			for(Feature f : fs) lines.add(f.getGeom());
+			fs.clear(); fs = null;
+			System.out.println(lines.size());
+
+			lines = planifyLines(lines);
 			System.out.println(lines.size());
 
 			lines = lineMerge(lines);
 			System.out.println(lines.size());
 
-			Geometry u = Union.getLineUnion(lines);
-			System.out.println(u.getGeometryType());
-			System.out.println(u.getCoordinates().length + " cs");
-			Collection<LineString> lines_ = JTSGeomUtil.getLineStringGeometries(u);
-			System.out.println(lines_.size());
+			lines = filterGeom(lines, res);
+			System.out.println(lines.size());
 
-			lines = lineMerge(lines_);
+			lines = planifyLines(lines);
+			System.out.println(lines.size());
+
+			lines = lineMerge(lines);
 			System.out.println(lines.size());
 
 
 			//TODO
-			//DP filter
+			//make noding - resolutionise
 			//check number of connex components
 			//remove duplicate network edges - always keep shorter
-			//make noding - integrate
 			//check 180/-180 compatibility
 
 			ArrayList<Feature> fsOut = new ArrayList<Feature>();
 			int i=0;
-			for(Geometry ls : lines) {
+			for(Object ls : lines) {
 				Feature f = new Feature();
 				f.id = ""+(i++);
-				f.setGeom(ls);
+				f.setGeom((Geometry)ls);
 				fsOut.add(f);
 			}
 
