@@ -72,10 +72,10 @@ public class MarnetCheck {
 
 			lines = planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
 			lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
-			lines = dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
-			lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
 			lines = filterGeom(lines, res);						System.out.println(lines.size() + " filterGeom");
 			lines = removeSimilarDuplicateEdges(lines, res);	System.out.println(lines.size() + " removeSimilarDuplicateEdges");
+			lines = dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
+			lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
 			lines = planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
 			lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
 			lines = dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
