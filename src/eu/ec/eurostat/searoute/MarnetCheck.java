@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opencarto.algo.base.Union;
+import org.opencarto.algo.distances.HausdorffDistance;
 import org.opencarto.datamodel.Feature;
 import org.opencarto.datamodel.graph.Edge;
 import org.opencarto.datamodel.graph.Graph;
@@ -14,7 +15,9 @@ import org.opencarto.datamodel.graph.Node;
 import org.opencarto.io.GeoJSONUtil;
 import org.opencarto.util.JTSGeomUtil;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.operation.linemerge.LineMerger;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
@@ -57,58 +60,37 @@ public class MarnetCheck {
 
 	public static void main(String[] args) {
 		try {
-			System.out.println("Start.");
+			System.out.println("Start");
 
-			double res = 0.05;
+			double res = 0.02;
 
 			//load input lines
 			Collection lines = new HashSet<Geometry>();
 			lines.addAll( featuresToLines( GeoJSONUtil.load("resources/marnet/marnet_densified.geojson") ));
-			//lines.addAll( featuresToLines( GeoJSONUtil.load("/home/juju/geodata/mar_ais_gisco/mar_ais_gisco.geojson") ));
+			lines.addAll( featuresToLines( GeoJSONUtil.load("/home/juju/geodata/mar_ais_gisco/mar_ais_gisco.geojson") ));
 			System.out.println(lines.size());
 
-			lines = planifyLines(lines);
-			System.out.println(lines.size() + " planifyLines");
-
-			lines = lineMerge(lines);
-			System.out.println(lines.size() + " lineMerge");
-
-			lines = dtsePlanifyLines(lines, res);
-			System.out.println(lines.size() + " dtsePlanifyLines");
-
-			lines = filterGeom(lines, res);
-			System.out.println(lines.size() + " filterGeom");
-
-			lines = planifyLines(lines);
-			System.out.println(lines.size() + " planifyLines");
-
-			lines = lineMerge(lines);
-			System.out.println(lines.size() + " lineMerge");
-
-			lines = dtsePlanifyLines(lines, res);
-			System.out.println(lines.size() + " dtsePlanifyLines");
-
-			lines = lineMerge(lines);
-			System.out.println(lines.size() + " lineMerge");
-
-			lines = planifyLines(lines);
-			System.out.println(lines.size() + " planifyLines");
-
-			lines = lineMerge(lines);
-			System.out.println(lines.size() + " lineMerge");
-
-			lines = dtsePlanifyLines(lines, res);
-			System.out.println(lines.size() + " dtsePlanifyLines");
-
-			lines = lineMerge(lines);
-			System.out.println(lines.size() + " lineMerge");
-
-
+			lines = planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
+			lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
+			lines = dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
+			lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
+			lines = filterGeom(lines, res);						System.out.println(lines.size() + " filterGeom");
+			lines = removeSimilarDuplicateEdges(lines, res);	System.out.println(lines.size() + " removeSimilarDuplicateEdges");
+			lines = planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
+			lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
+			lines = dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
+			lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
+			lines = planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
+			lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
+			lines = dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
+			lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
+			lines = resPlanifyLines(lines, res*0.01);			System.out.println(lines.size() + " resPlanifyLines");
+			lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
+			lines = resPlanifyLines(lines, res*0.01);			System.out.println(lines.size() + " resPlanifyLines");
 
 			//TODO
 			//erm,inland
-			//remove duplicate edges (necessary ?)
-			//noding
+			//fix issue with 45.45300000000004
 			//check 180/-180 compatibility
 			/*/check number of connex components
 			Collection<Graph> ccs = GraphConnexComponents.get(g);
@@ -117,11 +99,49 @@ public class MarnetCheck {
 			}*/
 
 
+
 			//save output
 			GeoJSONUtil.save(linesToFeatures(lines), "resources/marnet/marnet_working_out.geojson", DefaultGeographicCRS.WGS84);
 
-			System.out.println("Done.");
+			System.out.println("Done");
 		} catch (Exception e) { e.printStackTrace(); }
+	}
+
+
+
+
+	public static Collection removeSimilarDuplicateEdges(Collection lines, double haussdorffDistance) {
+		Graph g = GraphBuilder.buildForNetworkFromLinearFeaturesNonPlanar( linesToFeatures(lines) );
+		removeSimilarDuplicateEdges(g, haussdorffDistance);
+		Collection out = new HashSet();
+		for(Edge e : g.getEdges()) out.add(e.getGeometry());
+		return out;
+	}
+
+	public static void removeSimilarDuplicateEdges(Graph g, double haussdorffDistance) {
+		Edge e = findSimilarDuplicateEdgeToRemove(g, haussdorffDistance);
+		while(e != null) {
+			g.remove(e);
+			e = findSimilarDuplicateEdgeToRemove(g, haussdorffDistance);
+		}
+	}
+
+	public static Edge findSimilarDuplicateEdgeToRemove(Graph g, double haussdorffDistance) {
+		for(Edge e : g.getEdges()) {
+			for(Edge e_ : e.getN1().getOutEdges())
+				if(e!=e_ && e_.getN2() == e.getN2() && new HausdorffDistance(e.getGeometry(),e_.getGeometry()).getDistance()<haussdorffDistance)
+					return getLonger(e,e_);
+			for(Edge e_ : e.getN2().getOutEdges())
+				if(e!=e_ && e_.getN2() == e.getN1() && new HausdorffDistance(e.getGeometry(),e_.getGeometry()).getDistance()<haussdorffDistance)
+					return getLonger(e,e_);
+		}
+		return null;
+	}
+
+	public static Edge getLonger(Edge e1, Edge e2) {
+		double d1 = e1.getGeometry().getLength();
+		double d2 = e2.getGeometry().getLength();
+		if(d1<d2) return e2; else return e1;
 	}
 
 
@@ -196,7 +216,7 @@ public class MarnetCheck {
 
 
 
-	/*
+
 	private static Collection resPlanifyLines(Collection lines, double res) {
 		lines = resApplyLines(lines, res);
 		lines = planifyLines(lines);
@@ -246,6 +266,6 @@ public class MarnetCheck {
 	public static void resApply(Coordinate[] cs, double res){
 		for(Coordinate c : cs) resApply(c, res);
 	}
-	 */
+
 
 }
