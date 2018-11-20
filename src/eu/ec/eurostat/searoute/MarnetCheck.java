@@ -62,12 +62,20 @@ public class MarnetCheck {
 		try {
 			System.out.println("Start");
 
-			double res = 0.02;
+			double res = 0.03;
+
+			Collection marnet = featuresToLines( GeoJSONUtil.load("resources/marnet/marnet_densified.geojson"));
+			Collection ais = featuresToLines( GeoJSONUtil.load("/home/juju/geodata/mar_ais_gisco/mar_ais_gisco.geojson"));
+
+			marnet = planifyLines(marnet);						System.out.println(marnet.size() + " planifyLines");
+			marnet = lineMerge(marnet);							System.out.println(marnet.size() + " lineMerge");
+			ais = planifyLines(ais);						System.out.println(ais.size() + " planifyLines");
+			ais = lineMerge(ais);							System.out.println(ais.size() + " lineMerge");
 
 			//load input lines
 			Collection lines = new HashSet<Geometry>();
-			lines.addAll( featuresToLines( GeoJSONUtil.load("resources/marnet/marnet_densified.geojson") ));
-			lines.addAll( featuresToLines( GeoJSONUtil.load("/home/juju/geodata/mar_ais_gisco/mar_ais_gisco.geojson") ));
+			lines.addAll(marnet);
+			lines.addAll(ais);
 			System.out.println(lines.size());
 
 			lines = planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
@@ -89,9 +97,9 @@ public class MarnetCheck {
 			lines = resPlanifyLines(lines, res*0.01);			System.out.println(lines.size() + " resPlanifyLines");
 
 			//TODO
+			//check 180/-180 compatibility
 			//erm,inland
 			//fix issue with 45.45300000000004
-			//check 180/-180 compatibility
 			/*/check number of connex components
 			Collection<Graph> ccs = GraphConnexComponents.get(g);
 			for(Graph cc : ccs) {
@@ -178,6 +186,7 @@ public class MarnetCheck {
 	}
 
 
+	//TODO shortest?
 	public static Edge findTooShortEdge(Graph g, double d) {
 		for(Edge e : g.getEdges())
 			if(e.getGeometry().getLength() < d) return e;
