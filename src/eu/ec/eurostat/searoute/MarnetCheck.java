@@ -7,6 +7,7 @@ import java.util.Set;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opencarto.algo.base.Union;
 import org.opencarto.algo.distances.HausdorffDistance;
+import org.opencarto.algo.graph.GraphConnexComponents;
 import org.opencarto.datamodel.Feature;
 import org.opencarto.datamodel.graph.Edge;
 import org.opencarto.datamodel.graph.Graph;
@@ -58,24 +59,32 @@ public class MarnetCheck {
 		return fs;
 	}
 
+	private static Collection prepare(Collection lines, double res) {
+		lines = planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
+		lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
+		lines = filterGeom(lines, res);						System.out.println(lines.size() + " filterGeom");
+		lines = removeSimilarDuplicateEdges(lines, res);	System.out.println(lines.size() + " removeSimilarDuplicateEdges");
+		lines = dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
+		lines = resPlanifyLines(lines, res*0.01);			System.out.println(lines.size() + " resPlanifyLines");
+		return lines;
+	}
+
 	public static void main(String[] args) {
 		try {
 			System.out.println("Start");
 
 			double res = 0.03;
 
-			Collection marnet = featuresToLines( GeoJSONUtil.load("resources/marnet/marnet_densified.geojson"));
-			Collection ais = featuresToLines( GeoJSONUtil.load("/home/juju/geodata/mar_ais_gisco/mar_ais_gisco.geojson"));
-
-			marnet = planifyLines(marnet);						System.out.println(marnet.size() + " planifyLines");
-			marnet = lineMerge(marnet);							System.out.println(marnet.size() + " lineMerge");
-			ais = planifyLines(ais);						System.out.println(ais.size() + " planifyLines");
-			ais = lineMerge(ais);							System.out.println(ais.size() + " lineMerge");
-
 			//load input lines
 			Collection lines = new HashSet<Geometry>();
-			lines.addAll(marnet);
-			lines.addAll(ais);
+
+			Collection marnet = featuresToLines( GeoJSONUtil.load("resources/marnet/marnet_densified.geojson"));
+			marnet = prepare(marnet, res); lines.addAll(marnet);
+			Collection ais = featuresToLines( GeoJSONUtil.load("/home/juju/geodata/mar_ais_gisco.geojson"));
+			ais = prepare(ais, res); lines.addAll(ais);
+			Collection ef = featuresToLines( GeoJSONUtil.load("/home/juju/geodata/ef.geojson"));
+			ef = prepare(ef, res); lines.addAll(ef);
+
 			System.out.println(lines.size());
 
 			lines = planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
@@ -96,17 +105,8 @@ public class MarnetCheck {
 			lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
 			lines = resPlanifyLines(lines, res*0.01);			System.out.println(lines.size() + " resPlanifyLines");
 
-			//TODO
-			//check 180/-180 compatibility
-			//erm,inland
-			//fix issue with 45.45300000000004
-			/*/check number of connex components
-			Collection<Graph> ccs = GraphConnexComponents.get(g);
-			for(Graph cc : ccs) {
-				System.out.println(" "+cc.getNodes().size());
-			}*/
-
-
+			//run with -Xss4m
+			lines = keepOnlyLargestGraphConnexComponents(lines, 50);	System.out.println(lines.size() + " keepOnlyLargestGraphConnexComponents");
 
 			//save output
 			GeoJSONUtil.save(linesToFeatures(lines), "resources/marnet/marnet_working_out.geojson", DefaultGeographicCRS.WGS84);
@@ -117,6 +117,18 @@ public class MarnetCheck {
 
 
 
+
+	private static Collection keepOnlyLargestGraphConnexComponents(Collection lines, int minEdgeNumber) {
+		Graph g = GraphBuilder.buildForNetworkFromLinearFeaturesNonPlanar( linesToFeatures(lines) );
+		Collection<Graph> ccs = GraphConnexComponents.get(g);
+		Collection out = new HashSet();
+		for(Graph cc : ccs) {
+			if( cc.getEdges().size() < minEdgeNumber ) continue;
+			for(Edge e : cc.getEdges())
+				out.add(e.getGeometry());
+		}
+		return out;
+	}
 
 	public static Collection removeSimilarDuplicateEdges(Collection lines, double haussdorffDistance) {
 		Graph g = GraphBuilder.buildForNetworkFromLinearFeaturesNonPlanar( linesToFeatures(lines) );
@@ -159,7 +171,7 @@ public class MarnetCheck {
 		lines = planifyLines(lines);
 		int sI=1,sF=0;
 		while(sF<sI) {
-			System.out.println(" dtsePlanifyLines loop");
+			System.out.println(" dtsePlanifyLines loop   " + lines.size());
 			sI=lines.size();
 			lines = deleteTooShortEdge(lines, res);
 			lines = planifyLines(lines);
@@ -231,7 +243,7 @@ public class MarnetCheck {
 		lines = planifyLines(lines);
 		int sI=1,sF=0;
 		while(sF<sI) {
-			System.out.println(" resPlanifyLines loop");
+			System.out.println(" resPlanifyLines loop" + lines.size());
 			sI=lines.size();
 			lines = resApplyLines(lines, res);
 			lines = planifyLines(lines);
@@ -269,8 +281,8 @@ public class MarnetCheck {
 
 
 	public static void resApply(Coordinate c, double res){
-		c.x = Math.round(c.x/res)*res;
-		c.y = Math.round(c.y/res)*res;
+		c.x = ((int)Math.round(c.x/res)) * res;
+		c.y = ((int)Math.round(c.y/res)) * res;
 	}
 	public static void resApply(Coordinate[] cs, double res){
 		for(Coordinate c : cs) resApply(c, res);
