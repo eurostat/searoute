@@ -213,7 +213,8 @@ public class SeaRouting {
 			for(int j=i+1; j<portsL.size(); j++) {
 				Feature pj = portsL.get(j);
 				Feature sr = getRoute(pi.getGeom().getCoordinate(), pj.getGeom().getCoordinate());
-				sr.getProperties().put("dkm", Utils.getLengthGeo(sr.getGeom()));
+				Geometry geom = sr.getGeom();
+				sr.getProperties().put("dkm", geom==null? -1 : Utils.getLengthGeo(geom));
 				sr.getProperties().put("from", pi.getProperties().get(idProp));
 				sr.getProperties().put("to", pj.getProperties().get(idProp));
 				srs.add(sr);
@@ -230,16 +231,16 @@ public class SeaRouting {
 		System.out.println("Start");
 
 		//load ports
-		Collection<Feature> ports = GeoJSONUtil.load("/home/juju/geodata/gisco/port_pt_2013_WGS84.geojson");
+		Collection<Feature> ports = GeoJSONUtil.load("/home/juju/geodata/gisco/port_pt_2013_WGS84_ext.geojson");
 		System.out.println(ports.size());
 
 		SeaRouting sr = new SeaRouting();
-		ports = sr.filterPorts(ports, 0.1);
+		ports = sr.filterPorts(ports, 0.01);
 		System.out.println(ports.size());
 
-		//Collection<Feature> rs = sr.getRoutes(ports, "PORT_ID");
+		Collection<Feature> rs = sr.getRoutes(ports, "PORT_ID");
 
-		GeoJSONUtil.save(ports, "/home/juju/Bureau/test.geojson", DefaultGeographicCRS.WGS84);
+		GeoJSONUtil.save(rs, "/home/juju/Bureau/test.geojson", DefaultGeographicCRS.WGS84);
 
 		System.out.println("End");
 	}
