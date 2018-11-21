@@ -24,6 +24,12 @@ import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 public class MarnetCheck {
 
+	//TODO
+	//test port routing - csv
+	//connect ports from GISCO DB
+	//ensure no land intersection
+
+
 	private static Collection lineMerge(Collection lines) {
 		LineMerger lm = new LineMerger();
 		lm.add(lines);
