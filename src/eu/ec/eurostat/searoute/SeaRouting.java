@@ -141,6 +141,7 @@ public class SeaRouting {
 	}
 	//get the route when the node are known
 	public Feature getRoute(Coordinate oPos, Node oN, Coordinate dPos, Node dN) {
+		GeometryFactory gf = new GeometryFactory();
 
 		//get node positions
 		Coordinate oNPos = getPosition(oN), dNPos = getPosition(dN);
@@ -154,7 +155,6 @@ public class SeaRouting {
 
 		if(dist>=0 && distN>=0 && distN > dist){
 			//return direct route
-			GeometryFactory gf = new GeometryFactory();
 			Feature rf = new Feature();
 			rf.setGeom( gf.createMultiLineString(new LineString[]{ gf.createLineString(new Coordinate[]{oPos,dPos}) }) );
 			return rf;
@@ -167,7 +167,11 @@ public class SeaRouting {
 		}
 
 
-		if(path == null) return null;
+		if(path == null) {
+			Feature rf = new Feature();
+			rf.setGeom(null);
+			return rf;
+		}
 
 		//build line geometry
 		LineMerger lm = new LineMerger();
@@ -179,7 +183,6 @@ public class SeaRouting {
 			lm.add(mls);
 		}
 		//add first and last parts
-		GeometryFactory gf = new GeometryFactory();
 		lm.add(gf.createLineString(new Coordinate[]{oPos,oNPos}));
 		lm.add(gf.createLineString(new Coordinate[]{dPos,dNPos}));
 
@@ -206,11 +209,13 @@ public class SeaRouting {
 		if(idProp == null) idProp = "ID";
 
 		List<Feature> portsL = new ArrayList<Feature>(); portsL.addAll(ports);
+		int nb=portsL.size(); nb=(nb*(nb+1))/2; int cnt=0;
 
 		HashSet<Feature> srs = new HashSet<Feature>();
 		for(int i=0; i<portsL.size(); i++) {
 			Feature pi = portsL.get(i);
 			for(int j=i+1; j<portsL.size(); j++) {
+				System.out.println(100*(cnt++)/nb);
 				Feature pj = portsL.get(j);
 				Feature sr = getRoute(pi.getGeom().getCoordinate(), pj.getGeom().getCoordinate());
 				Geometry geom = sr.getGeom();
@@ -235,9 +240,11 @@ public class SeaRouting {
 		System.out.println(ports.size());
 
 		SeaRouting sr = new SeaRouting();
-		ports = sr.filterPorts(ports, 0.01);
+		ports = sr.filterPorts(ports, 0.1);
 		System.out.println(ports.size());
 
+		//TODO check route include beginning and end
+		
 		Collection<Feature> rs = sr.getRoutes(ports, "PORT_ID");
 
 		GeoJSONUtil.save(rs, "/home/juju/Bureau/test.geojson", DefaultGeographicCRS.WGS84);
