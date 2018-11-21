@@ -4,17 +4,15 @@
 package eu.ec.eurostat.searoute;
 
 import java.io.File;
-import java.io.Serializable;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
 
-import org.geotools.data.DataStore;
-import org.geotools.data.DataStoreFinder;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
+import org.geotools.geojson.feature.FeatureJSON;
 import org.geotools.graph.build.feature.FeatureGraphGenerator;
 import org.geotools.graph.build.line.LineStringGraphGenerator;
 import org.geotools.graph.path.DijkstraShortestPathFinder;
@@ -28,6 +26,7 @@ import org.geotools.graph.traverse.standard.DijkstraIterator.EdgeWeighter;
 import org.opengis.feature.simple.SimpleFeature;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;
@@ -43,15 +42,21 @@ public class SeaRouting {
 	private Graph g;
 	private EdgeWeighter weighter;
 
-	public SeaRouting() throws MalformedURLException { this("WebContent/resources/shp/marnet.shp"); }
+	public SeaRouting() throws MalformedURLException { this("WebContent/resources/marnet/marnet_plus.geojson"); }
+	//public SeaRouting() throws MalformedURLException { this("WebContent/resources/shp/marnet.shp"); }
 	public SeaRouting(String shpPath) throws MalformedURLException { this(new File(shpPath)); }
 	public SeaRouting(File marnetFile) throws MalformedURLException { this(marnetFile.toURI().toURL()); }
 	public SeaRouting(URL marnetFileURL) {
 		try {
-			Map<String, Serializable> map = new HashMap<>();
+			/*Map<String, Serializable> map = new HashMap<>();
 			map.put( "url", marnetFileURL );
 			DataStore store = DataStoreFinder.getDataStore(map);
 			FeatureCollection fc =  store.getFeatureSource(store.getTypeNames()[0]).getFeatures();
+			store.dispose();*/
+
+			InputStream input = marnetFileURL.openStream();
+			FeatureCollection fc = new FeatureJSON().readFeatureCollection(input);
+			input.close();
 
 			//build graph
 			FeatureIterator<?> it = fc.features();
@@ -59,7 +64,6 @@ public class SeaRouting {
 			while(it.hasNext()) gGen.add(it.next());
 			g = gGen.getGraph();
 			it.close();
-			store.dispose();
 		} catch (Exception e) { e.printStackTrace(); }
 
 		//link nodes around the globe
@@ -81,11 +85,8 @@ public class SeaRouting {
 			public double getWeight(Edge e) {
 				//edge around the globe
 				if( e.getObject()==null ) return 0;
-
 				SimpleFeature f = (SimpleFeature) e.getObject();
-				MultiLineString line = (MultiLineString) f.getDefaultGeometry();
-				//return line.getLength();
-				return Utils.getLengthGeo(line);
+				return Utils.getLengthGeo((Geometry)f.getDefaultGeometry());
 			}
 		};
 
@@ -162,7 +163,7 @@ public class SeaRouting {
 			Edge e = (Edge)o;
 			SimpleFeature f = (SimpleFeature) e.getObject();
 			if(f==null) continue;
-			MultiLineString mls = (MultiLineString) f.getDefaultGeometry();
+			Geometry mls = (Geometry)f.getDefaultGeometry();
 			lm.add(mls);
 		}
 		//add first and last parts
@@ -175,14 +176,20 @@ public class SeaRouting {
 	}
 
 	public static void main(String[] args) throws MalformedURLException {
+		System.out.println("Start");
 		SeaRouting sr = new SeaRouting();
+
+		System.out.println(new Date().toInstant());
 		//get from origin () to destination ()
 		MultiLineString geom = sr.getRoute(5.3, 43.3, 121.8, 31.2);
+		System.out.println(new Date().toInstant());
+
 		System.out.println(geom);
 		double dist = Utils.getLengthGeo(geom);
 		System.out.println(dist);
 		String gj = Utils.toGeoJSON(geom);
 		System.out.println(gj);
+		System.out.println("End");
 	}
 
 }

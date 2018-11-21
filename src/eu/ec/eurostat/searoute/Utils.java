@@ -34,6 +34,13 @@ public class Utils {
 	}
 
 	//in km
+	public static double getLengthGeo(Geometry g) {
+		if(g instanceof LineString) return getLengthGeo((LineString)g);
+		if(g instanceof MultiLineString) return getLengthGeo((MultiLineString)g);
+		System.err.println("getLengthGeo not implemented for geometry type "+g.getGeometryType());
+		return -1;
+	}
+	//in km
 	public static double getLengthGeo(MultiLineString mls){
 		double dist = 0;
 		for(int i=0; i<mls.getNumGeometries(); i++)
