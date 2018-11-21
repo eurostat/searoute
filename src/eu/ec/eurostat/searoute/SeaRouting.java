@@ -104,7 +104,7 @@ public class SeaRouting {
 	}
 
 	//lon,lat
-	public Coordinate getPosition(Node n){
+	private Coordinate getPosition(Node n){
 		if(n==null) return null;
 		Point pt = (Point)n.getObject();
 		if(pt==null) return null;
@@ -124,6 +124,12 @@ public class SeaRouting {
 		}
 		return nMin;
 	}
+
+	//return the distance in km. Distance to closest node
+	private double getDistanceToNetworkKM(Coordinate c) {
+		return Utils.getDistance(c, getPosition(getNode(c)));
+	}
+
 
 	//return the route geometry from origin/destination coordinates
 	public Feature getRoute(double oLon, double oLat, double dLon, double dLat) {
@@ -184,17 +190,22 @@ public class SeaRouting {
 		return rf;
 	}
 
-	public Collection<Feature> getRoutes(Collection<Feature> ports, String idProp, SeaRouting srg) {
+
+
+
+	public Collection<Feature> getRoutes(Collection<Feature> ports, String idProp, SeaRouting srg, double minDistToNetworkKM) {
 		if(srg == null) try { srg = new SeaRouting(); } catch (MalformedURLException e) { e.printStackTrace(); }
 		if(idProp == null) idProp = "ID";
 
 		List<Feature> pls = new ArrayList<Feature>();
-		pls.addAll(ports);
+		for(Feature p : ports)
+			if(srg.getDistanceToNetworkKM(p.getGeom().getCoordinate()) <= minDistToNetworkKM)
+				pls.add(p);
 
 		HashSet<Feature> srs = new HashSet<Feature>();
-		for(int i=0; i<srs.size(); i++) {
+		for(int i=0; i<pls.size(); i++) {
 			Feature pi = pls.get(i);
-			for(int j=i+1; j<srs.size(); j++) {
+			for(int j=i+1; j<pls.size(); j++) {
 				Feature pj = pls.get(j);
 				Feature sr = srg.getRoute(pi.getGeom().getCoordinate(), pj.getGeom().getCoordinate());
 				sr.getProperties().put("dkm", Utils.getLengthGeo(sr.getGeom()));
@@ -212,6 +223,16 @@ public class SeaRouting {
 
 	public static void main(String[] args) throws MalformedURLException {
 		System.out.println("Start");
+
+		//TODO here !
+
+		System.out.println("End");
+	}
+
+
+	/*
+	public static void main(String[] args) throws MalformedURLException {
+		System.out.println("Start");
 		SeaRouting sr = new SeaRouting();
 
 		System.out.println(new Date().toInstant());
@@ -219,7 +240,8 @@ public class SeaRouting {
 		Feature f = sr.getRoute(5.3, 43.3, 121.8, 31.2);
 		System.out.println(new Date().toInstant());
 
-		System.out.println(f);
+		System.out.println(f.getProperties().get("dFromKM"));
+		System.out.println(f.getProperties().get("dToKM"));
 		System.out.println(f.getGeom());
 		double dist = Utils.getLengthGeo(f.getGeom());
 		System.out.println(dist);
@@ -227,5 +249,5 @@ public class SeaRouting {
 		System.out.println(gj);
 		System.out.println("End");
 	}
-
+	 */
 }
