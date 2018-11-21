@@ -7,8 +7,11 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
@@ -23,13 +26,13 @@ import org.geotools.graph.structure.Node;
 import org.geotools.graph.structure.basic.BasicEdge;
 import org.geotools.graph.traverse.standard.DijkstraIterator;
 import org.geotools.graph.traverse.standard.DijkstraIterator.EdgeWeighter;
+import org.opencarto.datamodel.Feature;
 import org.opengis.feature.simple.SimpleFeature;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.operation.linemerge.LineMerger;
 
@@ -123,14 +126,14 @@ public class SeaRouting {
 	}
 
 	//return the route geometry from origin/destination coordinates
-	public MultiLineString getRoute(double oLon, double oLat, double dLon, double dLat) {
+	public Feature getRoute(double oLon, double oLat, double dLon, double dLat) {
 		return getRoute(new Coordinate(oLon,oLat), new Coordinate(dLon,dLat));
 	}
-	public MultiLineString getRoute(Coordinate oPos, Coordinate dPos) {
+	public Feature getRoute(Coordinate oPos, Coordinate dPos) {
 		return getRoute(oPos, getNode(oPos), dPos, getNode(dPos));
 	}
 	//get the route when the node are known
-	public MultiLineString getRoute(Coordinate oPos, Node oN, Coordinate dPos, Node dN) {
+	public Feature getRoute(Coordinate oPos, Node oN, Coordinate dPos, Node dN) {
 
 		//get node positions
 		Coordinate oNPos = getPosition(oN), dNPos = getPosition(dN);
@@ -145,7 +148,9 @@ public class SeaRouting {
 		if(dist>=0 && distN>=0 && distN > dist){
 			//return direct route
 			GeometryFactory gf = new GeometryFactory();
-			return gf.createMultiLineString(new LineString[]{ gf.createLineString(new Coordinate[]{oPos,dPos}) });
+			Feature rf = new Feature();
+			rf.setGeom( gf.createMultiLineString(new LineString[]{ gf.createLineString(new Coordinate[]{oPos,dPos}) }) );
+			return rf;
 		}
 
 		//Compute dijkstra from start node
@@ -172,8 +177,38 @@ public class SeaRouting {
 		lm.add(gf.createLineString(new Coordinate[]{dPos,dNPos}));
 
 		Collection<?> lss = lm.getMergedLineStrings();
-		return gf.createMultiLineString( lss.toArray(new LineString[lss.size()]) );
+		Feature rf = new Feature();
+		rf.setGeom( gf.createMultiLineString( lss.toArray(new LineString[lss.size()]) ) );
+		rf.getProperties().put("dFromKM", Utils.getDistance(oPos, oNPos));
+		rf.getProperties().put("dToKM", Utils.getDistance(dPos, dNPos));
+		return rf;
 	}
+
+	public Collection<Feature> getRoutes(Collection<Feature> ports, String idProp, SeaRouting srg) {
+		if(srg == null) try { srg = new SeaRouting(); } catch (MalformedURLException e) { e.printStackTrace(); }
+		if(idProp == null) idProp = "ID";
+
+		List<Feature> pls = new ArrayList<Feature>();
+		pls.addAll(ports);
+
+		HashSet<Feature> srs = new HashSet<Feature>();
+		for(int i=0; i<srs.size(); i++) {
+			Feature pi = pls.get(i);
+			for(int j=i+1; j<srs.size(); j++) {
+				Feature pj = pls.get(j);
+				Feature sr = srg.getRoute(pi.getGeom().getCoordinate(), pj.getGeom().getCoordinate());
+				sr.getProperties().put("dkm", Utils.getLengthGeo(sr.getGeom()));
+				sr.getProperties().put("from", pi.getProperties().get(idProp));
+				sr.getProperties().put("to", pj.getProperties().get(idProp));
+				srs.add(sr);
+			}
+		}
+		return srs;
+	}
+
+
+
+
 
 	public static void main(String[] args) throws MalformedURLException {
 		System.out.println("Start");
@@ -181,13 +216,14 @@ public class SeaRouting {
 
 		System.out.println(new Date().toInstant());
 		//get from origin () to destination ()
-		MultiLineString geom = sr.getRoute(5.3, 43.3, 121.8, 31.2);
+		Feature f = sr.getRoute(5.3, 43.3, 121.8, 31.2);
 		System.out.println(new Date().toInstant());
 
-		System.out.println(geom);
-		double dist = Utils.getLengthGeo(geom);
+		System.out.println(f);
+		System.out.println(f.getGeom());
+		double dist = Utils.getLengthGeo(f.getGeom());
 		System.out.println(dist);
-		String gj = Utils.toGeoJSON(geom);
+		String gj = Utils.toGeoJSON(f.getGeom());
 		System.out.println(gj);
 		System.out.println("End");
 	}

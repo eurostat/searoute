@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.cli.CommandLine;
@@ -18,8 +19,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-
-import com.vividsolutions.jts.geom.MultiLineString;
+import org.opencarto.datamodel.Feature;
 
 /**
  * Main method for executable program.
@@ -114,11 +114,12 @@ public class SeaRouteMain {
 				continue;
 
 			//compute route
-			MultiLineString g = sr.getRoute(oLon, oLat, dLon, dLat);
-			o.put("route", Utils.toGeoJSON(g));
+			Feature f = sr.getRoute(oLon, oLat, dLon, dLat);
+			for(Entry<?,?> e : f.getProperties().entrySet()) o.put(e.getKey().toString(), e.getValue().toString());
+			o.put("route", Utils.toGeoJSON(f.getGeom()));
 
 			//compute distance
-			double d = Utils.getLengthGeo(g);
+			double d = Utils.getLengthGeo(f.getGeom());
 			o.put("dist", ""+Utils.round(d, 2));
 		}
 

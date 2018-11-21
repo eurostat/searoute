@@ -13,9 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.geotools.graph.structure.Node;
+import org.opencarto.datamodel.Feature;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.MultiLineString;
+import com.vividsolutions.jts.geom.Geometry;
 
 public class SeaRouteWS extends HttpServlet {
 	//   /usr/share/tomcat8/bin/catalina.sh start
@@ -223,8 +224,8 @@ public class SeaRouteWS extends HttpServlet {
 			}
 
 			//the maritime route geometry
-			MultiLineString ls = sr.getRoute(oPos, oN, dPos, dN);
-			//MultiLineString ls = sr.getRoute(oLon, oLat, dLon, dLat);
+			Feature f = sr.getRoute(oPos, oN, dPos, dN);
+			Geometry ls = f.getGeom();
 
 			if(ls==null){
 				out.print( "{\"status\":\"error\",\"message\":\"Shortest path not found\"}" );
