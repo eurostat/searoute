@@ -109,7 +109,7 @@ public class MarnetCheck {
 			lines = keepOnlyLargestGraphConnexComponents(lines, 50);	System.out.println(lines.size() + " keepOnlyLargestGraphConnexComponents");
 
 			//save output
-			GeoJSONUtil.save(linesToFeatures(lines), "resources/marnet/marnet_working_out.geojson", DefaultGeographicCRS.WGS84);
+			GeoJSONUtil.save(linesToFeatures(lines), "resources/marnet/marnet_plus.geojson", DefaultGeographicCRS.WGS84);
 
 			System.out.println("Done");
 		} catch (Exception e) { e.printStackTrace(); }
