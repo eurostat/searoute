@@ -9,7 +9,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -26,7 +25,9 @@ import org.geotools.graph.structure.Node;
 import org.geotools.graph.structure.basic.BasicEdge;
 import org.geotools.graph.traverse.standard.DijkstraIterator;
 import org.geotools.graph.traverse.standard.DijkstraIterator.EdgeWeighter;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opencarto.datamodel.Feature;
+import org.opencarto.io.GeoJSONUtil;
 import org.opengis.feature.simple.SimpleFeature;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -192,22 +193,26 @@ public class SeaRouting {
 
 
 
+	public Collection<Feature> filterPorts(Collection<Feature> ports, double minDistToNetworkKM) {
+		Collection<Feature> pls = new HashSet<Feature>();
+		for(Feature p : ports)
+			if(getDistanceToNetworkKM(p.getGeom().getCoordinate()) <= minDistToNetworkKM)
+				pls.add(p);
+		return pls;
+	}
 
-	public Collection<Feature> getRoutes(Collection<Feature> ports, String idProp, SeaRouting srg, double minDistToNetworkKM) {
-		if(srg == null) try { srg = new SeaRouting(); } catch (MalformedURLException e) { e.printStackTrace(); }
+
+	public Collection<Feature> getRoutes(Collection<Feature> ports, String idProp) {
 		if(idProp == null) idProp = "ID";
 
-		List<Feature> pls = new ArrayList<Feature>();
-		for(Feature p : ports)
-			if(srg.getDistanceToNetworkKM(p.getGeom().getCoordinate()) <= minDistToNetworkKM)
-				pls.add(p);
+		List<Feature> portsL = new ArrayList<Feature>(); portsL.addAll(ports);
 
 		HashSet<Feature> srs = new HashSet<Feature>();
-		for(int i=0; i<pls.size(); i++) {
-			Feature pi = pls.get(i);
-			for(int j=i+1; j<pls.size(); j++) {
-				Feature pj = pls.get(j);
-				Feature sr = srg.getRoute(pi.getGeom().getCoordinate(), pj.getGeom().getCoordinate());
+		for(int i=0; i<portsL.size(); i++) {
+			Feature pi = portsL.get(i);
+			for(int j=i+1; j<portsL.size(); j++) {
+				Feature pj = portsL.get(j);
+				Feature sr = getRoute(pi.getGeom().getCoordinate(), pj.getGeom().getCoordinate());
 				sr.getProperties().put("dkm", Utils.getLengthGeo(sr.getGeom()));
 				sr.getProperties().put("from", pi.getProperties().get(idProp));
 				sr.getProperties().put("to", pj.getProperties().get(idProp));
@@ -224,7 +229,17 @@ public class SeaRouting {
 	public static void main(String[] args) throws MalformedURLException {
 		System.out.println("Start");
 
-		//TODO here !
+		//load ports
+		Collection<Feature> ports = GeoJSONUtil.load("/home/juju/geodata/gisco/port_pt_2013_WGS84.geojson");
+		System.out.println(ports.size());
+
+		SeaRouting sr = new SeaRouting();
+		ports = sr.filterPorts(ports, 0.1);
+		System.out.println(ports.size());
+
+		//Collection<Feature> rs = sr.getRoutes(ports, "PORT_ID");
+
+		GeoJSONUtil.save(ports, "/home/juju/Bureau/test.geojson", DefaultGeographicCRS.WGS84);
 
 		System.out.println("End");
 	}
