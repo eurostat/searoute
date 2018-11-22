@@ -243,8 +243,6 @@ public class SeaRouting {
 		ports = sr.filterPorts(ports, 0.1);
 		System.out.println(ports.size());
 
-		//TODO check route include beginning and end
-		
 		Collection<Feature> rs = sr.getRoutes(ports, "PORT_ID");
 
 		GeoJSONUtil.save(rs, "/home/juju/Bureau/test.geojson", DefaultGeographicCRS.WGS84);
