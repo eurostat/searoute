@@ -29,17 +29,18 @@ public class MarnetCheck {
 	//add port connections from GISCO DB
 	//ensure no land intersection
 
-
-	private static Collection prepare(Collection lines, double res) {
-		lines = planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
-		lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
-		lines = filterGeom(lines, res);						System.out.println(lines.size() + " filterGeom");
-		lines = removeSimilarDuplicateEdges(lines, res);	System.out.println(lines.size() + " removeSimilarDuplicateEdges");
-		lines = dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
-		lines = resPlanifyLines(lines, res*0.01);			System.out.println(lines.size() + " resPlanifyLines");
-		return lines;
+	public static void main(String[] args) {
+		try {
+			System.out.println("Start");
+			for(double res : new double[] { 0.5, 0.2, 0.1, 0.05, 0.025 }) {
+				System.out.println("*** res="+res);
+				Collection lines = make(res, "resources/marnet/marnet_densified.geojson", "/home/juju/geodata/gisco/mar_ais_gisco.geojson", "/home/juju/geodata/gisco/ef.geojson");
+				System.out.println("save...");
+				GeoJSONUtil.save(linesToFeatures(lines), "resources/marnet/marnet_plus_"+res+".geojson", DefaultGeographicCRS.WGS84);
+			}
+			System.out.println("Done");
+		} catch (Exception e) { e.printStackTrace(); }
 	}
-
 
 	private static Collection make(double res, String... datasources) {
 		//load input lines
@@ -79,21 +80,15 @@ public class MarnetCheck {
 		return lines;
 	}
 
-	public static void main(String[] args) {
-		try {
-			System.out.println("Start");
-
-			for(double res : new double[] { 0.5, 0.2, 0.1, 0.05, 0.025 }) {
-				System.out.println("*** res="+res);
-				Collection lines = make(res, "resources/marnet/marnet_densified.geojson", "/home/juju/geodata/gisco/mar_ais_gisco.geojson", "/home/juju/geodata/gisco/ef.geojson");
-				System.out.println("save...");
-				GeoJSONUtil.save(linesToFeatures(lines), "resources/marnet/marnet_plus"+res+".geojson", DefaultGeographicCRS.WGS84);
-			}
-
-			System.out.println("Done");
-		} catch (Exception e) { e.printStackTrace(); }
+	private static Collection prepare(Collection lines, double res) {
+		lines = planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
+		lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
+		lines = filterGeom(lines, res);						System.out.println(lines.size() + " filterGeom");
+		lines = removeSimilarDuplicateEdges(lines, res);	System.out.println(lines.size() + " removeSimilarDuplicateEdges");
+		lines = dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
+		lines = resPlanifyLines(lines, res*0.01);			System.out.println(lines.size() + " resPlanifyLines");
+		return lines;
 	}
-
 
 
 

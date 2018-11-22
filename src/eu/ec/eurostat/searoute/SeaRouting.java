@@ -47,7 +47,7 @@ public class SeaRouting {
 	private Graph g;
 	private EdgeWeighter weighter;
 
-	public SeaRouting() throws MalformedURLException { this("resources/marnet/marnet_plus.geojson"); }
+	public SeaRouting() throws MalformedURLException { this("resources/marnet/marnet_plus0.025.geojson"); }
 	//public SeaRouting() throws MalformedURLException { this("WebContent/resources/shp/marnet.shp"); }
 	public SeaRouting(String shpPath) throws MalformedURLException { this(new File(shpPath)); }
 	public SeaRouting(File marnetFile) throws MalformedURLException { this(marnetFile.toURI().toURL()); }
@@ -253,8 +253,8 @@ public class SeaRouting {
 		Collection<Feature> ports = GeoJSONUtil.load("/home/juju/geodata/gisco/port_pt_2013_WGS84.geojson");
 		System.out.println(ports.size());
 
-		SeaRouting sr = new SeaRouting("resources/marnet/marnet_cta.geojson");
-		ports = getRandom(ports, 500);
+		SeaRouting sr = new SeaRouting("resources/marnet/marnet_plus0.5.geojson");
+		ports = getRandom(ports, 1000);
 		//ports = sr.filterPorts(ports, 34);
 		System.out.println(ports.size());
 
