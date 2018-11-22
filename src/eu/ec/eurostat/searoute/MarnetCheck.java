@@ -25,11 +25,80 @@ import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 public class MarnetCheck {
 
 	//TODO
+	//make multi resolution network
 	//remove thin triangles (with hight computation)
 	//add port connections from GISCO DB
-	//
 	//ensure no land intersection
 
+
+	private static Collection prepare(Collection lines, double res) {
+		lines = planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
+		lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
+		lines = filterGeom(lines, res);						System.out.println(lines.size() + " filterGeom");
+		lines = removeSimilarDuplicateEdges(lines, res);	System.out.println(lines.size() + " removeSimilarDuplicateEdges");
+		lines = dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
+		lines = resPlanifyLines(lines, res*0.01);			System.out.println(lines.size() + " resPlanifyLines");
+		return lines;
+	}
+
+
+	private static Collection make(double res) {
+		//load input lines
+		Collection lines = new HashSet<Geometry>();
+
+		Collection marnet = featuresToLines( GeoJSONUtil.load("resources/marnet/marnet_densified.geojson"));
+		marnet = prepare(marnet, res); lines.addAll(marnet);
+		Collection ais = featuresToLines( GeoJSONUtil.load("/home/juju/geodata/gisco/mar_ais_gisco.geojson"));
+		ais = prepare(ais, res); lines.addAll(ais);
+		Collection ef = featuresToLines( GeoJSONUtil.load("/home/juju/geodata/gisco/ef.geojson"));
+		ef = prepare(ef, res); lines.addAll(ef);
+
+		System.out.println(lines.size());
+
+		lines = planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
+		lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
+		lines = filterGeom(lines, res);						System.out.println(lines.size() + " filterGeom");
+		lines = removeSimilarDuplicateEdges(lines, res);	System.out.println(lines.size() + " removeSimilarDuplicateEdges");
+		lines = dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
+		lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
+		lines = planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
+		lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
+		lines = dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
+		lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
+		lines = planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
+		lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
+		lines = dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
+		lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
+		lines = resPlanifyLines(lines, res*0.01);			System.out.println(lines.size() + " resPlanifyLines");
+		lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
+		lines = resPlanifyLines(lines, res*0.01);			System.out.println(lines.size() + " resPlanifyLines");
+
+		//run with -Xss4m
+		lines = keepOnlyLargestGraphConnexComponents(lines, 50);	System.out.println(lines.size() + " keepOnlyLargestGraphConnexComponents");
+
+		return lines;
+	}
+
+	public static void main(String[] args) {
+		try {
+			System.out.println("Start");
+
+			for(double res : new double[] { 0.5, 0.2, 0.1, 0.05, 0.03 }) {
+				System.out.println("*** res="+res);
+				Collection lines = make(res);
+				GeoJSONUtil.save(linesToFeatures(lines), "resources/marnet/marnet_plus"+res+".geojson", DefaultGeographicCRS.WGS84);
+			}
+
+			System.out.println("Done");
+		} catch (Exception e) { e.printStackTrace(); }
+	}
+
+
+
+
+
+	
+	
 
 	private static Collection lineMerge(Collection lines) {
 		LineMerger lm = new LineMerger();
@@ -66,65 +135,15 @@ public class MarnetCheck {
 		return fs;
 	}
 
-	private static Collection prepare(Collection lines, double res) {
-		lines = planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
-		lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
-		lines = filterGeom(lines, res);						System.out.println(lines.size() + " filterGeom");
-		lines = removeSimilarDuplicateEdges(lines, res);	System.out.println(lines.size() + " removeSimilarDuplicateEdges");
-		lines = dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
-		lines = resPlanifyLines(lines, res*0.01);			System.out.println(lines.size() + " resPlanifyLines");
-		return lines;
-	}
-
-	public static void main(String[] args) {
-		try {
-			System.out.println("Start");
-
-			double res = 0.03;
-
-			//load input lines
-			Collection lines = new HashSet<Geometry>();
-
-			Collection marnet = featuresToLines( GeoJSONUtil.load("resources/marnet/marnet_densified.geojson"));
-			marnet = prepare(marnet, res); lines.addAll(marnet);
-			Collection ais = featuresToLines( GeoJSONUtil.load("/home/juju/geodata/mar_ais_gisco.geojson"));
-			ais = prepare(ais, res); lines.addAll(ais);
-			Collection ef = featuresToLines( GeoJSONUtil.load("/home/juju/geodata/ef.geojson"));
-			ef = prepare(ef, res); lines.addAll(ef);
-
-			System.out.println(lines.size());
-
-			lines = planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
-			lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
-			lines = filterGeom(lines, res);						System.out.println(lines.size() + " filterGeom");
-			lines = removeSimilarDuplicateEdges(lines, res);	System.out.println(lines.size() + " removeSimilarDuplicateEdges");
-			lines = dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
-			lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
-			lines = planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
-			lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
-			lines = dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
-			lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
-			lines = planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
-			lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
-			lines = dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
-			lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
-			lines = resPlanifyLines(lines, res*0.01);			System.out.println(lines.size() + " resPlanifyLines");
-			lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
-			lines = resPlanifyLines(lines, res*0.01);			System.out.println(lines.size() + " resPlanifyLines");
-
-			//run with -Xss4m
-			lines = keepOnlyLargestGraphConnexComponents(lines, 50);	System.out.println(lines.size() + " keepOnlyLargestGraphConnexComponents");
-
-			//save output
-			GeoJSONUtil.save(linesToFeatures(lines), "resources/marnet/marnet_plus.geojson", DefaultGeographicCRS.WGS84);
-
-			System.out.println("Done");
-		} catch (Exception e) { e.printStackTrace(); }
-	}
-
-
-
-
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	private static Collection keepOnlyLargestGraphConnexComponents(Collection lines, int minEdgeNumber) {
 		Graph g = GraphBuilder.buildForNetworkFromLinearFeaturesNonPlanar( linesToFeatures(lines) );
 		Collection<Graph> ccs = GraphConnexComponents.get(g);

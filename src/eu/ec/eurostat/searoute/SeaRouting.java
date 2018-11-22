@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -229,6 +230,19 @@ public class SeaRouting {
 	}
 
 
+	private static Collection getRandom(Collection col, int nb) {
+		ArrayList<?> list = new ArrayList();
+		list.addAll(col);
+		Collections.shuffle(list);
+		HashSet set = new HashSet<>();
+		int i=0;
+		for(Object o : list) {
+			set.add(o);
+			i++;
+			if(i==nb) break;
+		}
+		return set;
+	}
 
 
 
@@ -240,7 +254,8 @@ public class SeaRouting {
 		System.out.println(ports.size());
 
 		SeaRouting sr = new SeaRouting("resources/marnet/marnet_cta.geojson");
-		ports = sr.filterPorts(ports, 20);
+		ports = getRandom(ports, 500);
+		//ports = sr.filterPorts(ports, 34);
 		System.out.println(ports.size());
 
 		Collection<Feature> rs = sr.getRoutes(ports, "PORT_ID");
