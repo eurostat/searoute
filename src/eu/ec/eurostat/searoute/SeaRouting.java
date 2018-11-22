@@ -46,7 +46,7 @@ public class SeaRouting {
 	private Graph g;
 	private EdgeWeighter weighter;
 
-	public SeaRouting() throws MalformedURLException { this("WebContent/resources/marnet/marnet_plus.geojson"); }
+	public SeaRouting() throws MalformedURLException { this("resources/marnet/marnet_plus.geojson"); }
 	//public SeaRouting() throws MalformedURLException { this("WebContent/resources/shp/marnet.shp"); }
 	public SeaRouting(String shpPath) throws MalformedURLException { this(new File(shpPath)); }
 	public SeaRouting(File marnetFile) throws MalformedURLException { this(marnetFile.toURI().toURL()); }
