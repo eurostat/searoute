@@ -25,8 +25,9 @@ import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 public class MarnetCheck {
 
 	//TODO
-	//test port routing - csv
-	//connect ports from GISCO DB
+	//remove thin triangles (with hight computation)
+	//add port connections from GISCO DB
+	//
 	//ensure no land intersection
 
 

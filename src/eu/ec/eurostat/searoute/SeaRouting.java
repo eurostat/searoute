@@ -209,14 +209,14 @@ public class SeaRouting {
 		if(idProp == null) idProp = "ID";
 
 		List<Feature> portsL = new ArrayList<Feature>(); portsL.addAll(ports);
-		int nb=portsL.size(); nb=(nb*(nb+1))/2; int cnt=0;
+		int nb=portsL.size(); nb=(nb*(nb-1))/2; int cnt=0;
 
 		HashSet<Feature> srs = new HashSet<Feature>();
 		for(int i=0; i<portsL.size(); i++) {
 			Feature pi = portsL.get(i);
 			for(int j=i+1; j<portsL.size(); j++) {
-				System.out.println(100*(cnt++)/nb);
 				Feature pj = portsL.get(j);
+				System.out.println(pi.getProperties().get(idProp) + " - " + pj.getProperties().get(idProp) + " - " + (100*(cnt++)/nb) + "%");
 				Feature sr = getRoute(pi.getGeom().getCoordinate(), pj.getGeom().getCoordinate());
 				Geometry geom = sr.getGeom();
 				sr.getProperties().put("dkm", geom==null? -1 : Utils.getLengthGeo(geom));
@@ -236,11 +236,11 @@ public class SeaRouting {
 		System.out.println("Start");
 
 		//load ports
-		Collection<Feature> ports = GeoJSONUtil.load("/home/juju/geodata/gisco/port_pt_2013_WGS84_ext.geojson");
+		Collection<Feature> ports = GeoJSONUtil.load("/home/juju/geodata/gisco/port_pt_2013_WGS84.geojson");
 		System.out.println(ports.size());
 
-		SeaRouting sr = new SeaRouting();
-		ports = sr.filterPorts(ports, 0.1);
+		SeaRouting sr = new SeaRouting("resources/marnet/marnet_cta.geojson");
+		ports = sr.filterPorts(ports, 20);
 		System.out.println(ports.size());
 
 		Collection<Feature> rs = sr.getRoutes(ports, "PORT_ID");
