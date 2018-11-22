@@ -25,8 +25,7 @@ import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 public class MarnetCheck {
 
 	//TODO
-	//make multi resolution network
-	//remove thin triangles (with hight computation)
+	//for thin triangles (with short height), remove the longest segment
 	//add port connections from GISCO DB
 	//ensure no land intersection
 
@@ -42,18 +41,19 @@ public class MarnetCheck {
 	}
 
 
-	private static Collection make(double res) {
+	private static Collection make(double res, String... datasources) {
 		//load input lines
 		Collection lines = new HashSet<Geometry>();
 
-		Collection marnet = featuresToLines( GeoJSONUtil.load("resources/marnet/marnet_densified.geojson"));
-		marnet = prepare(marnet, res); lines.addAll(marnet);
-		Collection ais = featuresToLines( GeoJSONUtil.load("/home/juju/geodata/gisco/mar_ais_gisco.geojson"));
-		ais = prepare(ais, res); lines.addAll(ais);
-		Collection ef = featuresToLines( GeoJSONUtil.load("/home/juju/geodata/gisco/ef.geojson"));
-		ef = prepare(ef, res); lines.addAll(ef);
+		//data sources preparation
+		for(String ds : datasources) {
+			System.out.println(" preparing "+ds);
+			Collection ds_ = featuresToLines( GeoJSONUtil.load(ds));
+			ds_ = prepare(ds_, res);
+			lines.addAll(ds_);
+		}
 
-		System.out.println(lines.size());
+		System.out.println("Total before integration: " + lines.size());
 
 		lines = planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
 		lines = lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
@@ -83,9 +83,10 @@ public class MarnetCheck {
 		try {
 			System.out.println("Start");
 
-			for(double res : new double[] { 0.5, 0.2, 0.1, 0.05, 0.03 }) {
+			for(double res : new double[] { 0.5, 0.2, 0.1, 0.05, 0.025 }) {
 				System.out.println("*** res="+res);
-				Collection lines = make(res);
+				Collection lines = make(res, "resources/marnet/marnet_densified.geojson", "/home/juju/geodata/gisco/mar_ais_gisco.geojson", "/home/juju/geodata/gisco/ef.geojson");
+				System.out.println("save...");
 				GeoJSONUtil.save(linesToFeatures(lines), "resources/marnet/marnet_plus"+res+".geojson", DefaultGeographicCRS.WGS84);
 			}
 
@@ -97,8 +98,8 @@ public class MarnetCheck {
 
 
 
-	
-	
+
+
 
 	private static Collection lineMerge(Collection lines) {
 		LineMerger lm = new LineMerger();
@@ -135,15 +136,15 @@ public class MarnetCheck {
 		return fs;
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
 	private static Collection keepOnlyLargestGraphConnexComponents(Collection lines, int minEdgeNumber) {
 		Graph g = GraphBuilder.buildForNetworkFromLinearFeaturesNonPlanar( linesToFeatures(lines) );
 		Collection<Graph> ccs = GraphConnexComponents.get(g);
