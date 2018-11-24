@@ -10,6 +10,7 @@ import org.opencarto.algo.distances.HausdorffDistance;
 import org.opencarto.algo.graph.GraphConnexComponents;
 import org.opencarto.datamodel.Feature;
 import org.opencarto.datamodel.graph.Edge;
+import org.opencarto.datamodel.graph.Face;
 import org.opencarto.datamodel.graph.Graph;
 import org.opencarto.datamodel.graph.GraphBuilder;
 import org.opencarto.datamodel.graph.Node;
@@ -135,7 +136,40 @@ public class MarnetCheck {
 
 
 
+	public static Collection deleteFlatTriangles(Collection lines, double d) {
+		//create graph
+		Graph g = GraphBuilder.buildForNetworkFromLinearFeatures( linesToFeatures(lines) );
+		deleteFlatTriangles(g, d);
+		Collection out = new HashSet();
+		for(Edge e : g.getEdges()) out.add(e.getGeometry());
+		return out;
+	}
 
+	public static void deleteFlatTriangles(Graph g, double d) {
+		Edge e = findEdgeToDeleteForFlatTriangle(g, d);
+		while(e != null) {
+			//removeEdge(g, e); //TODO
+			e = findEdgeToDeleteForFlatTriangle(g, d);
+		}
+	}
+
+	public static Edge findEdgeToDeleteForFlatTriangle(Graph g, double d) {
+		for(Face f : g.getFaces()) {
+			if(f.getNodes().size() > 3) continue;
+			//TODO measure minimum heigth and compare to d
+			return getLongestEdge(f);
+		}
+		return null;
+	}
+
+	public static Edge getLongestEdge(Face f) {
+		Edge eMax = null; double lMax = -1;
+		for(Edge e : f.getEdges()) {
+			double l = e.getGeometry().getLength();
+			if(l>lMax) { eMax = e;  lMax = l; }
+		}
+		return eMax;
+	}
 
 
 
@@ -218,7 +252,6 @@ public class MarnetCheck {
 			e = findTooShortEdge(g, d);
 		}
 	}
-
 
 	//TODO shortest?
 	public static Edge findTooShortEdge(Graph g, double d) {
