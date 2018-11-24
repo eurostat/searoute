@@ -13,3 +13,6 @@ hs_err_pid*
 /build/
 .classpath
 .project
+
+/.settings/
+/WebContent/resources/
