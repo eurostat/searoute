@@ -27,8 +27,6 @@ import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 public class MarnetCheck {
 
 	//TODO
-	//code for multiscale - back to shp - WS
-	//WS ant - copy shp data
 	//for thin triangles (with short height), remove the longest segment
 	//add port connections from GISCO DB
 	//ensure no land intersection

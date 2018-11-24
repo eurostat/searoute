@@ -31,7 +31,7 @@ html { font-family: Arial; }
 		var dpos = getParameterByName("dpos");
 
 		//get resolution
-		var res = getParameterByName("res");
+		var res = getParameterByName("res") || 20;
 
 		if (!opos) {
 			console.warn("Could not retrieve maritime route: No origin position(s) specified");

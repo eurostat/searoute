@@ -4,6 +4,8 @@
 	<property name="jarversion" value="0.1" />
 
 	<target name="war">
+		<delete><fileset dir="WebContent/resources/" /></delete>
+		<copy todir="WebContent/resources/" ><fileset dir="resources/" includes="**"/></copy> 
 		<war destfile="${warfile}.war" webxml="WebContent/WEB-INF/web.xml" update="true">
 			<classes dir="build\classes" />
 			<fileset dir="WebContent">

@@ -126,10 +126,10 @@ public class SeaRouteWS extends HttpServlet {
 			case "rou":
 
 				//resolution
-				int resKM = 5;
+				int resKM = 20;
 				try { resKM = Integer.parseInt(request.getParameter("res")); } catch (Exception e) {}
 				SeaRouting sr = srs.get(resKM);
-				if(sr==null) sr = srs.get(5);
+				if(sr==null) sr = srs.get(20);
 
 				//geometry asked
 				boolean geomP = !("0".equals( request.getParameter("g") ));
