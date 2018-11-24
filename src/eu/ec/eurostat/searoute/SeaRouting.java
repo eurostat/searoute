@@ -43,6 +43,7 @@ import com.vividsolutions.jts.operation.linemerge.LineMerger;
  *
  */
 public class SeaRouting {
+	public static final int[] RESOLUTION_KM = new int[] { 100, 40, 20, 10, 5 };
 
 	private Graph g;
 	private EdgeWeighter weighter;
