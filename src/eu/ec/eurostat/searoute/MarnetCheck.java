@@ -189,29 +189,29 @@ public class MarnetCheck {
 
 
 	private static Collection dtsePlanifyLines(Collection lines, double res) {
-		lines = deleteTooShortEdge(lines, res);
+		lines = deleteTooShortEdges(lines, res);
 		lines = planifyLines(lines);
 		int sI=1,sF=0;
 		while(sF<sI) {
 			System.out.println(" dtsePlanifyLines loop   " + lines.size());
 			sI=lines.size();
-			lines = deleteTooShortEdge(lines, res);
+			lines = deleteTooShortEdges(lines, res);
 			lines = planifyLines(lines);
 			sF=lines.size();
 		}
 		return lines;
 	}
 
-	public static Collection deleteTooShortEdge(Collection lines, double d) {
+	public static Collection deleteTooShortEdges(Collection lines, double d) {
 		//create graph
 		Graph g = GraphBuilder.buildForNetworkFromLinearFeaturesNonPlanar( linesToFeatures(lines) );
-		deleteTooShortEdge(g, d);
+		deleteTooShortEdges(g, d);
 		Collection out = new HashSet();
 		for(Edge e : g.getEdges()) out.add(e.getGeometry());
 		return out;
 	}
 
-	public static void deleteTooShortEdge(Graph g, double d) {
+	public static void deleteTooShortEdges(Graph g, double d) {
 		Edge e = findTooShortEdge(g, d);
 		while(e != null) {
 			removeEdge(g, e);
