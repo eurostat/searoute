@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -31,7 +32,7 @@ public class SeaRouteWS extends HttpServlet {
 
 	private static final String ENC_CT = "; charset=utf-8";
 
-	private SeaRouting sr;
+	private HashMap<Integer,SeaRouting> srs = new HashMap<>();
 
 	/*/cache
 	private HashMap<String, Object[]> cache;
@@ -70,9 +71,8 @@ public class SeaRouteWS extends HttpServlet {
 		System.out.println("---" + this + " started - " + df.format(new Date()));
 		//cache = new HashMap<String, Object[]>();
 		try {
-			//TODO load all
-			int resKM = 20;
-			sr = new SeaRouting("webapps/searoutews/resources/marnet/marnet_plus_"+resKM+".shp");
+			for(int resKM : SeaRouting.RESOLUTION_KM)
+				srs.put(resKM, new SeaRouting("webapps/searoutews/resources/marnet/marnet_plus_"+resKM+".shp"));
 		} catch (MalformedURLException e) { e.printStackTrace(); }
 	}
 
@@ -124,6 +124,13 @@ public class SeaRouteWS extends HttpServlet {
 
 				break;
 			case "rou":
+
+				//resolution
+				int resKM = 5;
+				try { resKM = Integer.parseInt(request.getParameter("res")); } catch (Exception e) {}
+				SeaRouting sr = srs.get(resKM);
+				if(sr==null) sr = srs.get(5);
+
 				//geometry asked
 				boolean geomP = !("0".equals( request.getParameter("g") ));
 
@@ -162,10 +169,10 @@ public class SeaRouteWS extends HttpServlet {
 					out.print("{\"status\":\"empty\"}");
 				else {
 					if(oLon.length>1) out.print("[");
-					returnRoute(out, oLon[0], oLat[0], dLon[0], dLat[0], distP, geomP);
+					returnRoute(out, oLon[0], oLat[0], dLon[0], dLat[0], distP, geomP, sr);
 					for(int i=1; i<oLon.length; i++){
 						out.print(",");
-						returnRoute(out, oLon[i], oLat[i], dLon[i], dLat[i], distP, geomP);
+						returnRoute(out, oLon[i], oLat[i], dLon[i], dLat[i], distP, geomP, sr);
 					}
 					if(oLon.length>1) out.print("]");
 				}
@@ -186,7 +193,7 @@ public class SeaRouteWS extends HttpServlet {
 
 	}
 
-	private void returnRoute(PrintWriter out, double oLon, double oLat, double dLon, double dLat, boolean distP, boolean geomP) {
+	private void returnRoute(PrintWriter out, double oLon, double oLat, double dLon, double dLat, boolean distP, boolean geomP, SeaRouting sr) {
 		try {
 			if(oLon==Double.NaN || oLat==Double.NaN){
 				out.print("{\"status\":\"error\",\"message\":\"Unknown origin location\"");

@@ -30,6 +30,9 @@ html { font-family: Arial; }
 		var opos = getParameterByName("opos");
 		var dpos = getParameterByName("dpos");
 
+		//get resolution
+		var res = getParameterByName("res");
+
 		if (!opos) {
 			console.warn("Could not retrieve maritime route: No origin position(s) specified");
 			return;
@@ -39,7 +42,7 @@ html { font-family: Arial; }
 			return;
 		}
 
-		$.ajax({url : "seaws",data : "opos=" + opos + "&dpos=" + dpos
+		$.ajax({url : "seaws",data : "opos=" + opos + "&dpos=" + dpos + "&res=" + res
 		}).done( function(rou) {
 						$("#waitimg").hide();
 
@@ -115,6 +118,7 @@ html { font-family: Arial; }
 								$("#title").text("Sea route estimation");
 								$("#infos").append("<p>From (Lon=" + olon + ",Lat=" + olat + ") to (Lon=" + dlon + ",Lat=" + dlat + ") - Estimated distance: " + d.toFixed(2) + " km</p>");
 							}
+							$("#infos").append("<p>(Resolution: " + res + " km)</p>");
 
 							//add maritime route
 							var mrl = new L.GeoJSON([], {
