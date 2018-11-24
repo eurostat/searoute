@@ -27,14 +27,13 @@ import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 public class MarnetCheck {
 
 	//TODO
-	//code for multiscale
-	//back to shp
+	//code for multiscale - back to shp - WS
 	//for thin triangles (with short height), remove the longest segment
 	//add port connections from GISCO DB
 	//ensure no land intersection
 
 	public static void main(String[] args) {
-		double[] resDegs = new double[] { 0.5, 0.2, 0.1, 0.05, 0.025 };
+		double[] resDegs = new double[] { 0.5, 0.25, 0.1, 0.05, 0.025 };
 
 		try {
 			System.out.println("Start");
@@ -44,7 +43,7 @@ public class MarnetCheck {
 				System.out.println("*** res= "+resKM+"km - "+resDeg);
 				Collection lines = make(resDeg, "resources/marnet/marnet_densified.geojson", "/home/juju/geodata/gisco/mar_ais_gisco.geojson", "/home/juju/geodata/gisco/ef.geojson");
 				System.out.println("save...");
-				SHPUtil.saveSHP(linesToFeatures(lines), "resources/marnet/marnet_plus_"+resKM+"KM.geojson", DefaultGeographicCRS.WGS84);
+				SHPUtil.saveSHP(linesToFeatures(lines), "resources/marnet/marnet_plus_"+resKM+"KM.shp", DefaultGeographicCRS.WGS84);
 			}
 			System.out.println("Done");
 		} catch (Exception e) { e.printStackTrace(); }
@@ -234,7 +233,7 @@ public class MarnetCheck {
 		lines = planifyLines(lines);
 		int sI=1,sF=0;
 		while(sF<sI) {
-			System.out.println(" dtsePlanifyLines loop   " + lines.size());
+			System.out.println(" dtsePlanifyLines loop " + lines.size());
 			sI=lines.size();
 			lines = deleteTooShortEdges(lines, res);
 			lines = planifyLines(lines);
@@ -305,7 +304,7 @@ public class MarnetCheck {
 		lines = planifyLines(lines);
 		int sI=1,sF=0;
 		while(sF<sI) {
-			System.out.println(" resPlanifyLines loop" + lines.size());
+			System.out.println(" resPlanifyLines loop " + lines.size());
 			sI=lines.size();
 			lines = resApplyLines(lines, res);
 			lines = planifyLines(lines);

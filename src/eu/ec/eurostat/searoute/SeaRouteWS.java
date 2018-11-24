@@ -29,7 +29,6 @@ public class SeaRouteWS extends HttpServlet {
 	private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static final long serialVersionUID = 5326338791791803741L;
 
-	private static final String marnetPath = "webapps/searoutews/resources/marnet/marnet_plus.geojson";
 	private static final String ENC_CT = "; charset=utf-8";
 
 	private SeaRouting sr;
@@ -71,7 +70,9 @@ public class SeaRouteWS extends HttpServlet {
 		System.out.println("---" + this + " started - " + df.format(new Date()));
 		//cache = new HashMap<String, Object[]>();
 		try {
-			sr = new SeaRouting(marnetPath);
+			//TODO load all
+			int resKM = 20;
+			sr = new SeaRouting("webapps/searoutews/resources/marnet/marnet_plus_"+resKM+".shp");
 		} catch (MalformedURLException e) { e.printStackTrace(); }
 	}
 

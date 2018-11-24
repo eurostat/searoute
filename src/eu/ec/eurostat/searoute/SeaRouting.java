@@ -4,18 +4,21 @@
 package eu.ec.eurostat.searoute;
 
 import java.io.File;
-import java.io.InputStream;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
+import org.geotools.data.DataStore;
+import org.geotools.data.DataStoreFinder;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
-import org.geotools.geojson.feature.FeatureJSON;
 import org.geotools.graph.build.feature.FeatureGraphGenerator;
 import org.geotools.graph.build.line.LineStringGraphGenerator;
 import org.geotools.graph.path.DijkstraShortestPathFinder;
@@ -43,26 +46,26 @@ import com.vividsolutions.jts.operation.linemerge.LineMerger;
  *
  */
 public class SeaRouting {
-	public static final int[] RESOLUTION_KM = new int[] { 100, 40, 20, 10, 5 };
+	public static final int[] RESOLUTION_KM = new int[] { 100, 50, 20, 10, 5 };
 
 	private Graph g;
 	private EdgeWeighter weighter;
 
-	public SeaRouting() throws MalformedURLException { this("resources/marnet/marnet_plus0.025.geojson"); }
-	//public SeaRouting() throws MalformedURLException { this("WebContent/resources/shp/marnet.shp"); }
+	public SeaRouting() throws MalformedURLException { this(20); }
+	public SeaRouting(int resKM) throws MalformedURLException { this("resources/marnet/marnet_plus_"+resKM+"KM.shp"); }
 	public SeaRouting(String shpPath) throws MalformedURLException { this(new File(shpPath)); }
 	public SeaRouting(File marnetFile) throws MalformedURLException { this(marnetFile.toURI().toURL()); }
 	public SeaRouting(URL marnetFileURL) {
 		try {
-			/*Map<String, Serializable> map = new HashMap<>();
+			Map<String, Serializable> map = new HashMap<>();
 			map.put( "url", marnetFileURL );
 			DataStore store = DataStoreFinder.getDataStore(map);
 			FeatureCollection fc =  store.getFeatureSource(store.getTypeNames()[0]).getFeatures();
-			store.dispose();*/
+			store.dispose();
 
-			InputStream input = marnetFileURL.openStream();
+			/*InputStream input = marnetFileURL.openStream();
 			FeatureCollection fc = new FeatureJSON().readFeatureCollection(input);
-			input.close();
+			input.close();*/
 
 			//build graph
 			FeatureIterator<?> it = fc.features();
@@ -254,7 +257,7 @@ public class SeaRouting {
 		Collection<Feature> ports = GeoJSONUtil.load("/home/juju/geodata/gisco/port_pt_2013_WGS84.geojson");
 		System.out.println(ports.size());
 
-		SeaRouting sr = new SeaRouting("resources/marnet/marnet_plus0.5.geojson");
+		SeaRouting sr = new SeaRouting(100);
 		ports = getRandom(ports, 1000);
 		//ports = sr.filterPorts(ports, 34);
 		System.out.println(ports.size());
