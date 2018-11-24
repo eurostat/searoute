@@ -28,6 +28,7 @@ public class MarnetCheck {
 
 	//TODO
 	//for thin triangles (with short height), remove the longest segment
+	//publish - document
 	//add port connections from GISCO DB
 	//ensure no land intersection
 
