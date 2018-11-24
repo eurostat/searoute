@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -29,9 +30,7 @@ import org.geotools.graph.structure.Node;
 import org.geotools.graph.structure.basic.BasicEdge;
 import org.geotools.graph.traverse.standard.DijkstraIterator;
 import org.geotools.graph.traverse.standard.DijkstraIterator.EdgeWeighter;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opencarto.datamodel.Feature;
-import org.opencarto.io.GeoJSONUtil;
 import org.opengis.feature.simple.SimpleFeature;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -53,7 +52,7 @@ public class SeaRouting {
 
 	public SeaRouting() throws MalformedURLException { this(20); }
 	public SeaRouting(int resKM) throws MalformedURLException { this("resources/marnet/marnet_plus_"+resKM+"KM.shp"); }
-	public SeaRouting(String shpPath) throws MalformedURLException { this(new File(shpPath)); }
+	public SeaRouting(String path) throws MalformedURLException { this(new File(path)); }
 	public SeaRouting(File marnetFile) throws MalformedURLException { this(marnetFile.toURI().toURL()); }
 	public SeaRouting(URL marnetFileURL) {
 		try {
@@ -249,7 +248,7 @@ public class SeaRouting {
 	}
 
 
-
+/*
 	public static void main(String[] args) throws MalformedURLException {
 		System.out.println("Start");
 
@@ -268,12 +267,12 @@ public class SeaRouting {
 
 		System.out.println("End");
 	}
+*/
 
 
-	/*
 	public static void main(String[] args) throws MalformedURLException {
 		System.out.println("Start");
-		SeaRouting sr = new SeaRouting();
+		SeaRouting sr = new SeaRouting(100);
 
 		System.out.println(new Date().toInstant());
 		//get from origin () to destination ()
@@ -289,5 +288,5 @@ public class SeaRouting {
 		System.out.println(gj);
 		System.out.println("End");
 	}
-	 */
+
 }

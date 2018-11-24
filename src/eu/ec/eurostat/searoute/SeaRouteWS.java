@@ -72,7 +72,7 @@ public class SeaRouteWS extends HttpServlet {
 		//cache = new HashMap<String, Object[]>();
 		try {
 			for(int resKM : SeaRouting.RESOLUTION_KM)
-				srs.put(resKM, new SeaRouting("webapps/searoutews/resources/marnet/marnet_plus_"+resKM+".shp"));
+				srs.put(resKM, new SeaRouting("webapps/searoutews/resources/marnet/marnet_plus_"+resKM+"KM.shp"));
 		} catch (MalformedURLException e) { e.printStackTrace(); }
 	}
 
