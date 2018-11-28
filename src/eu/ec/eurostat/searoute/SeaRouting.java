@@ -29,10 +29,8 @@ import org.geotools.graph.structure.Node;
 import org.geotools.graph.structure.basic.BasicEdge;
 import org.geotools.graph.traverse.standard.DijkstraIterator;
 import org.geotools.graph.traverse.standard.DijkstraIterator.EdgeWeighter;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opencarto.datamodel.Feature;
 import org.opencarto.io.GeoJSONUtil;
-import org.opencarto.io.SHPUtil;
 import org.opengis.feature.simple.SimpleFeature;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -254,11 +252,31 @@ public class SeaRouting {
 	public static void main(String[] args) throws MalformedURLException {
 		System.out.println("Start");
 
+		//load port data
+		ArrayList<Feature> ports = GeoJSONUtil.load("/home/juju/geodata/gisco/port_pt_2013_WGS84.geojson");
+		//index by id
+		HashMap<String,Feature> iPorts = new HashMap<String,Feature>();
+		for(Feature p : ports)
+			iPorts.put(p.getProperties().get("PORT_ID").toString(), p);
+		ports.clear(); ports=null;
+
+		//load target route data
+
+
+		//run
+
+		System.out.println("End");
+	}
+
+	/*
+	public static void main(String[] args) throws MalformedURLException {
+		System.out.println("Start");
+
 		//load ports
 		Collection<Feature> ports = GeoJSONUtil.load("/home/juju/geodata/gisco/port_pt_2013_WGS84.geojson");
 		System.out.println(ports.size());
 
-		SeaRouting sr = new SeaRouting(100);
+		SeaRouting sr = new SeaRouting(5);
 		ports = getRandom(ports, 1000);
 		//ports = sr.filterPorts(ports, 34);
 		System.out.println(ports.size());
@@ -269,8 +287,8 @@ public class SeaRouting {
 
 		System.out.println("End");
 	}
-
-/*
+	 */
+	/*
 	public static void main(String[] args) throws MalformedURLException {
 		System.out.println("Start");
 		SeaRouting sr = new SeaRouting(100);
@@ -289,5 +307,5 @@ public class SeaRouting {
 		System.out.println(gj);
 		System.out.println("End");
 	}
-*/
+	 */
 }
