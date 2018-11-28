@@ -14,13 +14,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.graph.build.feature.FeatureGraphGenerator;
-import org.geotools.graph.build.line.LineStringGraphGenerator;
+import org.geotools.graph.build.line.LineStringGraphGenerator;import org.geotools.graph.build.polygon.PolygonGraphGenerator.PolygonRelationship;
 import org.geotools.graph.path.DijkstraShortestPathFinder;
 import org.geotools.graph.path.Path;
 import org.geotools.graph.structure.Edge;
@@ -261,9 +262,35 @@ public class SeaRouting {
 		ports.clear(); ports=null;
 
 		//load target route data
+		ArrayList<HashMap<String, String>> mrs = CSVUtil.load("/home/juju/Bureau/Port-port_routes_distances.csv");
+		System.out.println(mrs.iterator().next());
+		//{PORT=DE01DEBRV, LIB_EN=Bremerhaven, RELATION=GB01GBDVR, LIB_EN_1=Dover, KM="672,62", ORIGINE=P2P}
 
+		//check if there are missing ports
+		Set<String> portIds = new HashSet<String>();
+		for(HashMap<String, String> mr : mrs) {
+			portIds.add(mr.get("PORT"));
+			portIds.add(mr.get("RELATION"));
+		}
+		for(String pc : portIds) {
+			Feature p = iPorts.get(pc.substring(4,9));
+			if(p == null) System.out.println(pc);
+		}
+		portIds.clear(); portIds=null;
 
 		//run
+		for(HashMap<String, String> mr : mrs) {
+			String pc1 = mr.get("PORT");
+			String pc2 = mr.get("RELATION");
+			//System.out.println(pc1 + " to " + pc2);
+
+			Feature p1 = iPorts.get(pc1.substring(4,9));
+			Feature p2 = iPorts.get(pc2.substring(4,9));
+			if(p1 == null) continue;
+			if(p2 == null) continue;
+
+			//TODO
+		}
 
 		System.out.println("End");
 	}
