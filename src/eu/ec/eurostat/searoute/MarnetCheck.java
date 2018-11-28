@@ -27,10 +27,10 @@ import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 public class MarnetCheck {
 
 	//TODO
+	//add port connections from GISCO DB
 	//for thin triangles (with short height), remove the longest segment
 	//publish - document
-	//add port connections from GISCO DB
-	//ensure no land intersection
+	//ensure no land intersection ?
 
 	public static void main(String[] args) {
 		double[] resDegs = new double[] { 0.5, 0.25, 0.1, 0.05, 0.025 };
