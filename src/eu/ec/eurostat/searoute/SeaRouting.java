@@ -10,7 +10,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -30,7 +29,10 @@ import org.geotools.graph.structure.Node;
 import org.geotools.graph.structure.basic.BasicEdge;
 import org.geotools.graph.traverse.standard.DijkstraIterator;
 import org.geotools.graph.traverse.standard.DijkstraIterator.EdgeWeighter;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opencarto.datamodel.Feature;
+import org.opencarto.io.GeoJSONUtil;
+import org.opencarto.io.SHPUtil;
 import org.opengis.feature.simple.SimpleFeature;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -248,7 +250,7 @@ public class SeaRouting {
 	}
 
 
-/*
+
 	public static void main(String[] args) throws MalformedURLException {
 		System.out.println("Start");
 
@@ -263,13 +265,12 @@ public class SeaRouting {
 
 		Collection<Feature> rs = sr.getRoutes(ports, "PORT_ID");
 
-		GeoJSONUtil.save(rs, "/home/juju/Bureau/test.geojson", DefaultGeographicCRS.WGS84);
+		SHPUtil.saveSHP(rs, "/home/juju/Bureau/test.shp", DefaultGeographicCRS.WGS84);
 
 		System.out.println("End");
 	}
-*/
 
-
+/*
 	public static void main(String[] args) throws MalformedURLException {
 		System.out.println("Start");
 		SeaRouting sr = new SeaRouting(100);
@@ -288,5 +289,5 @@ public class SeaRouting {
 		System.out.println(gj);
 		System.out.println("End");
 	}
-
+*/
 }
