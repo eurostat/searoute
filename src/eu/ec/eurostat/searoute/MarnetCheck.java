@@ -162,14 +162,15 @@ public class MarnetCheck {
 	}
 
 	public static Edge findEdgeToDeleteForFlatTriangle(Graph g, double d) {
-		for(Face f : g.getFaces()) {
+		//TODO
+		/*for(Face f : g.getFaces()) {
 			if(f.getNodes().size() > 3) continue;
 			Edge e = getLongestEdge(f);
 			//TODO measure minimum heigth and compare to d
 			double h = Math.abs(()*()-()*()) / e.getGeometry().getLength();
 			if(h>d) continue;
 			return e;
-		}
+		}*/
 		return null;
 	}
 
