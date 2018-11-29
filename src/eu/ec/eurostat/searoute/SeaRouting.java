@@ -21,7 +21,7 @@ import org.geotools.data.DataStoreFinder;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.graph.build.feature.FeatureGraphGenerator;
-import org.geotools.graph.build.line.LineStringGraphGenerator;import org.geotools.graph.build.polygon.PolygonGraphGenerator.PolygonRelationship;
+import org.geotools.graph.build.line.LineStringGraphGenerator;
 import org.geotools.graph.path.DijkstraShortestPathFinder;
 import org.geotools.graph.path.Path;
 import org.geotools.graph.structure.Edge;
@@ -30,6 +30,7 @@ import org.geotools.graph.structure.Node;
 import org.geotools.graph.structure.basic.BasicEdge;
 import org.geotools.graph.traverse.standard.DijkstraIterator;
 import org.geotools.graph.traverse.standard.DijkstraIterator.EdgeWeighter;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opencarto.datamodel.Feature;
 import org.opencarto.io.GeoJSONUtil;
 import org.opengis.feature.simple.SimpleFeature;
@@ -263,34 +264,51 @@ public class SeaRouting {
 
 		//load target route data
 		ArrayList<HashMap<String, String>> mrs = CSVUtil.load("/home/juju/Bureau/Port-port_routes_distances.csv");
-		System.out.println(mrs.iterator().next());
+		//System.out.println(mrs.iterator().next());
 		//{PORT=DE01DEBRV, LIB_EN=Bremerhaven, RELATION=GB01GBDVR, LIB_EN_1=Dover, KM="672,62", ORIGINE=P2P}
 
-		//check if there are missing ports
+		//check missing ports
 		Set<String> portIds = new HashSet<String>();
 		for(HashMap<String, String> mr : mrs) {
 			portIds.add(mr.get("PORT"));
 			portIds.add(mr.get("RELATION"));
 		}
+		System.out.println("Total unique ports needed: " + portIds.size());
+		Set<String> missingPorts = new HashSet<String>();
 		for(String pc : portIds) {
 			Feature p = iPorts.get(pc.substring(4,9));
-			if(p == null) System.out.println(pc);
+			if(p != null) continue;
+			//System.out.println(pc);
+			missingPorts.add(pc);
 		}
 		portIds.clear(); portIds=null;
+		System.out.println("Nb missing ports = " + missingPorts.size());
+
 
 		//run
+		SeaRouting sr = new SeaRouting(100);
+		Collection<Feature> out = new ArrayList<>();
+		int i=0;
 		for(HashMap<String, String> mr : mrs) {
 			String pc1 = mr.get("PORT");
 			String pc2 = mr.get("RELATION");
-			//System.out.println(pc1 + " to " + pc2);
+			System.out.println(pc1 + " to " + pc2 + " - " + (i++) + "/" + mrs.size());
 
+			//get ports
 			Feature p1 = iPorts.get(pc1.substring(4,9));
 			Feature p2 = iPorts.get(pc2.substring(4,9));
 			if(p1 == null) continue;
 			if(p2 == null) continue;
 
-			//TODO
+			//compute routing
+			Feature r = sr.getRoute(p1.getGeom().getCoordinate(), p2.getGeom().getCoordinate());
+			r.getProperties().putAll(mr);
+			out .add(r);
 		}
+		System.out.println("Final: " + out.size());
+
+		//save
+		GeoJSONUtil.save(out, "/home/juju/Bureau/routes.geojson", DefaultGeographicCRS.WGS84);
 
 		System.out.println("End");
 	}
