@@ -7,9 +7,7 @@ import java.io.File;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -124,9 +122,10 @@ public class SeaRouteMain {
 		}
 
 		//export
-		Collection<Map<String, Object>> dataOut = new ArrayList<Map<String, Object>>();
+		//TODO check if really necessary
+		ArrayList<HashMap<String, String>> dataOut = new ArrayList<>();
 		for(HashMap<String, String> d : data) {
-			Map<String, Object> d_ = new HashMap<String,Object>();
+			HashMap<String, String> d_ = new HashMap<>();
 			d_.putAll(d);
 			dataOut.add(d_);
 		}

@@ -11,7 +11,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -88,8 +87,8 @@ public class CSVUtil {
 
 
 	//save a csv file
-	public static void save(Collection<Map<String, Object>> data, String outFile) { save(data, outFile, null); }
-	public static void save(Collection<Map<String, Object>> data, String outFile, List<String> keys) {
+	public static void save(ArrayList<HashMap<String, String>> data, String outFile) { save(data, outFile, null); }
+	public static void save(ArrayList<HashMap<String, String>> data, String outFile, List<String> keys) {
 		try {
 			if(data.size()==0){
 				System.err.println("Cannot save CSV file: Empty dataset.");
@@ -111,7 +110,7 @@ public class CSVUtil {
 			bw.write("\n");
 
 			//write data
-			for(Map<String, Object> obj : data){
+			for(Map<String, String> obj : data){
 				i=0;
 				for(String key : keys){
 					String value = obj.get(key).toString();
@@ -152,10 +151,10 @@ public class CSVUtil {
 	}
 
 	public static void save(List<String> data, String outFile) {
-		Collection<Map<String, Object>> data_ = new ArrayList<Map<String, Object>>();
+		ArrayList<HashMap<String, String>> data_ = new ArrayList<>();
 		for(int i=0; i<data.size(); i++) {
-			Map<String, Object> m = new HashMap<String, Object>();
-			m.put("id", i);
+			HashMap<String, String> m = new HashMap<>();
+			m.put("id", i+"");
 			m.put("val", data.get(i));
 			data_.add(m);
 		}

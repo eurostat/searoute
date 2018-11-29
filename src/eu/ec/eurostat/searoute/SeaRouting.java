@@ -248,6 +248,52 @@ public class SeaRouting {
 	}
 
 
+	/*
+	public static void main(String[] args) throws MalformedURLException {
+		System.out.println("Start");
+
+		ArrayList<HashMap<String, String>> missingPorts = CSVUtil.load("/home/juju/Bureau/missingPorts.csv");
+		HashMap<String,String> cnts = new HashMap<>();
+		cnts.put("PL", "Poland");
+		cnts.put("NL", "Netherland");
+		cnts.put("NO", "Norway");
+		cnts.put("DE", "Germany");
+		cnts.put("BE", "Belgium");
+		cnts.put("TR", "Turkey");
+		cnts.put("LT", "Lithuania");
+		cnts.put("GR", "Greece");
+		cnts.put("FR", "France");
+		cnts.put("IT", "Italy");
+		cnts.put("FI", "Finland");
+		cnts.put("IE", "Ireland");
+		cnts.put("DK", "Danemark");
+		cnts.put("ES", "Spain");
+		cnts.put("GB", "United Kingdom");
+		for(HashMap<String, String> p : missingPorts) {
+			String cc = p.get("ID").substring(0, 2);
+			//System.out.println(cc + " " + cnts.get(cc));
+			String qu = p.get("NAME") + ", " + cnts.get(cc);
+			System.out.println(qu);
+
+			LocationResult res = GWebServices.getLocation(qu);
+			System.out.println(res.status);
+
+			p.put("status", res.status);
+			p.put("lon", "");
+			p.put("lat", "");
+
+			if(res.pos != null) p.put("poss", res.pos.length+"");
+			if(res.pos != null && res.pos.length >= 2) {
+				p.put("lon", res.pos[0]+"");
+				p.put("lat", res.pos[1]+"");
+			}
+		}
+
+		CSVUtil.save(missingPorts, "/home/juju/Bureau/missingPortsGeo.csv");
+
+		System.out.println("End");
+	}*/
+
 
 	public static void main(String[] args) throws MalformedURLException {
 		System.out.println("Start");
@@ -265,21 +311,22 @@ public class SeaRouting {
 		//System.out.println(mrs.iterator().next());
 		//{PORT=DE01DEBRV, LIB_EN=Bremerhaven, RELATION=GB01GBDVR, LIB_EN_1=Dover, KM="672,62", ORIGINE=P2P}
 
-		//check missing ports
-		HashMap<String,HashMap<String, Object>> portIds = new HashMap<>();
+
+		//get the missing ports
+		HashMap<String,HashMap<String, String>> portIds = new HashMap<>();
 		for(HashMap<String, String> mr : mrs) {
-			HashMap<String, Object> p = new HashMap<>();
+			HashMap<String, String> p = new HashMap<>();
 			p.put("ID", mr.get("PORT"));
 			p.put("NAME", mr.get("LIB_EN"));
-			portIds.put(p.get("ID").toString(), p);
+			portIds.put(p.get("ID"), p);
 			p = new HashMap<>();
 			p.put("ID", mr.get("RELATION"));
 			p.put("NAME", mr.get("LIB_EN_1"));
-			portIds.put(p.get("ID").toString(), p);
+			portIds.put(p.get("ID"), p);
 		}
 		System.out.println("Total unique ports needed: " + portIds.size());
-		Collection<Map<String, Object>> missingPorts = new HashSet<>();
-		for(HashMap<String, Object> pc : portIds.values()) {
+		ArrayList<HashMap<String, String>> missingPorts = new ArrayList<>();
+		for(HashMap<String, String> pc : portIds.values()) {
 			Feature p = iPorts.get(pc.get("ID").toString().substring(4,9));
 			if(p != null) continue;
 			//System.out.println(pc);
