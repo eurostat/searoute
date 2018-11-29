@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
@@ -30,7 +29,6 @@ import org.geotools.graph.structure.Node;
 import org.geotools.graph.structure.basic.BasicEdge;
 import org.geotools.graph.traverse.standard.DijkstraIterator;
 import org.geotools.graph.traverse.standard.DijkstraIterator.EdgeWeighter;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opencarto.datamodel.Feature;
 import org.opencarto.io.GeoJSONUtil;
 import org.opengis.feature.simple.SimpleFeature;
@@ -268,25 +266,32 @@ public class SeaRouting {
 		//{PORT=DE01DEBRV, LIB_EN=Bremerhaven, RELATION=GB01GBDVR, LIB_EN_1=Dover, KM="672,62", ORIGINE=P2P}
 
 		//check missing ports
-		Set<String> portIds = new HashSet<String>();
+		HashMap<String,HashMap<String, Object>> portIds = new HashMap<>();
 		for(HashMap<String, String> mr : mrs) {
-			portIds.add(mr.get("PORT"));
-			portIds.add(mr.get("RELATION"));
+			HashMap<String, Object> p = new HashMap<>();
+			p.put("ID", mr.get("PORT"));
+			p.put("NAME", mr.get("LIB_EN"));
+			portIds.put(p.get("ID").toString(), p);
+			p = new HashMap<>();
+			p.put("ID", mr.get("RELATION"));
+			p.put("NAME", mr.get("LIB_EN_1"));
+			portIds.put(p.get("ID").toString(), p);
 		}
 		System.out.println("Total unique ports needed: " + portIds.size());
-		Set<String> missingPorts = new HashSet<String>();
-		for(String pc : portIds) {
-			Feature p = iPorts.get(pc.substring(4,9));
+		Collection<Map<String, Object>> missingPorts = new HashSet<>();
+		for(HashMap<String, Object> pc : portIds.values()) {
+			Feature p = iPorts.get(pc.get("ID").toString().substring(4,9));
 			if(p != null) continue;
 			//System.out.println(pc);
 			missingPorts.add(pc);
 		}
 		portIds.clear(); portIds=null;
 		System.out.println("Nb missing ports = " + missingPorts.size());
+		CSVUtil.save(missingPorts, "/home/juju/Bureau/missingPorts.csv");
 
 
-		//run
-		SeaRouting sr = new SeaRouting(100);
+		/*/run
+		SeaRouting sr = new SeaRouting(100); //5: 10days - 20: 3days
 		Collection<Feature> out = new ArrayList<>();
 		int i=0;
 		for(HashMap<String, String> mr : mrs) {
@@ -304,11 +309,14 @@ public class SeaRouting {
 			Feature r = sr.getRoute(p1.getGeom().getCoordinate(), p2.getGeom().getCoordinate());
 			r.getProperties().putAll(mr);
 			out .add(r);
+			if(i>1000) break;
 		}
 		System.out.println("Final: " + out.size());
 
 		//save
-		GeoJSONUtil.save(out, "/home/juju/Bureau/routes.geojson", DefaultGeographicCRS.WGS84);
+		//GeoJSONUtil.save(out, "/home/juju/Bureau/routes.geojson", DefaultGeographicCRS.WGS84);
+		SHPUtil.saveSHP(out, "/home/juju/Bureau/routes.shp", DefaultGeographicCRS.WGS84);
+		 */
 
 		System.out.println("End");
 	}
