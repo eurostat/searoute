@@ -252,7 +252,7 @@ public class SeaRouting {
 	public static void main(String[] args) throws MalformedURLException {
 		System.out.println("Start");
 
-		ArrayList<HashMap<String, String>> missingPorts = CSVUtil.load("/home/juju/Bureau/missingPorts.csv");
+		ArrayList<HashMap<String, String>> missingPorts = CSVUtil.load("/home/juju/Bureau/gisco_port/missingPorts.csv");
 		HashMap<String,String> cnts = new HashMap<>();
 		cnts.put("PL", "Poland");
 		cnts.put("NL", "Netherland");
@@ -289,7 +289,7 @@ public class SeaRouting {
 			}
 		}
 
-		CSVUtil.save(missingPorts, "/home/juju/Bureau/missingPortsGeo.csv");
+		CSVUtil.save(missingPorts, "/home/juju/Bureau/gisco_port/missingPortsGeo.csv");
 
 		System.out.println("End");
 	}*/
@@ -307,7 +307,7 @@ public class SeaRouting {
 		ports.clear(); ports=null;
 
 		//load target route data
-		ArrayList<HashMap<String, String>> mrs = CSVUtil.load("/home/juju/Bureau/Port-port_routes_distances.csv");
+		ArrayList<HashMap<String, String>> mrs = CSVUtil.load("/home/juju/Bureau/gisco_port/Port-port_routes_distances.csv");
 		//System.out.println(mrs.iterator().next());
 		//{PORT=DE01DEBRV, LIB_EN=Bremerhaven, RELATION=GB01GBDVR, LIB_EN_1=Dover, KM="672,62", ORIGINE=P2P}
 
@@ -334,7 +334,7 @@ public class SeaRouting {
 		}
 		portIds.clear(); portIds=null;
 		System.out.println("Nb missing ports = " + missingPorts.size());
-		CSVUtil.save(missingPorts, "/home/juju/Bureau/missingPorts.csv");
+		CSVUtil.save(missingPorts, "/home/juju/Bureau/gisco_port/missingPorts.csv");
 
 
 		/*/run
@@ -361,8 +361,8 @@ public class SeaRouting {
 		System.out.println("Final: " + out.size());
 
 		//save
-		//GeoJSONUtil.save(out, "/home/juju/Bureau/routes.geojson", DefaultGeographicCRS.WGS84);
-		SHPUtil.saveSHP(out, "/home/juju/Bureau/routes.shp", DefaultGeographicCRS.WGS84);
+		//GeoJSONUtil.save(out, "/home/juju/Bureau/gisco_port/routes.geojson", DefaultGeographicCRS.WGS84);
+		SHPUtil.saveSHP(out, "/home/juju/Bureau/gisco_port/routes.shp", DefaultGeographicCRS.WGS84);
 		 */
 
 		System.out.println("End");
@@ -383,7 +383,7 @@ public class SeaRouting {
 
 		Collection<Feature> rs = sr.getRoutes(ports, "PORT_ID");
 
-		SHPUtil.saveSHP(rs, "/home/juju/Bureau/test.shp", DefaultGeographicCRS.WGS84);
+		SHPUtil.saveSHP(rs, "/home/juju/Bureau/gisco_port/test.shp", DefaultGeographicCRS.WGS84);
 
 		System.out.println("End");
 	}
