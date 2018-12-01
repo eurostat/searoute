@@ -300,6 +300,7 @@ public class SeaRouting {
 
 		//load port data
 		ArrayList<Feature> ports = GeoJSONUtil.load("/home/juju/geodata/gisco/port_pt_2013_WGS84.geojson");
+		ports.addAll( GeoJSONUtil.load("/home/juju/geodata/gisco/port_pt_2010_WGS84.geojson") );
 		//index by id
 		HashMap<String,Feature> iPorts = new HashMap<String,Feature>();
 		for(Feature p : ports)
