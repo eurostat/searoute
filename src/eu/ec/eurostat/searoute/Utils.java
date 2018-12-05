@@ -20,8 +20,6 @@ import com.vividsolutions.jts.geom.MultiLineString;
  */
 public class Utils {
 
-
-
 	//in km
 	public static double getDistance(Coordinate c1, Coordinate c2) {
 		return getDistance(c1.x, c1.y ,c2.x, c2.y);

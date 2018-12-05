@@ -122,14 +122,7 @@ public class SeaRouteMain {
 		}
 
 		//export
-		//TODO check if really necessary
-		ArrayList<HashMap<String, String>> dataOut = new ArrayList<>();
-		for(HashMap<String, String> d : data) {
-			HashMap<String, String> d_ = new HashMap<>();
-			d_.putAll(d);
-			dataOut.add(d_);
-		}
-		CSVUtil.save(dataOut, outFile);
+		CSVUtil.save(data, outFile);
 	}
 
 
