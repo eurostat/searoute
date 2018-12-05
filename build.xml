@@ -40,7 +40,7 @@
 	<target name="jar">
 		<jar destfile="./releases/searoute-${jarversion}/searoute.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
-				<attribute name="Main-Class" value="eu.ec.eurostat.searoute.SeaRouteMain" />
+				<attribute name="Main-Class" value="eu.europa.ec.eurostat.searoute.SeaRouteMain" />
 				<attribute name="Class-Path" value="." />
 			</manifest>
 			<fileset dir="./build/classes" />

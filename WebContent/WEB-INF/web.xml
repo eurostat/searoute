@@ -7,7 +7,7 @@
 
 	<servlet>
 		<servlet-name>searoute</servlet-name>
-		<servlet-class>eu.ec.eurostat.searoute.SeaRouteWS</servlet-class>
+		<servlet-class>eu.europa.ec.eurostat.searoute.SeaRouteWS</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>searoute</servlet-name>
