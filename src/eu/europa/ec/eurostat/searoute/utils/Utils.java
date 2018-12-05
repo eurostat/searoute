@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.ec.eurostat.searoute;
+package eu.europa.ec.eurostat.searoute.utils;
 
 import java.io.IOException;
 import java.io.StringWriter;

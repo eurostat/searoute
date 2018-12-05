@@ -1,4 +1,4 @@
-package eu.ec.eurostat.searoute;
+package eu.europa.ec.eurostat.searoute;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,6 +18,8 @@ import org.opencarto.datamodel.Feature;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+
+import eu.europa.ec.eurostat.searoute.utils.Utils;
 
 public class SeaRouteWS extends HttpServlet {
 	//   /usr/share/tomcat8/bin/catalina.sh start

@@ -1,4 +1,4 @@
-package eu.ec.eurostat.searoute.w;
+package eu.europa.ec.eurostat.searoute.w;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.HashSet;
 import org.opencarto.datamodel.Feature;
 import org.opencarto.io.GeoJSONUtil;
 
-import eu.ec.eurostat.searoute.CSVUtil;
+import eu.europa.ec.eurostat.searoute.utils.CSVUtil;
 
 public class Mains {
 

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.ec.eurostat.searoute;
+package eu.europa.ec.eurostat.searoute;
 
 import java.io.File;
 import java.net.URL;
@@ -18,6 +18,9 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.opencarto.datamodel.Feature;
+
+import eu.europa.ec.eurostat.searoute.utils.CSVUtil;
+import eu.europa.ec.eurostat.searoute.utils.Utils;
 
 /**
  * Main method for executable program.

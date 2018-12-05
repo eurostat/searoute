@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eu.ec.eurostat.searoute;
+package eu.europa.ec.eurostat.searoute;
 
 import java.io.File;
 import java.io.Serializable;
@@ -37,6 +37,8 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.operation.linemerge.LineMerger;
+
+import eu.europa.ec.eurostat.searoute.utils.Utils;
 
 /**
  * @author julien Gaffuri

@@ -1,4 +1,4 @@
-package eu.ec.eurostat.searoute.w;
+package eu.europa.ec.eurostat.searoute.w;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -24,7 +24,7 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.operation.linemerge.LineMerger;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
-import eu.ec.eurostat.searoute.SeaRouting;
+import eu.europa.ec.eurostat.searoute.SeaRouting;
 
 public class MarnetCheck {
 
