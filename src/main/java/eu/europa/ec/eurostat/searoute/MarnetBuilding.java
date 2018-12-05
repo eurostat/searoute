@@ -9,4 +9,6 @@ package eu.europa.ec.eurostat.searoute;
  */
 public class MarnetBuilding {
 
+	//TODO
+
 }

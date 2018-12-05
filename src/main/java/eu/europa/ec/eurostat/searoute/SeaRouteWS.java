@@ -29,8 +29,9 @@ public class SeaRouteWS extends HttpServlet {
 	//http://localhost:8080/searoutews/
 	//http://localhost:8080/searoutews/seaws?ser=rou&opos=5.3,43.3&dpos=121.8,31.2
 
-	//https://javatutorial.net/how-to-deploy-and-undeploy-applications-in-tomcat
-	//https://www.baeldung.com/tomcat-deploy-war
+	//automated deployment: https://www.baeldung.com/tomcat-deploy-war
+	//move stuff to oc - improve structure - avoid overlaps
+	//jar/war packaging
 
 
 	private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
