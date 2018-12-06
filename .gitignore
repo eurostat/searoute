@@ -9,11 +9,5 @@ hs_err_pid*
 
 /target/
 /.settings/
-/bin/
-/build/
 .classpath
 .project
-
-/.settings/
-/target/
-/WebContent/resources/
