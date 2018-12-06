@@ -28,8 +28,8 @@ public class SeaRouteWS extends HttpServlet {
 	//logs: /var/lib/tomcat8/logs/
 	//http://localhost:8080/searoutews/
 	//http://localhost:8080/searoutews/seaws?ser=rou&opos=5.3,43.3&dpos=121.8,31.2
+	//mvn tomcat7:deploy re un
 
-	//mvn war deployment: https://www.baeldung.com/tomcat-deploy-war
 	//move stuff to oc - improve structure - avoid overlaps
 	//jar/war packaging
 
