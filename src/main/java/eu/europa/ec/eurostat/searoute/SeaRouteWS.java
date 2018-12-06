@@ -31,6 +31,7 @@ public class SeaRouteWS extends HttpServlet {
 	//http://localhost:8080/searoutews/seaws?ser=rou&opos=5.3,43.3&dpos=121.8,31.2
 	//mvn tomcat7:deploy re un
 
+	//fix ws: move back geojson save?
 	//move stuff to oc - improve structure - avoid overlaps
 	//jar/war packaging
 
