@@ -6,9 +6,6 @@
 	<version>0.9</version>
 	<packaging>war</packaging>
 
-	<name>searoutews</name>
-	<url>https://github.com/eurostat/searoute</url>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -34,6 +31,7 @@
 
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

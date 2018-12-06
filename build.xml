@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="dep" default="dowar" basedir=".">
-	<property name="warfile" value="searoutews" />
+	<property name="warfile" value="searoute" />
 	<property name="jarversion" value="0.1" />
 
 	<target name="war">
@@ -16,11 +16,12 @@
 
 	<target name="deploy">
 		<copy todir="/var/lib/tomcat8/webapps" overwrite="true">
-			<fileset dir=".">
+			<!-- <fileset dir="."> -->
+			<fileset dir="target">
 				<include name="*.war" />
 			</fileset>
 		</copy>
-		<delete file="${warfile}.war" />
+		<!-- <delete file="${warfile}.war" /> -->
 	</target>
 	<target name="cleant">
 		<!-- <delete dir="/var/lib/tomcat8/webapps/${warfile}"/> -->
