@@ -29,7 +29,7 @@ public class SeaRouteWS extends HttpServlet {
 	//http://localhost:8080/searoutews/
 	//http://localhost:8080/searoutews/seaws?ser=rou&opos=5.3,43.3&dpos=121.8,31.2
 
-	//automated deployment: https://www.baeldung.com/tomcat-deploy-war
+	//mvn war deployment: https://www.baeldung.com/tomcat-deploy-war
 	//move stuff to oc - improve structure - avoid overlaps
 	//jar/war packaging
 
@@ -79,7 +79,7 @@ public class SeaRouteWS extends HttpServlet {
 		//cache = new HashMap<String, Object[]>();
 		try {
 			for(int resKM : SeaRouting.RESOLUTION_KM)
-				srs.put(resKM, new SeaRouting("webapps/searoutews/resources/marnet/marnet_plus_"+resKM+"KM.shp"));
+				srs.put(resKM, new SeaRouting("webapps/searoute/resources/marnet/marnet_plus_"+resKM+"KM.shp"));
 		} catch (MalformedURLException e) { e.printStackTrace(); }
 	}
 
