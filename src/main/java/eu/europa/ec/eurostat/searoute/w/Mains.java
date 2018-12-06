@@ -9,7 +9,7 @@ import java.util.HashSet;
 
 import org.opencarto.datamodel.Feature;
 import org.opencarto.io.GeoJSONUtil;
-import org.opencarto.util.ProjectionUtil;
+import org.opencarto.util.GeoDistanceUtil;
 
 import eu.europa.ec.eurostat.searoute.SeaRouting;
 
@@ -176,7 +176,7 @@ public class Mains {
 		System.out.println(f.getProperties().get("dFromKM"));
 		System.out.println(f.getProperties().get("dToKM"));
 		System.out.println(f.getGeom());
-		double dist = ProjectionUtil.getLengthGeoKM(f.getGeom());
+		double dist = GeoDistanceUtil.getLengthGeoKM(f.getGeom());
 		System.out.println(dist);
 		String gj = GeoJSONUtil.toGeoJSON(f.getGeom());
 		System.out.println(gj);

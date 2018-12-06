@@ -2,6 +2,7 @@ package eu.europa.ec.eurostat.searoute;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -13,10 +14,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.geotools.geojson.geom.GeometryJSON;
 import org.geotools.graph.structure.Node;
 import org.opencarto.datamodel.Feature;
-import org.opencarto.io.GeoJSONUtil;
-import org.opencarto.util.ProjectionUtil;
+import org.opencarto.util.GeoDistanceUtil;
 import org.opencarto.util.Util;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -101,7 +102,7 @@ public class SeaRouteWS extends HttpServlet {
 			if(ser == null || "".equals(ser)) ser = "rou";
 
 			switch (ser) {
-
+			
 			case "rouinfo":
 				response.setContentType("text/html"+ENC_CT);
 				//out.print("<html>");
@@ -240,9 +241,12 @@ public class SeaRouteWS extends HttpServlet {
 				return;
 			}
 
-			//the maritime route geometry
+
+			//build the maritime route geometry
 			Feature f = sr.getRoute(oPos, oN, dPos, dN);
 			Geometry ls = f.getGeom();
+			f = null;
+
 
 			if(ls==null){
 				out.print( "{\"status\":\"error\",\"message\":\"Shortest path not found\"}" );
@@ -253,13 +257,17 @@ public class SeaRouteWS extends HttpServlet {
 			String st;
 			st = "{\"status\":\"ok\"";
 			if(distP){
-				double d = ProjectionUtil.getLengthGeoKM(ls);
+				double d = GeoDistanceUtil.getLengthGeoKM(ls);
 				d = Util.round(d, 2);
 				st += ",\"dist\":"+d;
 			}
 			if(geomP){
 				//export as geojson
-				st += ",\"geom\":" + GeoJSONUtil.toGeoJSON(ls);
+				st += ",\"geom\":";
+				StringWriter writer = new StringWriter();
+				new GeometryJSON().write(ls, writer);
+				st += writer.toString();
+				writer.close();
 			}
 			st += "}";
 
@@ -269,9 +277,7 @@ public class SeaRouteWS extends HttpServlet {
 			//improve network / add inland transport / take into account impedance
 
 		} catch (Exception e) {
-			String st = "{\"status\":\"error\",\"message\":\"Unknown error\"";
-			st += "}";
-			out.print(st);
+			out.print("{\"status\":\"error\",\"message\":\"Unknown error\"}");
 			//out.print(e.getMessage());
 			//setInCache(oLocid, dLocid, st);
 			e.printStackTrace();

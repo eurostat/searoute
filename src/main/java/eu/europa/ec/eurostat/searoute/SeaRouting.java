@@ -29,7 +29,7 @@ import org.geotools.graph.structure.basic.BasicEdge;
 import org.geotools.graph.traverse.standard.DijkstraIterator;
 import org.geotools.graph.traverse.standard.DijkstraIterator.EdgeWeighter;
 import org.opencarto.datamodel.Feature;
-import org.opencarto.util.ProjectionUtil;
+import org.opencarto.util.GeoDistanceUtil;
 import org.opengis.feature.simple.SimpleFeature;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -93,7 +93,7 @@ public class SeaRouting {
 				//edge around the globe
 				if( e.getObject()==null ) return 0;
 				SimpleFeature f = (SimpleFeature) e.getObject();
-				return ProjectionUtil.getLengthGeoKM((Geometry)f.getDefaultGeometry());
+				return GeoDistanceUtil.getLengthGeoKM((Geometry)f.getDefaultGeometry());
 			}
 		};
 
@@ -131,7 +131,7 @@ public class SeaRouting {
 
 	//return the distance in km. Distance to closest node
 	private double getDistanceToNetworkKM(Coordinate c) {
-		return ProjectionUtil.getDistanceKM(c, getPosition(getNode(c)));
+		return GeoDistanceUtil.getDistanceKM(c, getPosition(getNode(c)));
 	}
 
 
@@ -152,9 +152,9 @@ public class SeaRouting {
 		//test if route should be based on network
 		//route do not need network if straight line between two points is smaller than the total distance to reach the network
 		double dist = -1;
-		dist = ProjectionUtil.getDistanceKM(oPos, dPos);
+		dist = GeoDistanceUtil.getDistanceKM(oPos, dPos);
 		double distN = -1;
-		distN = ProjectionUtil.getDistanceKM(oPos, oNPos) + ProjectionUtil.getDistanceKM(dPos, dNPos);
+		distN = GeoDistanceUtil.getDistanceKM(oPos, oNPos) + GeoDistanceUtil.getDistanceKM(dPos, dNPos);
 
 		if(dist>=0 && distN>=0 && distN > dist){
 			//return direct route
@@ -192,8 +192,8 @@ public class SeaRouting {
 		Collection<?> lss = lm.getMergedLineStrings();
 		Feature rf = new Feature();
 		rf.setGeom( gf.createMultiLineString( lss.toArray(new LineString[lss.size()]) ) );
-		rf.getProperties().put("dFromKM", ProjectionUtil.getDistanceKM(oPos, oNPos));
-		rf.getProperties().put("dToKM", ProjectionUtil.getDistanceKM(dPos, dNPos));
+		rf.getProperties().put("dFromKM", GeoDistanceUtil.getDistanceKM(oPos, oNPos));
+		rf.getProperties().put("dToKM", GeoDistanceUtil.getDistanceKM(dPos, dNPos));
 		return rf;
 	}
 
@@ -222,7 +222,7 @@ public class SeaRouting {
 				System.out.println(pi.getProperties().get(idProp) + " - " + pj.getProperties().get(idProp) + " - " + (100*(cnt++)/nb) + "%");
 				Feature sr = getRoute(pi.getGeom().getCoordinate(), pj.getGeom().getCoordinate());
 				Geometry geom = sr.getGeom();
-				sr.getProperties().put("dkm", geom==null? -1 : ProjectionUtil.getLengthGeoKM(geom));
+				sr.getProperties().put("dkm", geom==null? -1 : GeoDistanceUtil.getLengthGeoKM(geom));
 				sr.getProperties().put("from", pi.getProperties().get(idProp));
 				sr.getProperties().put("to", pj.getProperties().get(idProp));
 				srs.add(sr);

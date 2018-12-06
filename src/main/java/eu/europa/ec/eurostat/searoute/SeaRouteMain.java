@@ -20,7 +20,7 @@ import org.apache.commons.cli.ParseException;
 import org.opencarto.datamodel.Feature;
 import org.opencarto.io.CSVUtil;
 import org.opencarto.io.GeoJSONUtil;
-import org.opencarto.util.ProjectionUtil;
+import org.opencarto.util.GeoDistanceUtil;
 import org.opencarto.util.Util;
 
 /**
@@ -121,7 +121,7 @@ public class SeaRouteMain {
 			o.put("route", GeoJSONUtil.toGeoJSON(f.getGeom()));
 
 			//compute distance
-			double d = ProjectionUtil.getLengthGeoKM(f.getGeom());
+			double d = GeoDistanceUtil.getLengthGeoKM(f.getGeom());
 			o.put("dist", ""+Util.round(d, 2));
 		}
 
