@@ -13,13 +13,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.geotools.graph.structure.Node;
 import org.opencarto.datamodel.Feature;
+import org.opencarto.io.GeoJSONUtil;
+import org.opencarto.util.ProjectionUtil;
+import org.opencarto.util.Util;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
-import org.geotools.graph.structure.Node;
-
-import eu.europa.ec.eurostat.searoute.utils.Utils;
 
 public class SeaRouteWS extends HttpServlet {
 	//   /usr/share/tomcat8/bin/catalina.sh start
@@ -251,13 +252,13 @@ public class SeaRouteWS extends HttpServlet {
 			String st;
 			st = "{\"status\":\"ok\"";
 			if(distP){
-				double d = Utils.getLengthGeo(ls);
-				d = Utils.round(d, 2);
+				double d = ProjectionUtil.getLengthGeoKM(ls);
+				d = Util.round(d, 2);
 				st += ",\"dist\":"+d;
 			}
 			if(geomP){
 				//export as geojson
-				st += ",\"geom\":" + Utils.toGeoJSON(ls);
+				st += ",\"geom\":" + GeoJSONUtil.toGeoJSON(ls);
 			}
 			st += "}";
 

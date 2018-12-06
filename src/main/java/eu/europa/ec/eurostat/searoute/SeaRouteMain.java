@@ -18,9 +18,10 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.opencarto.datamodel.Feature;
-
-import eu.europa.ec.eurostat.searoute.utils.CSVUtil;
-import eu.europa.ec.eurostat.searoute.utils.Utils;
+import org.opencarto.io.CSVUtil;
+import org.opencarto.io.GeoJSONUtil;
+import org.opencarto.util.ProjectionUtil;
+import org.opencarto.util.Util;
 
 /**
  * Main method for executable program.
@@ -117,11 +118,11 @@ public class SeaRouteMain {
 			//compute route
 			Feature f = sr.getRoute(oLon, oLat, dLon, dLat);
 			for(Entry<?,?> e : f.getProperties().entrySet()) o.put(e.getKey().toString(), e.getValue().toString());
-			o.put("route", Utils.toGeoJSON(f.getGeom()));
+			o.put("route", GeoJSONUtil.toGeoJSON(f.getGeom()));
 
 			//compute distance
-			double d = Utils.getLengthGeo(f.getGeom());
-			o.put("dist", ""+Utils.round(d, 2));
+			double d = ProjectionUtil.getLengthGeoKM(f.getGeom());
+			o.put("dist", ""+Util.round(d, 2));
 		}
 
 		//export

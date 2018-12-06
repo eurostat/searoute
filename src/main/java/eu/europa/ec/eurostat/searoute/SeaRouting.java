@@ -29,6 +29,7 @@ import org.geotools.graph.structure.basic.BasicEdge;
 import org.geotools.graph.traverse.standard.DijkstraIterator;
 import org.geotools.graph.traverse.standard.DijkstraIterator.EdgeWeighter;
 import org.opencarto.datamodel.Feature;
+import org.opencarto.util.ProjectionUtil;
 import org.opengis.feature.simple.SimpleFeature;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -37,8 +38,6 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.operation.linemerge.LineMerger;
-
-import eu.europa.ec.eurostat.searoute.utils.Utils;
 
 /**
  * @author julien Gaffuri
@@ -51,7 +50,7 @@ public class SeaRouting {
 	private EdgeWeighter weighter;
 
 	public SeaRouting() throws MalformedURLException { this(20); }
-	public SeaRouting(int resKM) throws MalformedURLException { this("resources/marnet/marnet_plus_"+resKM+"KM.shp"); }
+	public SeaRouting(int resKM) throws MalformedURLException { this("src/main/webapp/resources/marnet/marnet_plus_"+resKM+"KM.shp"); }
 	public SeaRouting(String path) throws MalformedURLException { this(new File(path)); }
 	public SeaRouting(File marnetFile) throws MalformedURLException { this(marnetFile.toURI().toURL()); }
 	public SeaRouting(URL marnetFileURL) {
@@ -94,7 +93,7 @@ public class SeaRouting {
 				//edge around the globe
 				if( e.getObject()==null ) return 0;
 				SimpleFeature f = (SimpleFeature) e.getObject();
-				return Utils.getLengthGeo((Geometry)f.getDefaultGeometry());
+				return ProjectionUtil.getLengthGeoKM((Geometry)f.getDefaultGeometry());
 			}
 		};
 
@@ -132,7 +131,7 @@ public class SeaRouting {
 
 	//return the distance in km. Distance to closest node
 	private double getDistanceToNetworkKM(Coordinate c) {
-		return Utils.getDistance(c, getPosition(getNode(c)));
+		return ProjectionUtil.getDistanceKM(c, getPosition(getNode(c)));
 	}
 
 
@@ -153,9 +152,9 @@ public class SeaRouting {
 		//test if route should be based on network
 		//route do not need network if straight line between two points is smaller than the total distance to reach the network
 		double dist = -1;
-		dist = Utils.getDistance(oPos, dPos);
+		dist = ProjectionUtil.getDistanceKM(oPos, dPos);
 		double distN = -1;
-		distN = Utils.getDistance(oPos, oNPos) + Utils.getDistance(dPos, dNPos);
+		distN = ProjectionUtil.getDistanceKM(oPos, oNPos) + ProjectionUtil.getDistanceKM(dPos, dNPos);
 
 		if(dist>=0 && distN>=0 && distN > dist){
 			//return direct route
@@ -193,8 +192,8 @@ public class SeaRouting {
 		Collection<?> lss = lm.getMergedLineStrings();
 		Feature rf = new Feature();
 		rf.setGeom( gf.createMultiLineString( lss.toArray(new LineString[lss.size()]) ) );
-		rf.getProperties().put("dFromKM", Utils.getDistance(oPos, oNPos));
-		rf.getProperties().put("dToKM", Utils.getDistance(dPos, dNPos));
+		rf.getProperties().put("dFromKM", ProjectionUtil.getDistanceKM(oPos, oNPos));
+		rf.getProperties().put("dToKM", ProjectionUtil.getDistanceKM(dPos, dNPos));
 		return rf;
 	}
 
@@ -223,7 +222,7 @@ public class SeaRouting {
 				System.out.println(pi.getProperties().get(idProp) + " - " + pj.getProperties().get(idProp) + " - " + (100*(cnt++)/nb) + "%");
 				Feature sr = getRoute(pi.getGeom().getCoordinate(), pj.getGeom().getCoordinate());
 				Geometry geom = sr.getGeom();
-				sr.getProperties().put("dkm", geom==null? -1 : Utils.getLengthGeo(geom));
+				sr.getProperties().put("dkm", geom==null? -1 : ProjectionUtil.getLengthGeoKM(geom));
 				sr.getProperties().put("from", pi.getProperties().get(idProp));
 				sr.getProperties().put("to", pj.getProperties().get(idProp));
 				srs.add(sr);
