@@ -12,7 +12,7 @@ import eu.europa.ec.eurostat.searoute.SeaRouting;
 public class MarnetBuildingMain {
 
 	//TODO
-	//add port connections from GISCO DB
+	//add port connections from GISCO DB ?
 	//for thin triangles (with short height), remove the longest segment
 	//publish - document
 	//ensure no land intersection ?
