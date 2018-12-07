@@ -277,6 +277,9 @@ public class SeaRouteWS extends HttpServlet {
 
 		} catch (Exception e) {
 			out.print("{\"status\":\"error\",\"message\":\"Unknown error\"}");
+			//response.setContentType("text/"+ENC_CT);
+			//e.printStackTrace();
+			//e.printStackTrace(out);
 			//out.print(e.getMessage());
 			//setInCache(oLocid, dLocid, st);
 			e.printStackTrace();
