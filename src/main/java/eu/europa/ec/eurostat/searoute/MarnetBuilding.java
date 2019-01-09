@@ -18,7 +18,7 @@ import com.vividsolutions.jts.geom.Geometry;
  *
  */
 public class MarnetBuilding {
-
+	public static double[] resDegs = new double[] { 0.5, 0.25, 0.1, 0.05, 0.025 };
 
 	public static Collection make(double res, String... datasources) {
 		//load input lines
@@ -38,15 +38,15 @@ public class MarnetBuilding {
 		lines = MeshSimplification.lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
 		lines = MeshSimplification.filterGeom(lines, res);						System.out.println(lines.size() + " filterGeom");
 		lines = MeshSimplification.removeSimilarDuplicateEdges(lines, res);	System.out.println(lines.size() + " removeSimilarDuplicateEdges");
-		lines = MeshSimplification.dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
+		//lines = MeshSimplification.dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
 		lines = MeshSimplification.lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
 		lines = MeshSimplification.planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
 		lines = MeshSimplification.lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
-		lines = MeshSimplification.dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
+		//lines = MeshSimplification.dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
 		lines = MeshSimplification.lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
 		lines = MeshSimplification.planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
 		lines = MeshSimplification.lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
-		lines = MeshSimplification.dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
+		//lines = MeshSimplification.dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
 		lines = MeshSimplification.lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
 		lines = MeshSimplification.resPlanifyLines(lines, res*0.01);			System.out.println(lines.size() + " resPlanifyLines");
 		lines = MeshSimplification.lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
