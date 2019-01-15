@@ -5,11 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 
 import org.opencarto.datamodel.Feature;
-import org.opencarto.io.CSVUtil;
 import org.opencarto.io.GeoJSONUtil;
 import org.opencarto.util.GeoDistanceUtil;
 
@@ -65,7 +63,7 @@ public class Mains {
 		System.out.println("End");
 	}*/
 
-
+	/*
 	public static void main(String[] args) throws MalformedURLException {
 		System.out.println("Start");
 
@@ -108,7 +106,7 @@ public class Mains {
 		System.out.println("Nb missing ports = " + missingPorts.size());
 		CSVUtil.save(missingPorts, "/home/juju/Bureau/gisco_port/missingPorts.csv");
 
-/*
+
 		//run
 		SeaRouting sr = new SeaRouting(100); //5: 10days - 20: 3days
 		Collection<Feature> out = new ArrayList<>();
@@ -135,11 +133,11 @@ public class Mains {
 		//save
 		//GeoJSONUtil.save(out, "/home/juju/Bureau/gisco_port/routes.geojson", DefaultGeographicCRS.WGS84);
 		SHPUtil.saveSHP(out, "/home/juju/Bureau/gisco_port/routes.shp", DefaultGeographicCRS.WGS84);
-*/
+
 
 		System.out.println("End");
 	}
-
+	 */
 
 
 
@@ -167,7 +165,6 @@ public class Mains {
 
 
 
-/*
 	public static void main(String[] args) throws MalformedURLException {
 		System.out.println("Start");
 		SeaRouting sr = new SeaRouting(100);
@@ -186,7 +183,7 @@ public class Mains {
 		System.out.println(gj);
 		System.out.println("End");
 	}
-*/
+
 
 
 	private static Collection getRandom(Collection col, int nb) {
