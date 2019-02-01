@@ -4,16 +4,61 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opencarto.datamodel.Feature;
-import org.opencarto.io.GeoJSONUtil;
-import org.opencarto.util.GeoDistanceUtil;
+import org.opencarto.io.CSVUtil;
+import org.opencarto.io.SHPUtil;
+
+import com.vividsolutions.jts.geom.Coordinate;
 
 import eu.europa.ec.eurostat.searoute.SeaRouting;
 
 public class Mains {
+
+
+
+	public static void main(String[] args) throws MalformedURLException {
+		System.out.println("Start");
+
+		//load routes
+		ArrayList<HashMap<String, String>> routes = CSVUtil.load("/home/juju/Bureau/gisco_port/ROUTES_TABLE.txt", "\\s*(\"[^\"]*\"|[^;]*)\\s*");
+		System.out.println(routes.size());
+
+		//compute route geometries
+		SeaRouting sr = new SeaRouting(5);
+		ArrayList<Feature> rs = new ArrayList<Feature>();
+		for(HashMap<String, String> route : routes) {
+			System.out.println(route);
+
+			//TODO
+			if(route.get("FROM_X").isEmpty()) continue;
+			if(route.get("FROM_Y").isEmpty()) continue;
+			if(route.get("TO_X").isEmpty()) continue;
+			if(route.get("TO_Y").isEmpty()) continue;
+
+			//get coordinates
+			Coordinate oPos = new Coordinate(Double.parseDouble(route.get("FROM_X").replace(",", ".")), Double.parseDouble(route.get("FROM_Y").replace(",", ".")));
+			Coordinate dPos = new Coordinate(Double.parseDouble(route.get("TO_X").replace(",", ".")), Double.parseDouble(route.get("TO_Y").replace(",", ".")));
+			System.out.println(oPos);
+			System.out.println(dPos);
+
+			//change projection
+
+			//compute route
+			//Feature r = sr.getRoute(oPos, dPos);
+			//r.getProperties().putAll(route);
+
+			//break;
+		}
+
+		//save output
+		SHPUtil.saveSHP(rs, "/home/juju/Bureau/gisco_port/test.shp", DefaultGeographicCRS.WGS84);
+
+		System.out.println("End");
+	}
 
 
 
@@ -163,8 +208,7 @@ public class Mains {
 	 */
 
 
-
-
+	/*
 	public static void main(String[] args) throws MalformedURLException {
 		System.out.println("Start");
 		SeaRouting sr = new SeaRouting(100);
@@ -183,7 +227,7 @@ public class Mains {
 		System.out.println(gj);
 		System.out.println("End");
 	}
-
+	 */
 
 
 	private static Collection getRandom(Collection col, int nb) {
