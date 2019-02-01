@@ -14,12 +14,10 @@ import org.opencarto.datamodel.Feature;
 import org.opencarto.io.CSVUtil;
 import org.opencarto.io.SHPUtil;
 import org.opencarto.util.GeoDistanceUtil;
-import org.opencarto.util.ProjectionUtil;
-import org.opengis.geometry.MismatchedDimensionException;
-import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.MathTransform;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
 import eu.europa.ec.eurostat.searoute.SeaRouting;
@@ -37,42 +35,58 @@ public class Mains {
 
 		//prepare stuff
 		MathTransform mt = null;
-		try {
-			mt = CRS.findMathTransform(ProjectionUtil.getETRS89_LAEA_CRS(), ProjectionUtil.getWGS_84_CRS(), true);
-		} catch (MismatchedDimensionException | FactoryException e) {
-			e.printStackTrace();
-		}
+		try { mt = CRS.findMathTransform(CRS.decode("EPSG:3035"), CRS.decode("EPSG:4326")); }
+		catch (Exception e) { e.printStackTrace(); }
 		SeaRouting sr = new SeaRouting(100);
 		ArrayList<Feature> rs = new ArrayList<Feature>();
 		GeometryFactory gf = new GeometryFactory();
 
 		//compute route geometries
+		int i=0;
 		for(HashMap<String, String> route : routes) {
-			System.out.println("From " + route.get("LIB_EN") + " to " + route.get("LIB_EN_1"));
+			System.out.println((i++) + "/" + routes.size() + " - From " + route.get("LIB_EN") + " to " + route.get("LIB_EN_1"));
 
-			//TODO
-			if(route.get("FROM_X").isEmpty()) continue;
-			if(route.get("FROM_Y").isEmpty()) continue;
-			if(route.get("TO_X").isEmpty()) continue;
-			if(route.get("TO_Y").isEmpty()) continue;
+			Feature r = null;
 
-			//get coordinates
-			Coordinate oPos = new Coordinate(Double.parseDouble(route.get("FROM_X").replace(",", ".")), Double.parseDouble(route.get("FROM_Y").replace(",", ".")));
-			Coordinate dPos = new Coordinate(Double.parseDouble(route.get("TO_X").replace(",", ".")), Double.parseDouble(route.get("TO_Y").replace(",", ".")));
+			if(route.get("FROM_X").isEmpty() || route.get("FROM_Y").isEmpty()) {
+				System.err.println("Unknown coordinates for " + route.get("PORT_ID_FROM") + " " + route.get("LIB_EN"));
+				r = new Feature();
+			} else if(route.get("TO_X").isEmpty() || route.get("TO_Y").isEmpty()) {
+				System.err.println("Unknown coordinates for " + route.get("PORT_ID_TO") + " " + route.get("LIB_EN_1"));
+				r = new Feature();
+			} else {
+				//get coordinates
+				Coordinate oPos = new Coordinate(Double.parseDouble(route.get("FROM_X").replace(",", ".")), Double.parseDouble(route.get("FROM_Y").replace(",", ".")));
+				Coordinate dPos = new Coordinate(Double.parseDouble(route.get("TO_X").replace(",", ".")), Double.parseDouble(route.get("TO_Y").replace(",", ".")));
 
-			//change CRS from LAEA to geog
-			try {
-				oPos = JTS.transform(gf.createPoint(oPos), mt).getCoordinate();
-				dPos = JTS.transform(gf.createPoint(dPos), mt).getCoordinate();
-			} catch (Exception e) { e.printStackTrace(); }
 
-			//compute route
-			Feature r = sr.getRoute(oPos, dPos);
-			r.getProperties().put("dKM", GeoDistanceUtil.getLengthGeoKM(r.getGeom()));
-			System.out.println(r.getProperties().get("dKM"));
+
+				//TODO
+				System.out.println(oPos);
+
+				//change CRS from LAEA to geog
+				try {
+					oPos = JTS.transform(gf.createPoint(oPos), mt).getCoordinate();
+					dPos = JTS.transform(gf.createPoint(dPos), mt).getCoordinate();
+				} catch (Exception e) { e.printStackTrace(); }
+
+				System.out.println(oPos);
+
+
+
+				//compute route
+				r = sr.getRoute(oPos, dPos);
+
+				//compute distance
+				r.getProperties().put("dKM", GeoDistanceUtil.getLengthGeoKM(r.getGeom()));
+				System.out.println(r.getProperties().get("dKM"));
+
+			}
+
 			r.getProperties().putAll(route);
+			rs.add(r);
 
-			//break;
+			if(i>400) break;
 		}
 
 		//save output
