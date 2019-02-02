@@ -14,6 +14,8 @@ import org.opencarto.datamodel.Feature;
 import org.opencarto.io.CSVUtil;
 import org.opencarto.io.SHPUtil;
 import org.opencarto.util.GeoDistanceUtil;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.operation.MathTransform;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -24,8 +26,21 @@ import eu.europa.ec.eurostat.searoute.SeaRouting;
 
 public class Mains {
 
+	public static void main(String[] args) throws Exception {
+		
+		System.out.println(CRS.decode("EPSG:3035"));
+		System.out.println(CRS.decode("EPSG:4326"));
+		
+		GeometryFactory gf = new GeometryFactory();
+		Coordinate c = new Coordinate(3847988.7, 3161178.2);
+		MathTransform mt = CRS.findMathTransform(
+		   CRS.decode("EPSG:3035"),
+		   CRS.decode("EPSG:4326"));
+		c = JTS.transform(gf.createPoint(c), mt).getCoordinate();
+		System.out.println(c);
+	}
 
-
+/*
 	public static void main(String[] args) throws MalformedURLException {
 		System.out.println("Start");
 
