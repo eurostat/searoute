@@ -26,21 +26,6 @@ import eu.europa.ec.eurostat.searoute.SeaRouting;
 
 public class Mains {
 
-	public static void main(String[] args) throws Exception {
-		
-		System.out.println(CRS.decode("EPSG:3035"));
-		System.out.println(CRS.decode("EPSG:4326"));
-		
-		GeometryFactory gf = new GeometryFactory();
-		Coordinate c = new Coordinate(3847988.7, 3161178.2);
-		MathTransform mt = CRS.findMathTransform(
-		   CRS.decode("EPSG:3035"),
-		   CRS.decode("EPSG:4326"));
-		c = JTS.transform(gf.createPoint(c), mt).getCoordinate();
-		System.out.println(c);
-	}
-
-/*
 	public static void main(String[] args) throws MalformedURLException {
 		System.out.println("Start");
 
@@ -50,7 +35,7 @@ public class Mains {
 
 		//prepare stuff
 		MathTransform mt = null;
-		try { mt = CRS.findMathTransform(CRS.decode("EPSG:3035"), CRS.decode("EPSG:4326")); }
+		try { mt = CRS.findMathTransform(CRS.decode("EPSG:3035",true), CRS.decode("EPSG:4326")); }
 		catch (Exception e) { e.printStackTrace(); }
 		SeaRouting sr = new SeaRouting(100);
 		ArrayList<Feature> rs = new ArrayList<Feature>();
@@ -74,20 +59,11 @@ public class Mains {
 				Coordinate oPos = new Coordinate(Double.parseDouble(route.get("FROM_X").replace(",", ".")), Double.parseDouble(route.get("FROM_Y").replace(",", ".")));
 				Coordinate dPos = new Coordinate(Double.parseDouble(route.get("TO_X").replace(",", ".")), Double.parseDouble(route.get("TO_Y").replace(",", ".")));
 
-
-
-				//TODO
-				System.out.println(oPos);
-
 				//change CRS from LAEA to geog
 				try {
 					oPos = JTS.transform(gf.createPoint(oPos), mt).getCoordinate();
 					dPos = JTS.transform(gf.createPoint(dPos), mt).getCoordinate();
 				} catch (Exception e) { e.printStackTrace(); }
-
-				System.out.println(oPos);
-
-
 
 				//compute route
 				r = sr.getRoute(oPos, dPos);
@@ -101,7 +77,7 @@ public class Mains {
 			r.getProperties().putAll(route);
 			rs.add(r);
 
-			if(i>400) break;
+			//if(i>400) break;
 		}
 
 		//save output
