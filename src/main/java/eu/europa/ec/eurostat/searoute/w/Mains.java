@@ -14,12 +14,9 @@ import org.opencarto.datamodel.Feature;
 import org.opencarto.io.CSVUtil;
 import org.opencarto.io.SHPUtil;
 import org.opencarto.util.GeoDistanceUtil;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.operation.MathTransform;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
 import eu.europa.ec.eurostat.searoute.SeaRouting;
@@ -37,7 +34,7 @@ public class Mains {
 		MathTransform mt = null;
 		try { mt = CRS.findMathTransform(CRS.decode("EPSG:3035",true), CRS.decode("EPSG:4326", true)); }
 		catch (Exception e) { e.printStackTrace(); }
-		SeaRouting sr = new SeaRouting(20);
+		SeaRouting sr = new SeaRouting(10);
 		ArrayList<Feature> rs = new ArrayList<Feature>();
 		GeometryFactory gf = new GeometryFactory();
 
@@ -77,7 +74,7 @@ public class Mains {
 			r.getProperties().putAll(route);
 			rs.add(r);
 
-			if(i>400) break;
+			//if(i>400) break;
 		}
 
 		//save output
