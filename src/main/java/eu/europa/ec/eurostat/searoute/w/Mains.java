@@ -35,9 +35,9 @@ public class Mains {
 
 		//prepare stuff
 		MathTransform mt = null;
-		try { mt = CRS.findMathTransform(CRS.decode("EPSG:3035",true), CRS.decode("EPSG:4326")); }
+		try { mt = CRS.findMathTransform(CRS.decode("EPSG:3035",true), CRS.decode("EPSG:4326", true)); }
 		catch (Exception e) { e.printStackTrace(); }
-		SeaRouting sr = new SeaRouting(100);
+		SeaRouting sr = new SeaRouting(20);
 		ArrayList<Feature> rs = new ArrayList<Feature>();
 		GeometryFactory gf = new GeometryFactory();
 
@@ -77,7 +77,7 @@ public class Mains {
 			r.getProperties().putAll(route);
 			rs.add(r);
 
-			//if(i>400) break;
+			if(i>400) break;
 		}
 
 		//save output
