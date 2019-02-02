@@ -34,7 +34,7 @@ public class Mains {
 		MathTransform mt = null;
 		try { mt = CRS.findMathTransform(CRS.decode("EPSG:3035",true), CRS.decode("EPSG:4326", true)); }
 		catch (Exception e) { e.printStackTrace(); }
-		SeaRouting sr = new SeaRouting(10);
+		SeaRouting sr = new SeaRouting(5);
 		ArrayList<Feature> rs = new ArrayList<Feature>();
 		GeometryFactory gf = new GeometryFactory();
 
