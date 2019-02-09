@@ -29,9 +29,8 @@ String rgj = Utils.toGeoJSON(r);
 
 ### For java developers
 
-[SeaRoute](https://github.com/eurostat/searoute) is currently not deployed on a maven repository.
+[SeaRoute](https://github.com/eurostat/searoute) is currently not deployed on a maven repository. You need first to install [OpenCarto](https://github.com/jgaffuri/OpenCarto) with:
 
-You need first to install [OpenCarto](https://github.com/jgaffuri/OpenCarto):
 ```
 git clone https://github.com/eurostat/opencarto.git
 cd opencarto
