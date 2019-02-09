@@ -21,3 +21,27 @@ double d = Utils.getLengthGeo(r);
 //export the route in geoJSON format
 String rgj = Utils.toGeoJSON(r);
 ``` 
+## Installation
+
+### As a webservice (Java servlet)
+
+(TODO)
+
+### For java developers
+
+[SeaRoute](https://github.com/eurostat/searoute) is currently not deployed on a maven repository.
+
+You need first to install [OpenCarto](https://github.com/jgaffuri/OpenCarto):
+```
+git clone https://github.com/eurostat/opencarto.git
+cd opencarto
+mvn clean install
+```
+
+And then:
+
+```
+git clone https://github.com/eurostat/searoute.git
+cd searoute
+mvn clean install
+```
