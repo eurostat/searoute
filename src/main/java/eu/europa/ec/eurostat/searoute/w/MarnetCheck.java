@@ -5,6 +5,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.operation.linemerge.LineMerger;
+import org.locationtech.jts.simplify.DouglasPeuckerSimplifier;
 import org.opencarto.algo.base.Union;
 import org.opencarto.algo.distances.HausdorffDistance;
 import org.opencarto.algo.graph.GraphConnexComponents;
@@ -17,12 +22,6 @@ import org.opencarto.datamodel.graph.Node;
 import org.opencarto.io.GeoJSONUtil;
 import org.opencarto.io.SHPUtil;
 import org.opencarto.util.JTSGeomUtil;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.operation.linemerge.LineMerger;
-import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 import eu.europa.ec.eurostat.searoute.SeaRouting;
 

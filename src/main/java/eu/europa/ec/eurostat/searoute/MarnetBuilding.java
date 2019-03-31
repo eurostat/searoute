@@ -6,10 +6,9 @@ package eu.europa.ec.eurostat.searoute;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.locationtech.jts.geom.Geometry;
 import org.opencarto.algo.meshsimplification.MeshSimplification;
 import org.opencarto.io.GeoJSONUtil;
-
-import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * Some functions to build maritime networks at different resolutions.

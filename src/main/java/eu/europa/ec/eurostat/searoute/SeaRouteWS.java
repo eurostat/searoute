@@ -16,12 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.geotools.geojson.geom.GeometryJSON;
 import org.geotools.graph.structure.Node;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
 import org.opencarto.datamodel.Feature;
 import org.opencarto.util.GeoDistanceUtil;
 import org.opencarto.util.Util;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
 
 public class SeaRouteWS extends HttpServlet {
 	//   /usr/share/tomcat8/bin/catalina.sh start
