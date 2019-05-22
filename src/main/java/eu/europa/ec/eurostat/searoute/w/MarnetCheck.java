@@ -12,12 +12,13 @@ import org.locationtech.jts.operation.linemerge.LineMerger;
 import org.locationtech.jts.simplify.DouglasPeuckerSimplifier;
 import org.opencarto.algo.base.Union;
 import org.opencarto.algo.distances.HausdorffDistance;
-import org.opencarto.algo.graph.GraphConnexComponents;
+import org.opencarto.algo.graph.GraphBuilder;
+import org.opencarto.algo.graph.ConnexComponents;
+import org.opencarto.algo.graph.NodeDisplacement;
 import org.opencarto.datamodel.Feature;
 import org.opencarto.datamodel.graph.Edge;
 import org.opencarto.datamodel.graph.Face;
 import org.opencarto.datamodel.graph.Graph;
-import org.opencarto.datamodel.graph.GraphBuilder;
 import org.opencarto.datamodel.graph.Node;
 import org.opencarto.io.GeoJSONUtil;
 import org.opencarto.io.SHPUtil;
@@ -113,7 +114,7 @@ public class MarnetCheck {
 
 	private static Collection planifyLines(Collection lines) {
 		Geometry u = Union.getLineUnion(lines);
-		return JTSGeomUtil.getLineStringGeometries(u);
+		return JTSGeomUtil.extractLineStringGeometries(u);
 	}
 
 	private static Collection filterGeom(Collection lines, double d) {
@@ -146,7 +147,7 @@ public class MarnetCheck {
 
 	public static Collection deleteFlatTriangles(Collection lines, double d) {
 		//create graph
-		Graph g = GraphBuilder.buildForNetworkFromLinearFeatures( linesToFeatures(lines) );
+		Graph g = GraphBuilder.buildFromLinearFeaturesPlanar( linesToFeatures(lines), true );
 		deleteFlatTriangles(g, d);
 		Collection out = new HashSet();
 		for(Edge e : g.getEdges()) out.add(e.getGeometry());
@@ -189,8 +190,8 @@ public class MarnetCheck {
 
 
 	private static Collection keepOnlyLargestGraphConnexComponents(Collection lines, int minEdgeNumber) {
-		Graph g = GraphBuilder.buildForNetworkFromLinearFeaturesNonPlanar( linesToFeatures(lines) );
-		Collection<Graph> ccs = GraphConnexComponents.get(g);
+		Graph g = GraphBuilder.buildFromLinearFeaturesNonPlanar( linesToFeatures(lines) );
+		Collection<Graph> ccs = ConnexComponents.get(g);
 		Collection out = new HashSet();
 		for(Graph cc : ccs) {
 			if( cc.getEdges().size() < minEdgeNumber ) continue;
@@ -201,7 +202,7 @@ public class MarnetCheck {
 	}
 
 	public static Collection removeSimilarDuplicateEdges(Collection lines, double haussdorffDistance) {
-		Graph g = GraphBuilder.buildForNetworkFromLinearFeaturesNonPlanar( linesToFeatures(lines) );
+		Graph g = GraphBuilder.buildFromLinearFeaturesNonPlanar( linesToFeatures(lines) );
 		removeSimilarDuplicateEdges(g, haussdorffDistance);
 		Collection out = new HashSet();
 		for(Edge e : g.getEdges()) out.add(e.getGeometry());
@@ -252,7 +253,7 @@ public class MarnetCheck {
 
 	public static Collection deleteTooShortEdges(Collection lines, double d) {
 		//create graph
-		Graph g = GraphBuilder.buildForNetworkFromLinearFeaturesNonPlanar( linesToFeatures(lines) );
+		Graph g = GraphBuilder.buildFromLinearFeaturesNonPlanar( linesToFeatures(lines) );
 		deleteTooShortEdges(g, d);
 		Collection out = new HashSet();
 		for(Edge e : g.getEdges()) out.add(e.getGeometry());
@@ -285,7 +286,7 @@ public class MarnetCheck {
 		g.remove(e);
 
 		//move node n to edge center
-		n.moveTo( 0.5*(n.getC().x+n_.getC().x), 0.5*(n.getC().y+n_.getC().y) );
+		NodeDisplacement.moveTo( n, 0.5*(n.getC().x+n_.getC().x), 0.5*(n.getC().y+n_.getC().y) );
 
 		//make node n origin of all edges starting from node n_
 		Set<Edge> es;
@@ -335,7 +336,7 @@ public class MarnetCheck {
 			Geometry u = Union.getLineUnion(line_);
 			if(u.isEmpty()) continue;
 			if(u instanceof Point) continue;
-			out.addAll(JTSGeomUtil.getLineStringGeometries(u));
+			out.addAll(JTSGeomUtil.extractLineStringGeometries(u));
 		}
 		return out;
 	}

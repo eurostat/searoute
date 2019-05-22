@@ -2,10 +2,7 @@ package eu.europa.ec.eurostat.searoute.w;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
@@ -250,20 +247,5 @@ public class Mains {
 		System.out.println("End");
 	}
 	 */
-
-
-	private static Collection getRandom(Collection col, int nb) {
-		ArrayList<?> list = new ArrayList();
-		list.addAll(col);
-		Collections.shuffle(list);
-		HashSet set = new HashSet<>();
-		int i=0;
-		for(Object o : list) {
-			set.add(o);
-			i++;
-			if(i==nb) break;
-		}
-		return set;
-	}
 
 }
