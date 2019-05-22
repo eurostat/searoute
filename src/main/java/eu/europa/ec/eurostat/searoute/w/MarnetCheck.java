@@ -114,7 +114,7 @@ public class MarnetCheck {
 
 	private static Collection planifyLines(Collection lines) {
 		Geometry u = Union.getLineUnion(lines);
-		return JTSGeomUtil.extractLineStringGeometries(u);
+		return JTSGeomUtil.getLineStrings(u);
 	}
 
 	private static Collection filterGeom(Collection lines, double d) {
@@ -336,7 +336,7 @@ public class MarnetCheck {
 			Geometry u = Union.getLineUnion(line_);
 			if(u.isEmpty()) continue;
 			if(u instanceof Point) continue;
-			out.addAll(JTSGeomUtil.extractLineStringGeometries(u));
+			out.addAll(JTSGeomUtil.getLineStrings(u));
 		}
 		return out;
 	}

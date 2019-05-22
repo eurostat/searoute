@@ -9,6 +9,7 @@ import java.util.HashSet;
 import org.locationtech.jts.geom.Geometry;
 import org.opencarto.algo.graph.ConnexComponents;
 import org.opencarto.algo.graph.GraphSimplify;
+import org.opencarto.algo.line.DouglasPeuckerRamerFilter;
 import org.opencarto.io.GeoJSONUtil;
 import org.opencarto.util.FeatureUtil;
 
@@ -37,7 +38,7 @@ public class MarnetBuilding {
 
 		lines = GraphSimplify.planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
 		lines = GraphSimplify.lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
-		lines = GraphSimplify.DPsimplify(lines, res);						System.out.println(lines.size() + " filterGeom");
+		lines = DouglasPeuckerRamerFilter.get(lines, res);						System.out.println(lines.size() + " filterGeom");
 		lines = GraphSimplify.removeSimilarDuplicateEdges(lines, res);	System.out.println(lines.size() + " removeSimilarDuplicateEdges");
 		//lines = MeshSimplification.dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
 		lines = GraphSimplify.lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
@@ -49,9 +50,9 @@ public class MarnetBuilding {
 		lines = GraphSimplify.lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
 		//lines = MeshSimplification.dtsePlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
 		lines = GraphSimplify.lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
-		lines = GraphSimplify.resPlanifyLines(lines, res*0.01);			System.out.println(lines.size() + " resPlanifyLines");
+		lines = GraphSimplify.resPlanifyLines(lines, res*0.01, false);			System.out.println(lines.size() + " resPlanifyLines");
 		lines = GraphSimplify.lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
-		lines = GraphSimplify.resPlanifyLines(lines, res*0.01);			System.out.println(lines.size() + " resPlanifyLines");
+		lines = GraphSimplify.resPlanifyLines(lines, res*0.01, false);			System.out.println(lines.size() + " resPlanifyLines");
 
 		//run with -Xss4m
 		lines = ConnexComponents.keepOnlyLargestGraphConnexComponents(lines, 50);	System.out.println(lines.size() + " keepOnlyLargestGraphConnexComponents");
@@ -62,10 +63,10 @@ public class MarnetBuilding {
 	private static Collection prepare(Collection lines, double res) {
 		lines = GraphSimplify.planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
 		lines = GraphSimplify.lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
-		lines = GraphSimplify.DPsimplify(lines, res);						System.out.println(lines.size() + " filterGeom");
+		lines = DouglasPeuckerRamerFilter.get(lines, res);						System.out.println(lines.size() + " filterGeom");
 		lines = GraphSimplify.removeSimilarDuplicateEdges(lines, res);	System.out.println(lines.size() + " removeSimilarDuplicateEdges");
-		lines = GraphSimplify.collapseTooShortEdgesAndPlanifyLines(lines, res);				System.out.println(lines.size() + " dtsePlanifyLines");
-		lines = GraphSimplify.resPlanifyLines(lines, res*0.01);			System.out.println(lines.size() + " resPlanifyLines");
+		lines = GraphSimplify.collapseTooShortEdgesAndPlanifyLines(lines, res, true);				System.out.println(lines.size() + " dtsePlanifyLines");
+		lines = GraphSimplify.resPlanifyLines(lines, res*0.01, false);			System.out.println(lines.size() + " resPlanifyLines");
 		return lines;
 	}
 
