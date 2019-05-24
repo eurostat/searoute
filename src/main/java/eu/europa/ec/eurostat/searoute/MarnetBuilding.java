@@ -65,7 +65,7 @@ public class MarnetBuilding {
 		lines = GraphSimplify.lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
 		lines = DouglasPeuckerRamerFilter.get(lines, res);						System.out.println(lines.size() + " filterGeom");
 		lines = GraphSimplify.removeSimilarDuplicateEdges(lines, res);	System.out.println(lines.size() + " removeSimilarDuplicateEdges");
-		lines = GraphSimplify.collapseTooShortEdgesAndPlanifyLines(lines, res, true);				System.out.println(lines.size() + " dtsePlanifyLines");
+		lines = GraphSimplify.collapseTooShortEdgesAndPlanifyLines(lines, res, true, true);				System.out.println(lines.size() + " dtsePlanifyLines");
 		lines = GraphSimplify.resPlanifyLines(lines, res*0.01, false);			System.out.println(lines.size() + " resPlanifyLines");
 		return lines;
 	}
