@@ -3,7 +3,6 @@
  */
 package eu.europa.ec.eurostat.searoute;
 
-import java.awt.Point;
 import java.io.File;
 import java.io.Serializable;
 import java.net.MalformedURLException;
@@ -33,6 +32,7 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.operation.linemerge.LineMerger;
 import org.opencarto.datamodel.Feature;
 import org.opencarto.util.GeoDistanceUtil;
