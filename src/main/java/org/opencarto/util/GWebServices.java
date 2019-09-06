@@ -27,7 +27,7 @@ import org.w3c.dom.NodeList;
 public class GWebServices {
 	final static Logger logger = Logger.getLogger(GWebServices.class.getName());
 
-	public static String gKey = "AIzaSyCF4q7hHA7eDkBvXh9tEVPAHPLsapmnRbE";
+	public static String gKey = "AAA";
 	public static String cs = "003544372238783521660:3gsprhbvfy0";
 
 	//get url of the first website returned by a query
