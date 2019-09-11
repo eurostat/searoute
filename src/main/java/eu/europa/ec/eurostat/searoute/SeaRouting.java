@@ -57,7 +57,7 @@ public class SeaRouting {
 			Map<String, Serializable> map = new HashMap<>();
 			map.put( "url", marnetFileURL );
 			DataStore store = DataStoreFinder.getDataStore(map);
-			FeatureCollection fc =  store.getFeatureSource(store.getTypeNames()[0]).getFeatures();
+			FeatureCollection<?,?> fc =  store.getFeatureSource(store.getTypeNames()[0]).getFeatures();
 			store.dispose();
 
 			/*InputStream input = marnetFileURL.openStream();
