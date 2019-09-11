@@ -46,7 +46,10 @@ public class SeaRouting {
 	public static final int[] RESOLUTION_KM = new int[] { 100, 50, 20, 10, 5 };
 
 	private Graph g;
-	private EdgeWeighter weighter;
+	private EdgeWeighter defaultWeighter;
+	//private EdgeWeighter noSuezWeighter; //TODO
+	//private EdgeWeighter noPanamaWeighter; //TODO
+	//private EdgeWeighter noSuezNoPanamaWeighter; //TODO
 
 	public SeaRouting() throws MalformedURLException { this(20); }
 	public SeaRouting(int resKM) throws MalformedURLException { this("src/main/webapp/resources/marnet/marnet_plus_"+resKM+"KM.shp"); }
@@ -87,7 +90,7 @@ public class SeaRouting {
 		}
 
 		//define weighter
-		weighter = new DijkstraIterator.EdgeWeighter() {
+		defaultWeighter = new DijkstraIterator.EdgeWeighter() {
 			public double getWeight(Edge e) {
 				//edge around the globe
 				if( e.getObject()==null ) return 0;
@@ -165,7 +168,7 @@ public class SeaRouting {
 		//Compute dijkstra from start node
 		Path path = null;
 		synchronized (g) {
-			path = getShortestPath(g, oN,dN,weighter);
+			path = getShortestPath(g, oN, dN, defaultWeighter);
 		}
 
 
