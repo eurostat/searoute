@@ -32,7 +32,6 @@ public class SeaRouteWS extends HttpServlet {
 	//mvn tomcat7:deploy re un
 
 	//move stuff to oc - improve structure - avoid overlaps
-	//jar/war packaging
 
 
 	private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
