@@ -32,9 +32,11 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.MultiLineString;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.operation.linemerge.LineMerger;
 import org.opencarto.datamodel.Feature;
+import org.opencarto.io.GeoJSONUtil;
 import org.opencarto.util.GeoDistanceUtil;
 import org.opengis.feature.simple.SimpleFeature;
 
@@ -47,9 +49,9 @@ public class SeaRouting {
 
 	private Graph g;
 	private EdgeWeighter defaultWeighter;
-	//private EdgeWeighter noSuezWeighter; //TODO
-	//private EdgeWeighter noPanamaWeighter; //TODO
-	//private EdgeWeighter noSuezNoPanamaWeighter; //TODO
+	private EdgeWeighter noSuezWeighter;
+	private EdgeWeighter noPanamaWeighter;
+	private EdgeWeighter noSuezNoPanamaWeighter;
 
 	public SeaRouting() throws MalformedURLException { this(20); }
 	public SeaRouting(int resKM) throws MalformedURLException { this("src/main/webapp/resources/marnet/marnet_plus_"+resKM+"KM.shp"); }
@@ -89,12 +91,45 @@ public class SeaRouting {
 			}
 		}
 
-		//define weighter
+		//define weighters
 		defaultWeighter = new DijkstraIterator.EdgeWeighter() {
 			public double getWeight(Edge e) {
 				//edge around the globe
 				if( e.getObject()==null ) return 0;
 				SimpleFeature f = (SimpleFeature) e.getObject();
+				return GeoDistanceUtil.getLengthGeoKM((Geometry)f.getDefaultGeometry());
+			}
+		};
+		noSuezWeighter = new DijkstraIterator.EdgeWeighter() {
+			public double getWeight(Edge e) {
+				//edge around the globe
+				if( e.getObject()==null ) return 0;
+				SimpleFeature f = (SimpleFeature) e.getObject();
+				String desc = (String) f.getAttribute("desc_");
+				System.out.println(desc);
+				if("suez".equals(desc)) {
+					//TODO
+					System.out.println("surez found");
+					return Double.MAX_VALUE;
+				}
+				return GeoDistanceUtil.getLengthGeoKM((Geometry)f.getDefaultGeometry());
+			}
+		};
+		noPanamaWeighter = new DijkstraIterator.EdgeWeighter() {
+			public double getWeight(Edge e) {
+				//edge around the globe
+				if( e.getObject()==null ) return 0;
+				SimpleFeature f = (SimpleFeature) e.getObject();
+				//TODO check straits
+				return GeoDistanceUtil.getLengthGeoKM((Geometry)f.getDefaultGeometry());
+			}
+		};
+		noSuezNoPanamaWeighter = new DijkstraIterator.EdgeWeighter() {
+			public double getWeight(Edge e) {
+				//edge around the globe
+				if( e.getObject()==null ) return 0;
+				SimpleFeature f = (SimpleFeature) e.getObject();
+				//TODO check straits
 				return GeoDistanceUtil.getLengthGeoKM((Geometry)f.getDefaultGeometry());
 			}
 		};
@@ -138,14 +173,14 @@ public class SeaRouting {
 
 
 	//return the route geometry from origin/destination coordinates
-	public Feature getRoute(double oLon, double oLat, double dLon, double dLat) {
-		return getRoute(new Coordinate(oLon,oLat), new Coordinate(dLon,dLat));
+	public Feature getRoute(double oLon, double oLat, double dLon, double dLat, boolean allowSuez, boolean allowPanama) {
+		return getRoute(new Coordinate(oLon,oLat), new Coordinate(dLon,dLat), allowSuez, allowPanama);
 	}
-	public Feature getRoute(Coordinate oPos, Coordinate dPos) {
-		return getRoute(oPos, getNode(oPos), dPos, getNode(dPos));
+	public Feature getRoute(Coordinate oPos, Coordinate dPos, boolean allowSuez, boolean allowPanama) {
+		return getRoute(oPos, getNode(oPos), dPos, getNode(dPos), allowSuez, allowPanama);
 	}
 	//get the route when the node are known
-	public Feature getRoute(Coordinate oPos, Node oN, Coordinate dPos, Node dN) {
+	public Feature getRoute(Coordinate oPos, Node oN, Coordinate dPos, Node dN, boolean allowSuez, boolean allowPanama) {
 		GeometryFactory gf = new GeometryFactory();
 
 		//get node positions
@@ -210,7 +245,7 @@ public class SeaRouting {
 	}
 
 
-	public Collection<Feature> getRoutes(Collection<Feature> ports, String idProp) {
+	public Collection<Feature> getRoutes(Collection<Feature> ports, String idProp, boolean allowSuez, boolean allowPanama) {
 		if(idProp == null) idProp = "ID";
 
 		List<Feature> portsL = new ArrayList<Feature>(); portsL.addAll(ports);
@@ -222,7 +257,7 @@ public class SeaRouting {
 			for(int j=i+1; j<portsL.size(); j++) {
 				Feature pj = portsL.get(j);
 				System.out.println(pi.getProperties().get(idProp) + " - " + pj.getProperties().get(idProp) + " - " + (100*(cnt++)/nb) + "%");
-				Feature sr = getRoute(pi.getGeom().getCoordinate(), pj.getGeom().getCoordinate());
+				Feature sr = getRoute(pi.getGeom().getCoordinate(), pj.getGeom().getCoordinate(), allowSuez, allowPanama);
 				Geometry geom = sr.getGeom();
 				sr.getProperties().put("dkm", geom==null? -1 : GeoDistanceUtil.getLengthGeoKM(geom));
 				sr.getProperties().put("from", pi.getProperties().get(idProp));
@@ -231,6 +266,29 @@ public class SeaRouting {
 			}
 		}
 		return srs;
+	}
+
+
+	public static void main(String[] args) throws Exception {
+		System.out.println("Start");
+
+		//create the routing object
+		SeaRouting sr = new SeaRouting();
+
+		//get the route between Marseille (5.3E,43.3N) and Shanghai (121.8E,31.2N)
+		Feature route = sr.getRoute(5.3, 43.3, 121.8, 31.2, true, true);
+
+		//compute the distance in km
+		MultiLineString routeGeom = (MultiLineString) route.getGeom();
+		double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
+
+		//export the route in geoJSON format
+		String rgj = GeoJSONUtil.toGeoJSON(routeGeom);
+
+		System.out.println((int)d);
+		System.out.println(rgj);
+
+		System.out.println("End");
 	}
 
 }

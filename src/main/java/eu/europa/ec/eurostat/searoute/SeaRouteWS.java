@@ -34,9 +34,9 @@ public class SeaRouteWS extends HttpServlet {
 
 	private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static final long serialVersionUID = 5326338791791803741L;
-
 	private static final String ENC_CT = "; charset=utf-8";
 
+	//the different sea routing objects, indexed by resolution
 	private HashMap<Integer,SeaRouting> srs = new HashMap<>();
 
 	/*/cache
@@ -97,7 +97,7 @@ public class SeaRouteWS extends HttpServlet {
 			if(ser == null || "".equals(ser)) ser = "rou";
 
 			switch (ser) {
-			
+
 			case "rouinfo":
 				response.setContentType("text/html"+ENC_CT);
 				//out.print("<html>");
@@ -142,6 +142,11 @@ public class SeaRouteWS extends HttpServlet {
 				//distance asked
 				boolean distP = !("0".equals( request.getParameter("d") ));
 
+				//Suez channel allowed
+				boolean allowSuez = !("1".equals( request.getParameter("suez") ));
+				//Panama channel allowed
+				boolean allowPanama = !("1".equals( request.getParameter("panama") ));
+
 				//lat lon
 				double[] oLon=null,oLat=null,dLon=null,dLat=null;
 
@@ -174,10 +179,10 @@ public class SeaRouteWS extends HttpServlet {
 					out.print("{\"status\":\"empty\"}");
 				else {
 					if(oLon.length>1) out.print("[");
-					returnRoute(out, oLon[0], oLat[0], dLon[0], dLat[0], distP, geomP, sr);
+					returnRoute(out, oLon[0], oLat[0], dLon[0], dLat[0], distP, geomP, sr, allowSuez, allowPanama);
 					for(int i=1; i<oLon.length; i++){
 						out.print(",");
-						returnRoute(out, oLon[i], oLat[i], dLon[i], dLat[i], distP, geomP, sr);
+						returnRoute(out, oLon[i], oLat[i], dLon[i], dLat[i], distP, geomP, sr, allowSuez, allowPanama);
 					}
 					if(oLon.length>1) out.print("]");
 				}
@@ -198,7 +203,7 @@ public class SeaRouteWS extends HttpServlet {
 
 	}
 
-	private void returnRoute(PrintWriter out, double oLon, double oLat, double dLon, double dLat, boolean distP, boolean geomP, SeaRouting sr) {
+	private void returnRoute(PrintWriter out, double oLon, double oLat, double dLon, double dLat, boolean distP, boolean geomP, SeaRouting sr, boolean allowSuez, boolean allowPanama) {
 		try {
 			if(oLon==Double.NaN || oLat==Double.NaN){
 				out.print("{\"status\":\"error\",\"message\":\"Unknown origin location\"");
@@ -238,7 +243,7 @@ public class SeaRouteWS extends HttpServlet {
 
 
 			//build the maritime route geometry
-			Feature f = sr.getRoute(oPos, oN, dPos, dN);
+			Feature f = sr.getRoute(oPos, oN, dPos, dN, allowSuez, allowPanama);
 			Geometry ls = f.getGeom();
 			f = null;
 

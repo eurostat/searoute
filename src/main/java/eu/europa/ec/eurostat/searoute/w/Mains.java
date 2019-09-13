@@ -59,7 +59,7 @@ public class Mains {
 				} catch (Exception e) { e.printStackTrace(); }
 
 				//compute route
-				r = sr.getRoute(oPos, dPos);
+				r = sr.getRoute(oPos, dPos, true, true);
 
 				//compute distance
 				r.getProperties().put("dKM", GeoDistanceUtil.getLengthGeoKM(r.getGeom()));
