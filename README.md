@@ -47,7 +47,6 @@ and then use it in your Java project as a maven dependency:
 </dependency>
 ```
 
-
 ### As a webservice
 
 To deploy [SeaRoute](https://github.com/eurostat/searoute) as a webservice (Java servlet), run:
@@ -59,6 +58,11 @@ mvn clean package
 ```
 
 And move the servlet `/target/searoute.war` into your `/tomcatX.Y/webapps/` folder. Go then [http://localhost:8080/searoute/] on the see the API documentation and demos.
+
+### As an executable program
+
+See [https://github.com/eurostat/searoute/tree/master/releases/]
+TODO: Better document
 
 ## Some additional information
 
