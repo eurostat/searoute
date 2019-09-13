@@ -57,11 +57,12 @@ cd searoute
 mvn clean package
 ```
 
-And move the servlet `/target/searoute.war` into your `/tomcatX.Y/webapps/` folder. Go then [http://localhost:8080/searoute/] on the see the API documentation and demos.
+And move the servlet `/target/searoute.war` into your `/tomcatX.Y/webapps/` folder. Go then to (http://localhost:8080/searoute/)[http://localhost:8080/searoute/] to see the API documentation and demos.
 
 ### As an executable program
 
-See [https://github.com/eurostat/searoute/tree/master/releases/]
+See [here](https://github.com/eurostat/searoute/tree/master/releases/)
+
 TODO: Better document
 
 ## Some additional information
