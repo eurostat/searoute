@@ -13,13 +13,14 @@ See below an example from [Marseille (5.3E,43.3N)](https://www.openstreetmap.org
 SeaRouting sr = new SeaRouting();
 
 //get the route between Marseille (5.3E,43.3N) and Shanghai (121.8E,31.2N)
-MultiLineString r = sr.getRoute(5.3, 43.3, 121.8, 31.2);
+Feature route = sr.getRoute(5.3, 43.3, 121.8, 31.2);
 
 //compute the distance in km
-double d = Utils.getLengthGeo(r);
+MultiLineString routeGeom = (MultiLineString) route.getGeom();
+double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
 
 //export the route in geoJSON format
-String rgj = Utils.toGeoJSON(r);
+String rgj = GeoJSONUtil.toGeoJSON(routeGeom);
 ``` 
 ## Installation
 
