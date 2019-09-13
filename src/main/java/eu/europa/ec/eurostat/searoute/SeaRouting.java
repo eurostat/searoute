@@ -152,6 +152,7 @@ public class SeaRouting {
 
 
 	//return the route geometry from origin/destination coordinates
+	public Feature getRoute(double oLon, double oLat, double dLon, double dLat) { return getRoute(oLon, oLat, dLon, dLat, true, true); }
 	public Feature getRoute(double oLon, double oLat, double dLon, double dLat, boolean allowSuez, boolean allowPanama) {
 		return getRoute(new Coordinate(oLon,oLat), new Coordinate(dLon,dLat), allowSuez, allowPanama);
 	}
@@ -225,6 +226,7 @@ public class SeaRouting {
 	}
 
 
+	public Collection<Feature> getRoutes(Collection<Feature> ports, String idProp) { return getRoutes(ports, idProp); }
 	public Collection<Feature> getRoutes(Collection<Feature> ports, String idProp, boolean allowSuez, boolean allowPanama) {
 		if(idProp == null) idProp = "ID";
 
@@ -248,7 +250,7 @@ public class SeaRouting {
 		return srs;
 	}
 
-
+	/*
 	public static void main(String[] args) throws Exception {
 		System.out.println("Start");
 
@@ -267,5 +269,6 @@ public class SeaRouting {
 
 		System.out.println("End");
 	}
+	 */
 
 }

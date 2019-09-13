@@ -15,18 +15,21 @@ SeaRouting sr = new SeaRouting();
 //get the route between Marseille (5.3E,43.3N) and Shanghai (121.8E,31.2N)
 Feature route = sr.getRoute(5.3, 43.3, 121.8, 31.2);
 
-//compute the distance in km
+//compute the route distance in km
 MultiLineString routeGeom = (MultiLineString) route.getGeom();
 double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
 
-//export the route in geoJSON format
+//extract the route in geoJSON format
 String rgj = GeoJSONUtil.toGeoJSON(routeGeom);
-``` 
+```
+
+**NEW:** It is now possible to compute maritime routes, which avoid the Suez and/or Panama channel.
+
 ## Installation
 
-### For java developers
+### For java programmers
 
-[SeaRoute](https://github.com/eurostat/searoute) is currently not deployed on a maven repository. You need to install it with:
+[SeaRoute](https://github.com/eurostat/searoute) is currently not deployed on a maven repository. You need to download, compile and install it locally with:
 
 ```
 git clone https://github.com/eurostat/searoute.git
@@ -34,9 +37,28 @@ cd searoute
 mvn clean install
 ```
 
-### As a webservice (Java servlet)
+and then use it in your Java project as a maven dependency:
 
-(TODO)
+```
+<dependency>
+	<groupId>eu.europa.ec.eurostat</groupId>
+	<artifactId>searoute</artifactId>
+	<version>1.0</version>
+</dependency>
+```
+
+
+### As a webservice
+
+To deploy [SeaRoute](https://github.com/eurostat/searoute) as a webservice (Java servlet), run:
+
+```
+git clone https://github.com/eurostat/searoute.git
+cd searoute
+mvn clean package
+```
+
+And move the servlet `/target/searoute.war` into your `/tomcatX.Y/webapps/` folder. Go then [http://localhost:8080/searoute/] on the see the API documentation and demos.
 
 ## Some additional information
 
