@@ -3,7 +3,6 @@
  */
 package eu.europa.ec.eurostat.searoute;
 
-import java.awt.Point;
 import java.io.File;
 import java.io.Serializable;
 import java.net.MalformedURLException;
@@ -33,8 +32,11 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.MultiLineString;
+import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.operation.linemerge.LineMerger;
 import org.opencarto.datamodel.Feature;
+import org.opencarto.io.GeoJSONUtil;
 import org.opencarto.util.GeoDistanceUtil;
 import org.opengis.feature.simple.SimpleFeature;
 
@@ -46,7 +48,10 @@ public class SeaRouting {
 	public static final int[] RESOLUTION_KM = new int[] { 100, 50, 20, 10, 5 };
 
 	private Graph g;
-	private EdgeWeighter weighter;
+	private EdgeWeighter defaultWeighter;
+	private EdgeWeighter noSuezWeighter;
+	private EdgeWeighter noPanamaWeighter;
+	private EdgeWeighter noSuezNoPanamaWeighter;
 
 	public SeaRouting() throws MalformedURLException { this(20); }
 	public SeaRouting(int resKM) throws MalformedURLException { this("src/main/webapp/resources/marnet/marnet_plus_"+resKM+"KM.shp"); }
@@ -57,7 +62,7 @@ public class SeaRouting {
 			Map<String, Serializable> map = new HashMap<>();
 			map.put( "url", marnetFileURL );
 			DataStore store = DataStoreFinder.getDataStore(map);
-			FeatureCollection fc =  store.getFeatureSource(store.getTypeNames()[0]).getFeatures();
+			FeatureCollection<?,?> fc =  store.getFeatureSource(store.getTypeNames()[0]).getFeatures();
 			store.dispose();
 
 			/*InputStream input = marnetFileURL.openStream();
@@ -86,17 +91,29 @@ public class SeaRouting {
 			}
 		}
 
-		//define weighter
-		weighter = new DijkstraIterator.EdgeWeighter() {
+		//define weighters
+		defaultWeighter = buildEdgeWeighter(true, true);
+		noSuezWeighter = buildEdgeWeighter(false, true);
+		noPanamaWeighter = buildEdgeWeighter(true, false);
+		noSuezNoPanamaWeighter = buildEdgeWeighter(false, false);
+	}
+
+	private EdgeWeighter buildEdgeWeighter(boolean allowSuez, boolean allowPanama) {
+		return new DijkstraIterator.EdgeWeighter() {
 			public double getWeight(Edge e) {
 				//edge around the globe
 				if( e.getObject()==null ) return 0;
 				SimpleFeature f = (SimpleFeature) e.getObject();
+				if(allowSuez && allowPanama)
+					return GeoDistanceUtil.getLengthGeoKM((Geometry)f.getDefaultGeometry());
+				String desc = (String)f.getAttribute("desc_");
+				if(!allowSuez && "suez".equals(desc)) return Double.MAX_VALUE;
+				if(!allowPanama && "panama".equals(desc)) return Double.MAX_VALUE;
 				return GeoDistanceUtil.getLengthGeoKM((Geometry)f.getDefaultGeometry());
 			}
 		};
-
 	}
+
 
 
 
@@ -135,14 +152,15 @@ public class SeaRouting {
 
 
 	//return the route geometry from origin/destination coordinates
-	public Feature getRoute(double oLon, double oLat, double dLon, double dLat) {
-		return getRoute(new Coordinate(oLon,oLat), new Coordinate(dLon,dLat));
+	public Feature getRoute(double oLon, double oLat, double dLon, double dLat) { return getRoute(oLon, oLat, dLon, dLat, true, true); }
+	public Feature getRoute(double oLon, double oLat, double dLon, double dLat, boolean allowSuez, boolean allowPanama) {
+		return getRoute(new Coordinate(oLon,oLat), new Coordinate(dLon,dLat), allowSuez, allowPanama);
 	}
-	public Feature getRoute(Coordinate oPos, Coordinate dPos) {
-		return getRoute(oPos, getNode(oPos), dPos, getNode(dPos));
+	public Feature getRoute(Coordinate oPos, Coordinate dPos, boolean allowSuez, boolean allowPanama) {
+		return getRoute(oPos, getNode(oPos), dPos, getNode(dPos), allowSuez, allowPanama);
 	}
 	//get the route when the node are known
-	public Feature getRoute(Coordinate oPos, Node oN, Coordinate dPos, Node dN) {
+	public Feature getRoute(Coordinate oPos, Node oN, Coordinate dPos, Node dN, boolean allowSuez, boolean allowPanama) {
 		GeometryFactory gf = new GeometryFactory();
 
 		//get node positions
@@ -163,9 +181,10 @@ public class SeaRouting {
 		}
 
 		//Compute dijkstra from start node
+		EdgeWeighter w = allowPanama & allowSuez ? defaultWeighter : allowPanama? noSuezWeighter : allowSuez ? noPanamaWeighter : noSuezNoPanamaWeighter;
 		Path path = null;
 		synchronized (g) {
-			path = getShortestPath(g, oN,dN,weighter);
+			path = getShortestPath(g, oN, dN, w);
 		}
 
 
@@ -207,7 +226,8 @@ public class SeaRouting {
 	}
 
 
-	public Collection<Feature> getRoutes(Collection<Feature> ports, String idProp) {
+	public Collection<Feature> getRoutes(Collection<Feature> ports, String idProp) { return getRoutes(ports, idProp); }
+	public Collection<Feature> getRoutes(Collection<Feature> ports, String idProp, boolean allowSuez, boolean allowPanama) {
 		if(idProp == null) idProp = "ID";
 
 		List<Feature> portsL = new ArrayList<Feature>(); portsL.addAll(ports);
@@ -219,7 +239,7 @@ public class SeaRouting {
 			for(int j=i+1; j<portsL.size(); j++) {
 				Feature pj = portsL.get(j);
 				System.out.println(pi.getProperties().get(idProp) + " - " + pj.getProperties().get(idProp) + " - " + (100*(cnt++)/nb) + "%");
-				Feature sr = getRoute(pi.getGeom().getCoordinate(), pj.getGeom().getCoordinate());
+				Feature sr = getRoute(pi.getGeom().getCoordinate(), pj.getGeom().getCoordinate(), allowSuez, allowPanama);
 				Geometry geom = sr.getGeom();
 				sr.getProperties().put("dkm", geom==null? -1 : GeoDistanceUtil.getLengthGeoKM(geom));
 				sr.getProperties().put("from", pi.getProperties().get(idProp));
@@ -229,5 +249,26 @@ public class SeaRouting {
 		}
 		return srs;
 	}
+
+	/*
+	public static void main(String[] args) throws Exception {
+		System.out.println("Start");
+
+		//create the routing object
+		SeaRouting sr = new SeaRouting();
+
+		//get the route between Marseille (5.3E,43.3N) and Shanghai (121.8E,31.2N)
+		Feature route = sr.getRoute(5.3, 43.3, 121.8, 31.2, false, true);
+
+		//compute the distance in km
+		MultiLineString routeGeom = (MultiLineString) route.getGeom();
+		double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
+
+		//export the route in geoJSON format
+		String rgj = GeoJSONUtil.toGeoJSON(routeGeom);
+
+		System.out.println("End");
+	}
+	 */
 
 }

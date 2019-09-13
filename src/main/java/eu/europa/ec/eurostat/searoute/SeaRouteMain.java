@@ -47,6 +47,10 @@ public class SeaRouteMain {
 				.hasArg().argName("Column name").build());
 		options.addOption(Option.builder("dlatCol").desc("Optional. The name of the column in the input file where the destination latitude is specified. Default: 'dlat'.")
 				.hasArg().argName("Column name").build());
+		options.addOption(Option.builder("suez").desc("Optional. Set to '1' to allow trips using Suez channel. Default: '1'.")
+				.hasArg().argName("Boolean (0 or 1)").build());
+		options.addOption(Option.builder("panama").desc("Optional. Set to '1' to allow trips using Panama channel. Default: '1'.")
+				.hasArg().argName("Boolean (0 or 1)").build());
 		options.addOption(Option.builder("h").desc("Show this help message").build());
 
 		CommandLine cmd = null;
@@ -81,6 +85,9 @@ public class SeaRouteMain {
 		String dlonCol = cmd.getOptionValue("dlonCol");   if(dlonCol == null) dlonCol = "dlon";
 		String dlatCol = cmd.getOptionValue("dlatCol");   if(dlatCol == null) dlatCol = "dlat";
 
+		//channels
+		String suez = cmd.getOptionValue("suez");   if(suez == null) suez = "1";
+		String panama = cmd.getOptionValue("panama");   if(panama == null) panama = "1";
 
 		//load data
 		ArrayList<HashMap<String, String>> data = CSVUtil.load(inFile);
@@ -116,7 +123,7 @@ public class SeaRouteMain {
 				continue;
 
 			//compute route
-			Feature f = sr.getRoute(oLon, oLat, dLon, dLat);
+			Feature f = sr.getRoute(oLon, oLat, dLon, dLat, "1".equals(suez), "1".equals(panama));
 			for(Entry<?,?> e : f.getProperties().entrySet()) o.put(e.getKey().toString(), e.getValue().toString());
 			o.put("route", GeoJSONUtil.toGeoJSON(f.getGeom()));
 

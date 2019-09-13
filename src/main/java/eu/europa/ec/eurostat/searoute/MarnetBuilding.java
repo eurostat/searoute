@@ -6,7 +6,7 @@ package eu.europa.ec.eurostat.searoute;
 import java.util.Collection;
 import java.util.HashSet;
 
-import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.LineString;
 import org.opencarto.algo.graph.ConnexComponents;
 import org.opencarto.algo.graph.GraphSimplify;
 import org.opencarto.algo.line.DouglasPeuckerRamerFilter;
@@ -22,9 +22,9 @@ import org.opencarto.util.FeatureUtil;
 public class MarnetBuilding {
 	public static double[] resDegs = new double[] { 0.5, 0.25, 0.1, 0.05, 0.025 };
 
-	public static Collection make(double res, String... datasources) {
+	public static Collection<LineString> make(double res, String... datasources) {
 		//load input lines
-		Collection lines = new HashSet<Geometry>();
+		Collection<LineString> lines = new HashSet<LineString>();
 
 		//data sources preparation
 		for(String ds : datasources) {
@@ -60,7 +60,7 @@ public class MarnetBuilding {
 		return lines;
 	}
 
-	private static Collection prepare(Collection lines, double res) {
+	private static Collection<LineString> prepare(Collection<LineString> lines, double res) {
 		lines = GraphSimplify.planifyLines(lines);						System.out.println(lines.size() + " planifyLines");
 		lines = GraphSimplify.lineMerge(lines);							System.out.println(lines.size() + " lineMerge");
 		lines = DouglasPeuckerRamerFilter.get(lines, res);						System.out.println(lines.size() + " filterGeom");
@@ -71,3 +71,4 @@ public class MarnetBuilding {
 	}
 
 }
+

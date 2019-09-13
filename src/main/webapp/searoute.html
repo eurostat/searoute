@@ -33,6 +33,10 @@ html { font-family: Arial; }
 		//get resolution
 		var res = getParameterByName("res") || 20;
 
+		//get channels
+		var suez = getParameterByName("suez") || 1;
+		var panama = getParameterByName("panama") || 1;
+
 		if (!opos) {
 			console.warn("Could not retrieve maritime route: No origin position(s) specified");
 			return;
@@ -42,7 +46,7 @@ html { font-family: Arial; }
 			return;
 		}
 
-		$.ajax({url : "seaws",data : "opos=" + opos + "&dpos=" + dpos + "&res=" + res
+		$.ajax({url : "seaws",data : "opos=" + opos + "&dpos=" + dpos + "&res=" + res + "&suez=" + suez + "&panama=" + panama
 		}).done( function(rou) {
 						$("#waitimg").hide();
 
