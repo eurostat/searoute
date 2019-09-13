@@ -12,8 +12,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.math3.stat.StatUtils;
 import org.apache.log4j.Logger;
 import org.geotools.geometry.jts.JTS;
 import org.locationtech.jts.geom.Coordinate;
@@ -70,27 +68,6 @@ public class FeatureUtil {
 		for(Feature f : features) env.expandToInclude(f.getGeom().getEnvelopeInternal());
 		env.expandBy((enlargementFactor-1)*env.getWidth(), (enlargementFactor-1)*env.getHeight());
 		return env;
-	}
-
-	public static <T extends Feature> Coordinate getMedianPosition(Collection<T> fs) {
-		Coordinate c = new Coordinate();
-		{
-			ArrayList<Double> s = new ArrayList<Double>(); double[] s_;
-			for(Feature f : fs) for(Coordinate c_ : f.getGeom().getCoordinates()) s.add(c_.x);
-			s_ = ArrayUtils.toPrimitive(s.toArray(new Double[s.size()]));
-			c.x = StatUtils.percentile(s_ ,50);
-			s_ = null;
-			s.clear();
-		}{
-			ArrayList<Double> s = new ArrayList<Double>(); double[] s_;
-			for(Feature f : fs) for(Coordinate c_ : f.getGeom().getCoordinates()) s.add(c_.y);
-			s_ = ArrayUtils.toPrimitive(s.toArray(new Double[s.size()]));
-			c.y = StatUtils.percentile(s_ ,50);
-			s_ = null;
-			s_ = null;
-			s.clear();
-		}
-		return c;
 	}
 
 	//check if an attribute is an identifier (that is it is unique)
