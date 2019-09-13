@@ -143,9 +143,9 @@ public class SeaRouteWS extends HttpServlet {
 				boolean distP = !("0".equals( request.getParameter("d") ));
 
 				//Suez channel allowed
-				boolean allowSuez = !("1".equals( request.getParameter("suez") ));
+				boolean allowSuez = "1".equals( request.getParameter("suez") );
 				//Panama channel allowed
-				boolean allowPanama = !("1".equals( request.getParameter("panama") ));
+				boolean allowPanama = "1".equals( request.getParameter("panama") );
 
 				//lat lon
 				double[] oLon=null,oLat=null,dLon=null,dLat=null;
