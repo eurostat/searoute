@@ -32,11 +32,9 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
-import org.locationtech.jts.geom.MultiLineString;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.operation.linemerge.LineMerger;
 import org.opencarto.datamodel.Feature;
-import org.opencarto.io.GeoJSONUtil;
 import org.opencarto.util.GeoDistanceUtil;
 import org.opengis.feature.simple.SimpleFeature;
 
