@@ -71,13 +71,13 @@ public class SeaRouteMain {
 			System.err.println("An input file should be specified with -i option. Use -h option to show the help message.");
 			return;
 		} else if(!new File(inFile).exists()) {
-			System.err.println("Input file does not exist: "+inFile);
+			System.err.println("Input file does not exist: " + inFile);
 			return;
 		}
 
 		//output file
 		String outFile = cmd.getOptionValue("o");
-		if(outFile == null) outFile = Paths.get("").toAbsolutePath().toString()+"/out.csv";
+		if(outFile == null) outFile = Paths.get("").toAbsolutePath().toString() + "/out.csv";
 
 		//column names
 		String olonCol = cmd.getOptionValue("olonCol");   if(olonCol == null) olonCol = "olon";
