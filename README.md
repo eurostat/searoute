@@ -1,35 +1,27 @@
 # SeaRoute
 
-[SeaRoute](https://github.com/eurostat/searoute) is a Java library to compute shortest maritime routes between two points.
+[SeaRoute](https://github.com/eurostat/searoute) computes shortest maritime routes between pairs of locations.
 
 See below an example from [Marseille (5.3E,43.3N)](https://www.openstreetmap.org/#map=10/43.3/5.3) to [Shanghai (121.8E,31.2N)](https://www.openstreetmap.org/#map=10/31.2/121.8). The red line is the computed maritime route. The black line is the [great-circle route](https://en.wikipedia.org/wiki/Great-circle_distance).
 
 ![From Marseille to Shangai](doc/img/mars_shan.png)
 
+**NEW:** It is now possible to compute maritime routes avoiding the Suez and/or Panama channel.
+
 ## Usage
 
-```java
-//create the routing object
-SeaRouting sr = new SeaRouting();
+### As a program
 
-//get the route between Marseille (5.3E,43.3N) and Shanghai (121.8E,31.2N)
-Feature route = sr.getRoute(5.3, 43.3, 121.8, 31.2);
+[SeaRoute](https://github.com/eurostat/searoute) requires Java 1.8 or higher. Run `java --version` to check is Java is installed and what is the current version.
 
-//compute the route distance in km
-MultiLineString routeGeom = (MultiLineString) route.getGeom();
-double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
+Download the lastest release [here](https://github.com/eurostat/searoute/tree/master/releases/), unzip it and run `java -jar searoute.jar -h` to see the help.
+Examples of executions are provided in `searoute.bat` (for windows users) or `searoute.sh` (for linux users). An example of input file is also provided:`test_input.csv`. It is a simple CSV file with predefined columns for the origin/destination coordinates of the routes. The output format is a [GeoJSON](https://geojson.org/) file which can be displayed on [geojson.io](http://geojson.io/) or any modern GIS software such as [QGIS](https://qgis.org).
 
-//extract the route in geoJSON format
-String rgj = GeoJSONUtil.toGeoJSON(routeGeom);
-```
+![Example](doc/img/example.png)
 
-**NEW:** It is now possible to compute maritime routes, which avoid the Suez and/or Panama channel.
+### For Java coders
 
-## Installation
-
-### For java programmers
-
-[SeaRoute](https://github.com/eurostat/searoute) is currently not deployed on a maven repository. You need to download, compile and install it locally with:
+[SeaRoute](https://github.com/eurostat/searoute) is currently not deployed on a maven repository but you can quickly download, compile and install it locally with:
 
 ```
 git clone https://github.com/eurostat/searoute.git
@@ -47,6 +39,23 @@ and then use it in your Java project as a maven dependency:
 </dependency>
 ```
 
+Here is an example of shortest maritime route computation:
+
+```java
+//create the routing object
+SeaRouting sr = new SeaRouting();
+
+//get the route between Marseille (5.3E,43.3N) and Shanghai (121.8E,31.2N)
+Feature route = sr.getRoute(5.3, 43.3, 121.8, 31.2);
+
+//compute the route distance in km
+MultiLineString routeGeom = (MultiLineString) route.getGeom();
+double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
+
+//extract the route in geoJSON format
+String rgj = GeoJSONUtil.toGeoJSON(routeGeom);
+```
+
 ### As a webservice
 
 To deploy [SeaRoute](https://github.com/eurostat/searoute) as a webservice (Java servlet), run:
@@ -57,13 +66,7 @@ cd searoute
 mvn clean package
 ```
 
-And move the servlet `/target/searoute.war` into your `/tomcatX.Y/webapps/` folder. Go then to http://localhost:8080/searoute/ to see the [API documentation](https://eurostat.github.io/searoute/src/main/webapp/index.html) and demos.
-
-### As an executable program
-
-See [here](https://github.com/eurostat/searoute/tree/master/releases/)
-
-TODO: Better document
+and move the servlet `/target/searoute.war` into your `/tomcatX.Y/webapps/` folder. Go then to http://localhost:8080/searoute/ to see the [API documentation](https://eurostat.github.io/searoute/src/main/webapp/index.html) and demos.
 
 ## Some additional information
 
