@@ -57,6 +57,8 @@ double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
 String rgj = GeoJSONUtil.toGeoJSON(routeGeom);
 ```
 
+(TODO: Add link to javadoc.)
+
 ### As a webservice
 
 To deploy [SeaRoute](https://github.com/eurostat/searoute) as a webservice (Java servlet), run:
