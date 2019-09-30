@@ -4,7 +4,7 @@
 
 See below an example from [Marseille (5.3E,43.3N)](https://www.openstreetmap.org/#map=10/43.3/5.3) to [Shanghai (121.8E,31.2N)](https://www.openstreetmap.org/#map=10/31.2/121.8). The red line is the computed maritime route. The black line is the [great-circle route](https://en.wikipedia.org/wiki/Great-circle_distance).
 
-![From Marseille to Shangai](doc/img/mars_shan.png)
+![From Marseille to Shangai](docs/img/mars_shan.png)
 
 **NEW:** It is now possible to compute maritime routes avoiding the Suez and/or Panama channel.
 
@@ -18,7 +18,7 @@ Download the lastest release [here](https://github.com/eurostat/searoute/release
 
 Examples of executions for windows users are provided in `searoute.bat` (for linux users, see `searoute.sh`). `test_input.csv` is an example of input file. It is a simple CSV file with origin/destination coordinates of the routes. Note that only geographical coordinates (decimal degrees) are supported. The output file is a [GeoJSON](https://geojson.org/) file which can be displayed on [geojson.io](http://geojson.io/) or any modern GIS software such as [QGIS](https://qgis.org).
 
-![Example](doc/img/example.png)
+![Example](docs/img/example.png)
 
 ### For Java coders
 
@@ -57,7 +57,7 @@ double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
 String rgj = GeoJSONUtil.toGeoJSON(routeGeom);
 ```
 
-(TODO: Add link to javadoc.)
+For further overview, [see the documentation](https://eurostat.github.io/searoute/apidocs/).
 
 ### As a webservice
 
@@ -75,7 +75,7 @@ and move the servlet `/target/searoute.war` into your `/tomcatX.Y/webapps/` fold
 
 The shortest maritime routes are computed from a network of lines covering the seas and following some of the most frequent martitime routes. This maritime network is based on the *Oak Ridge National Labs CTA Transportation Network Group, Global Shipping Lane Network, World, 2000* (retrieved from [geocommons.com](http://geocommons.com/datasets?id=25) or [github](https://github.com/geoiq/gc_data/blob/master/datasets/25.geojson)), enriched with some additional lines around the European coasts based on [AIS data](https://en.wikipedia.org/wiki/Automatic_identification_system). Simplified versions of this network have been produced for different resolutions (5km, 10km, 20km, 50km, 100km) based on a shrinking of too short edges and a removal of similar edges.
 
-[![Maritime network overview](doc/img/marnet_overview_.png)](doc/img/marnet_overview.png)
+[![Maritime network overview](docs/img/marnet_overview_.png)](docs/img/marnet_overview.png)
 
 The shortest maritime routes are computed from this network using the [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) implemented in the wonderful [GeoTools](https://geotools.org/) library.
 
