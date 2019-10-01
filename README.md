@@ -22,7 +22,7 @@ Examples of executions for windows users are provided in `searoute.bat` (for lin
 
 ### For coders
 
-[SeaRoute](https://github.com/eurostat/searoute) can be used as a Java library. To quickly setup a development environment, see [these instructions](https://eurostat.github.io/README/docs/howto/java_eclipse_maven_git_quick_guide).
+[SeaRoute](https://github.com/eurostat/searoute) can be used as a Java library. To quickly setup a development environment, see [these instructions](https://eurostat.github.io/README/howto/java_eclipse_maven_git_quick_guide).
 
 Download and install [SeaRoute](https://github.com/eurostat/searoute) with:
 
