@@ -45,19 +45,6 @@ and then use it in your Java project as a dependency by adding it to the *pom.xm
 </dependencies>
 ```
 
-You should also add the [OSGeo](https://www.osgeo.org/) repository of [GeoTools](https://www.geotools.org/) :
-
-```
-<repositories>
-	...
-	<repository>
-		<id>osgeo</id>
-		<name>Open Source Geospatial Foundation Repository</name>
-		<url>http://download.osgeo.org/webdav/geotools/</url>
-	</repository>
-</repositories>
-```
-
 Here is an example of shortest maritime route computation:
 
 ```java
