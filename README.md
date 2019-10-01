@@ -20,9 +20,11 @@ Examples of executions for windows users are provided in `searoute.bat` (for lin
 
 ![Example](docs/img/example.png)
 
-### For Java coders
+### For coders
 
-[SeaRoute](https://github.com/eurostat/searoute) is currently not deployed on a maven repository but you can quickly download, compile and install it locally with:
+[SeaRoute](https://github.com/eurostat/searoute) can be used as a Java library. To quickly setup a development environment, see [these instructions](https://eurostat.github.io/README/howto/java_eclipse_maven_git_quick_guide).
+
+Download and install [SeaRoute](https://github.com/eurostat/searoute) with:
 
 ```
 git clone https://github.com/eurostat/searoute.git
@@ -30,14 +32,30 @@ cd searoute
 mvn clean install
 ```
 
-and then use it in your Java project as a maven dependency:
+and then use it in your Java project as a dependency by adding it to the *pom.xml* file:
 
 ```
-<dependency>
-	<groupId>eu.europa.ec.eurostat</groupId>
-	<artifactId>searoute</artifactId>
-	<version>1.0</version>
-</dependency>
+<dependencies>
+	...
+	<dependency>
+		<groupId>eu.europa.ec.eurostat</groupId>
+		<artifactId>searoute</artifactId>
+		<version>1.1</version>
+	</dependency>
+</dependencies>
+```
+
+You should also add the [OSGeo](https://www.osgeo.org/) repository of [GeoTools](https://www.geotools.org/) :
+
+```
+<repositories>
+	...
+	<repository>
+		<id>osgeo</id>
+		<name>Open Source Geospatial Foundation Repository</name>
+		<url>http://download.osgeo.org/webdav/geotools/</url>
+	</repository>
+</repositories>
 ```
 
 Here is an example of shortest maritime route computation:
@@ -57,7 +75,7 @@ double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
 String rgj = GeoJSONUtil.toGeoJSON(routeGeom);
 ```
 
-For further overview, [see the documentation](https://eurostat.github.io/searoute/apidocs/).
+For further overview, see [the documentation](https://eurostat.github.io/searoute/apidocs/).
 
 ### As a webservice
 
