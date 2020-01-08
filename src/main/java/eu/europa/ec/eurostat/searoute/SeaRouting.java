@@ -43,6 +43,8 @@ import org.opengis.feature.simple.SimpleFeature;
  *
  */
 public class SeaRouting {
+	//private final static Logger LOGGER = LogManager.getLogger(SeaRouting.class.getName());
+
 	public static final int[] RESOLUTION_KM = new int[] { 100, 50, 20, 10, 5 };
 
 	private Graph g;
@@ -264,6 +266,11 @@ public class SeaRouting {
 
 		//export the route in geoJSON format
 		String rgj = GeoJSONUtil.toGeoJSON(routeGeom);
+
+		LOGGER.info(route);
+		LOGGER.info(routeGeom);
+		LOGGER.info(d);
+		LOGGER.info(rgj);
 
 		System.out.println("End");
 	}
