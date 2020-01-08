@@ -7,7 +7,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.operation.polygonize.Polygonizer;
 
@@ -20,7 +21,7 @@ import org.locationtech.jts.operation.polygonize.Polygonizer;
  *
  */
 public class Face extends GraphElement{
-	private final static Logger LOGGER = Logger.getLogger(Face.class.getName());
+	private final static Logger LOGGER = LogManager.getLogger(Face.class.getName());
 
 	private static int ID = 0;
 

@@ -8,7 +8,8 @@ import java.util.Collection;
 
 import javax.measure.Unit;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.util.CRSUtilities;
@@ -24,7 +25,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
  *
  */
 public class ProjectionUtil {
-	public final static Logger LOGGER = Logger.getLogger(ProjectionUtil.class.getName());
+	public final static Logger LOGGER = LogManager.getLogger(ProjectionUtil.class.getName());
 
 	//geographic: ETRS89 4937 (3D) 4258(2D)
 	//# ETRS89

@@ -6,7 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -24,7 +25,7 @@ import org.locationtech.jts.operation.union.CascadedPolygonUnion;
  *
  */
 public class Union {
-	private final static Logger LOGGER = Logger.getLogger(Union.class.getName());
+	private final static Logger LOGGER = LogManager.getLogger(Union.class.getName());
 
 	public static <T extends Geometry> Geometry getLineUnion(Collection<T> geoms) {
 		return getLine( union_(geoms) );

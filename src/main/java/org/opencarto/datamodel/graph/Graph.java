@@ -4,7 +4,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.index.quadtree.Quadtree;
@@ -17,7 +18,7 @@ import org.locationtech.jts.index.quadtree.Quadtree;
  *
  */
 public class Graph {
-	private final static Logger LOGGER = Logger.getLogger(Graph.class.getName());
+	private final static Logger LOGGER = LogManager.getLogger(Graph.class.getName());
 
 	//nodes
 	private Set<Node> nodes = new HashSet<Node>();

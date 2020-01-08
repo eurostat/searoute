@@ -6,16 +6,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.log4j.Logger;
-import org.geotools.data.DataStore;
-import org.geotools.data.DataStoreFinder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FileDataStore;
 import org.geotools.data.FileDataStoreFinder;
@@ -24,9 +21,7 @@ import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.data.shapefile.files.ShpFiles;
 import org.geotools.data.simple.SimpleFeatureCollection;
-import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.simple.SimpleFeatureStore;
-import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Envelope;
@@ -48,7 +43,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
  *
  */
 public class SHPUtil {
-	private final static Logger LOGGER = Logger.getLogger(SHPUtil.class);
+	private final static Logger LOGGER = LogManager.getLogger(SHPUtil.class);
 
 	//get basic info on shp file
 
@@ -176,44 +171,6 @@ public class SHPUtil {
 	}
 
 
-
-
-	//add feature to a shapefile
-	private static void add(SimpleFeature f, String inFile) {
-		try {
-			Map<String,URL> map = new HashMap<String,URL>();
-			map.put("url", new File(inFile).toURI().toURL());
-			DataStore ds = DataStoreFinder.getDataStore(map);
-			String typeName = ds.getTypeNames()[0];
-			SimpleFeatureType ft = ds.getFeatureSource(typeName).getFeatures().getSchema();
-
-			Transaction tr = new DefaultTransaction("create");
-			String tn = ds.getTypeNames()[0];
-			SimpleFeatureSource fs_ = ds.getFeatureSource(tn);
-
-			if (fs_ instanceof SimpleFeatureStore) {
-				SimpleFeatureStore fst = (SimpleFeatureStore) fs_;
-
-				DefaultFeatureCollection objs = new DefaultFeatureCollection(null, ft);
-				objs.add(f);
-
-				fst.setTransaction(tr);
-				try {
-					fst.addFeatures(objs);
-					tr.commit();
-				} catch (Exception problem) {
-					problem.printStackTrace();
-					tr.rollback();
-				} finally {
-					tr.close();
-				}
-			} else {
-				System.out.println(tn + " does not support read/write access");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 
 

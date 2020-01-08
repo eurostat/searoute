@@ -5,7 +5,8 @@ package org.opencarto.algo.graph;
 
 import java.util.Collection;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
@@ -17,7 +18,7 @@ import org.opencarto.datamodel.graph.Edge;
  *
  */
 public class EdgeValidity {
-	private final static Logger LOGGER = Logger.getLogger(EdgeValidity.class.getName());
+	private final static Logger LOGGER = LogManager.getLogger(EdgeValidity.class.getName());
 
 	//check edge validity, that is:
 	// - it does not self intersects (it is "simple")

@@ -3,7 +3,8 @@ package org.opencarto.datamodel.graph;
 import java.util.Collection;
 import java.util.HashSet;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
@@ -18,7 +19,7 @@ import org.locationtech.jts.geom.LineString;
  * 
  */
 public class Edge extends GraphElement{
-	private final static Logger LOGGER = Logger.getLogger(Edge.class.getName());
+	private final static Logger LOGGER = LogManager.getLogger(Edge.class.getName());
 
 	private static int ID = 0;
 
