@@ -7,6 +7,13 @@
 	<version>1.1</version>
 	<packaging>war</packaging>
 
+	<licenses>
+		<license>
+			<name>European Union Public License, version 1.2 (EUPL-1.2)</name>
+			<url>https://opensource.org/licenses/EUPL-1.2</url>
+		</license>
+	</licenses>
+
 	<properties>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
