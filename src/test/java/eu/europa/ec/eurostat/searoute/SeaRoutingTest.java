@@ -3,21 +3,19 @@
  */
 package eu.europa.ec.eurostat.searoute;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.MultiLineString;
 
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
-import eu.europa.ec.eurostat.jgiscotools.io.GeoJSONUtil;
 import eu.europa.ec.eurostat.jgiscotools.util.GeoDistanceUtil;
+import junit.framework.TestCase;
 
 /**
  * @author Julien Gaffuri
  *
  */
-class SeaRoutingTest {
-	private final static Logger LOGGER = LogManager.getLogger(SeaRoutingTest.class.getName());
+class SeaRoutingTest extends TestCase {
+	//private final static Logger LOGGER = LogManager.getLogger(SeaRoutingTest.class.getName());
 
 	@Test
 	void testShangaiMarseille() throws Exception {
@@ -33,12 +31,20 @@ class SeaRoutingTest {
 		double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
 
 		//export the route in geoJSON format
-		String rgj = GeoJSONUtil.toGeoJSON(routeGeom);
+		//String rgj = GeoJSONUtil.toGeoJSON(routeGeom);
 
-		LOGGER.info(route.getAttributes()); //{dToKM=30.434689972094713, dFromKM=4.134285055159354}
-		LOGGER.info(routeGeom.getLength()); //239.80414982436778
-		LOGGER.info(d); //25091.977608633395
-		LOGGER.info(rgj); //{"type":"MultiLineString","coordinates":[[[5.2]]]}
+		assertFalse(route.getAttribute("dToKM") == null);
+		assertFalse(route.getAttribute("dFromKM") == null);
+		assertFalse(routeGeom == null);
+		assertTrue(routeGeom.getLength() < 250);
+		assertTrue(routeGeom.getLength() > 200);
+		assertTrue(d < 28000);
+		assertTrue(d > 23000);
+
+		//LOGGER.info(route.getAttributes()); //{dToKM=30.434689972094713, dFromKM=4.134285055159354}
+		//LOGGER.info(routeGeom.getLength()); //239.80414982436778
+		//LOGGER.info(d); //25091.977608633395
+		//LOGGER.info(rgj); //{"type":"MultiLineString","coordinates":[[[5.2]]]}
 	}
 
 }
