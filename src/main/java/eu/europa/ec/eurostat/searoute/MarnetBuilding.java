@@ -24,7 +24,7 @@ public class MarnetBuilding {
 	public static double[] resDegs = new double[] { 0.5, 0.25, 0.1, 0.05, 0.025 };
 
 	//TODO
-	//add port connections from GISCO DB ?
+	//add port connections from GISCO DB
 	//for thin triangles (with short height), remove the longest segment
 	//publish - document
 	//ensure no land intersection ?
