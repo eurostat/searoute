@@ -13,12 +13,14 @@ import junit.framework.TestCase;
  * @author Julien Gaffuri
  *
  */
-class SeaRoutingTest extends TestCase {
+public class SeaRoutingTest extends TestCase {
 	//private final static Logger LOGGER = LogManager.getLogger(SeaRoutingTest.class.getName());
 
-	public SeaRoutingTest() {}
+	/*public static void main(String[] args) throws Exception {
+		junit.textui.TestRunner.run(SeaRoutingTest.class);
+	}*/
 
-	void testShangaiMarseille() throws Exception {
+	public void testShangaiMarseille() throws Exception {
 
 		//create the routing object
 		SeaRouting sr = new SeaRouting();
