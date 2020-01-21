@@ -3,7 +3,6 @@
  */
 package eu.europa.ec.eurostat.searoute;
 
-import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.MultiLineString;
 
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
@@ -17,7 +16,8 @@ import junit.framework.TestCase;
 class SeaRoutingTest extends TestCase {
 	//private final static Logger LOGGER = LogManager.getLogger(SeaRoutingTest.class.getName());
 
-	@Test
+	public SeaRoutingTest() {}
+
 	void testShangaiMarseille() throws Exception {
 
 		//create the routing object
