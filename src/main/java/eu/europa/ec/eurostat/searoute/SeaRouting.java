@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.feature.FeatureCollection;
@@ -44,7 +46,7 @@ import eu.europa.ec.eurostat.jgiscotools.util.GeoDistanceUtil;
  *
  */
 public class SeaRouting {
-	//private final static Logger LOGGER = LogManager.getLogger(SeaRouting.class.getName());
+	private final static Logger LOGGER = LogManager.getLogger(SeaRouting.class.getName());
 
 	public static final int[] RESOLUTION_KM = new int[] { 100, 50, 20, 10, 5 };
 
@@ -84,7 +86,7 @@ public class SeaRouting {
 			Coordinate c = ((Point)n.getObject()).getCoordinate();
 			if(c.x==180) {
 				Node n_ = getNode(new Coordinate(-c.x,c.y));
-				//System.out.println(c + " -> " + ((Point)n_.getObject()).getCoordinate());
+				if(LOGGER.isTraceEnabled()) LOGGER.trace(c + " -> " + ((Point)n_.getObject()).getCoordinate());
 				BasicEdge be = new BasicEdge(n, n_);
 				n.getEdges().add(be);
 				n_.getEdges().add(be);
@@ -102,7 +104,7 @@ public class SeaRouting {
 	private EdgeWeighter buildEdgeWeighter(boolean allowSuez, boolean allowPanama) {
 		return new DijkstraIterator.EdgeWeighter() {
 			public double getWeight(Edge e) {
-				//edge around the globe
+				//deal with edge around the globe
 				if( e.getObject()==null ) return 0;
 				SimpleFeature f = (SimpleFeature) e.getObject();
 				if(allowSuez && allowPanama)
@@ -132,7 +134,12 @@ public class SeaRouting {
 		return pt.getCoordinate();
 	}
 
-	//get closest node from a position (lon,lat)
+	/**
+	 * Get closest node from a position (lon,lat)
+	 * 
+	 * @param c
+	 * @return
+	 */
 	public Node getNode(Coordinate c){
 		double dMin = Double.MAX_VALUE;
 		Node nMin=null;
@@ -146,21 +153,47 @@ public class SeaRouting {
 		return nMin;
 	}
 
-	//return the distance in km. Distance to closest node
-	private double getDistanceToNetworkKM(Coordinate c) {
-		return GeoDistanceUtil.getDistanceKM(c, getPosition(getNode(c)));
-	}
 
-
-	//return the route geometry from origin/destination coordinates
+	/**
+	 * Return the route geometry from origin/destination coordinates
+	 * 
+	 * @param oLon
+	 * @param oLat
+	 * @param dLon
+	 * @param dLat
+	 * @return
+	 */
 	public Feature getRoute(double oLon, double oLat, double dLon, double dLat) { return getRoute(oLon, oLat, dLon, dLat, true, true); }
+
+	/**
+	 * Return the route geometry from origin/destination coordinates
+	 * 
+	 * @param oLon
+	 * @param oLat
+	 * @param dLon
+	 * @param dLat
+	 * @param allowSuez
+	 * @param allowPanama
+	 * @return
+	 */
 	public Feature getRoute(double oLon, double oLat, double dLon, double dLat, boolean allowSuez, boolean allowPanama) {
 		return getRoute(new Coordinate(oLon,oLat), new Coordinate(dLon,dLat), allowSuez, allowPanama);
 	}
 	public Feature getRoute(Coordinate oPos, Coordinate dPos, boolean allowSuez, boolean allowPanama) {
 		return getRoute(oPos, getNode(oPos), dPos, getNode(dPos), allowSuez, allowPanama);
 	}
-	//get the route when the node are known
+
+	/**
+	 * Return the route geometry from origin/destination graph nodes (when they are known)
+	 * 
+	 * @param oPos
+	 * @param oN
+	 * @param dPos
+	 * @param dN
+	 * @param allowSuez
+	 * @param allowPanama
+	 * @return
+	 */
 	public Feature getRoute(Coordinate oPos, Node oN, Coordinate dPos, Node dN, boolean allowSuez, boolean allowPanama) {
 		GeometryFactory gf = new GeometryFactory();
 
@@ -218,6 +251,13 @@ public class SeaRouting {
 
 
 
+	/**
+	 * Keep only ports that are close to the network nodes.
+	 * 
+	 * @param ports
+	 * @param minDistToNetworkKM
+	 * @return
+	 */
 	public Collection<Feature> filterPorts(Collection<Feature> ports, double minDistToNetworkKM) {
 		Collection<Feature> pls = new HashSet<Feature>();
 		for(Feature p : ports)
@@ -226,8 +266,35 @@ public class SeaRouting {
 		return pls;
 	}
 
+	/**
+	 * Return the distance in km. Distance to closest node
+	 * 
+	 * @param c
+	 * @return
+	 */
+	private double getDistanceToNetworkKM(Coordinate c) {
+		return GeoDistanceUtil.getDistanceKM(c, getPosition(getNode(c)));
+	}
 
+
+	/**
+	 * Compute the route matrix of a list of ports.
+	 * 
+	 * @param ports
+	 * @param idProp
+	 * @return
+	 */
 	public Collection<Feature> getRoutes(Collection<Feature> ports, String idProp) { return getRoutes(ports, idProp); }
+
+	/**
+	 * Compute the route matrix of a list of ports.
+	 * 
+	 * @param ports
+	 * @param idProp
+	 * @param allowSuez
+	 * @param allowPanama
+	 * @return
+	 */
 	public Collection<Feature> getRoutes(Collection<Feature> ports, String idProp, boolean allowSuez, boolean allowPanama) {
 		if(idProp == null) idProp = "ID";
 
@@ -239,7 +306,7 @@ public class SeaRouting {
 			Feature pi = portsL.get(i);
 			for(int j=i+1; j<portsL.size(); j++) {
 				Feature pj = portsL.get(j);
-				System.out.println(pi.getAttribute(idProp) + " - " + pj.getAttribute(idProp) + " - " + (100*(cnt++)/nb) + "%");
+				if(LOGGER.isDebugEnabled()) LOGGER.debug(pi.getAttribute(idProp) + " - " + pj.getAttribute(idProp) + " - " + (100*(cnt++)/nb) + "%");
 				Feature sr = getRoute(pi.getDefaultGeometry().getCoordinate(), pj.getDefaultGeometry().getCoordinate(), allowSuez, allowPanama);
 				Geometry geom = sr.getDefaultGeometry();
 				sr.setAttribute("dkm", geom==null? -1 : GeoDistanceUtil.getLengthGeoKM(geom));
@@ -250,31 +317,5 @@ public class SeaRouting {
 		}
 		return srs;
 	}
-
-	/*
-	public static void main(String[] args) throws Exception {
-		System.out.println("Start");
-
-		//create the routing object
-		SeaRouting sr = new SeaRouting();
-
-		//get the route between Marseille (5.3E,43.3N) and Shanghai (121.8E,31.2N)
-		Feature route = sr.getRoute(5.3, 43.3, 121.8, 31.2, false, true);
-
-		//compute the distance in km
-		MultiLineString routeGeom = (MultiLineString) route.getGeom();
-		double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
-
-		//export the route in geoJSON format
-		String rgj = GeoJSONUtil.toGeoJSON(routeGeom);
-
-		LOGGER.info(route);
-		LOGGER.info(routeGeom);
-		LOGGER.info(d);
-		LOGGER.info(rgj);
-
-		System.out.println("End");
-	}
-	 */
 
 }
