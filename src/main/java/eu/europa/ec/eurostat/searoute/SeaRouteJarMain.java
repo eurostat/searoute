@@ -16,11 +16,12 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.opencarto.datamodel.Feature;
-import org.opencarto.io.CSVUtil;
-import org.opencarto.io.GeoJSONUtil;
-import org.opencarto.util.GeoDistanceUtil;
-import org.opencarto.util.Util;
+
+import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
+import eu.europa.ec.eurostat.jgiscotools.io.CSVUtil;
+import eu.europa.ec.eurostat.jgiscotools.io.GeoJSONUtil;
+import eu.europa.ec.eurostat.jgiscotools.util.GeoDistanceUtil;
+import eu.europa.ec.eurostat.jgiscotools.util.Util;
 
 /**
  * Main method for executable program.
@@ -132,11 +133,11 @@ public class SeaRouteJarMain {
 			Feature f = sr.getRoute(oLon, oLat, dLon, dLat, "1".equals(suez), "1".equals(panama));
 
 			//set data
-			f.getProperties().putAll(o);
+			f.getAttributes().putAll(o);
 
 			//compute distance
-			double d = GeoDistanceUtil.getLengthGeoKM(f.getGeom());
-			f.set("distKM", ""+Util.round(d, 2));
+			double d = GeoDistanceUtil.getLengthGeoKM(f.getDefaultGeometry());
+			f.setAttribute("distKM", ""+Util.round(d, 2));
 
 			fs.add(f);
 		}

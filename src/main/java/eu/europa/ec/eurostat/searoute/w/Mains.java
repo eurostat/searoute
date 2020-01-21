@@ -9,12 +9,12 @@ import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
-import org.opencarto.datamodel.Feature;
-import org.opencarto.io.CSVUtil;
-import org.opencarto.io.SHPUtil;
-import org.opencarto.util.GeoDistanceUtil;
 import org.opengis.referencing.operation.MathTransform;
 
+import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
+import eu.europa.ec.eurostat.jgiscotools.io.CSVUtil;
+import eu.europa.ec.eurostat.jgiscotools.io.SHPUtil;
+import eu.europa.ec.eurostat.jgiscotools.util.GeoDistanceUtil;
 import eu.europa.ec.eurostat.searoute.SeaRouting;
 
 public class Mains {
@@ -62,12 +62,12 @@ public class Mains {
 				r = sr.getRoute(oPos, dPos, true, true);
 
 				//compute distance
-				r.getProperties().put("dKM", GeoDistanceUtil.getLengthGeoKM(r.getGeom()));
-				System.out.println(r.getProperties().get("dKM"));
+				r.setAttribute("dKM", GeoDistanceUtil.getLengthGeoKM(r.getDefaultGeometry()));
+				System.out.println(r.getAttribute("dKM"));
 
 			}
 
-			r.getProperties().putAll(route);
+			r.getAttributes().putAll(route);
 			rs.add(r);
 
 			//if(i>400) break;
@@ -137,7 +137,7 @@ public class Mains {
 		//index by id
 		HashMap<String,Feature> iPorts = new HashMap<String,Feature>();
 		for(Feature p : ports)
-			iPorts.put(p.getProperties().get("PORT_ID").toString(), p);
+			iPorts.put(p.getAttribute("PORT_ID").toString(), p);
 		ports.clear(); ports=null;
 
 		//load target route data
@@ -237,8 +237,8 @@ public class Mains {
 		Feature f = sr.getRoute(5.3, 43.3, 121.8, 31.2);
 		System.out.println(new Date().toInstant());
 
-		System.out.println(f.getProperties().get("dFromKM"));
-		System.out.println(f.getProperties().get("dToKM"));
+		System.out.println(f.getAttribute("dFromKM"));
+		System.out.println(f.getAttribute("dToKM"));
 		System.out.println(f.getGeom());
 		double dist = GeoDistanceUtil.getLengthGeoKM(f.getGeom());
 		System.out.println(dist);

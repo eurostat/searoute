@@ -34,9 +34,10 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.operation.linemerge.LineMerger;
-import org.opencarto.datamodel.Feature;
-import org.opencarto.util.GeoDistanceUtil;
 import org.opengis.feature.simple.SimpleFeature;
+
+import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
+import eu.europa.ec.eurostat.jgiscotools.util.GeoDistanceUtil;
 
 /**
  * @author julien Gaffuri
@@ -176,7 +177,7 @@ public class SeaRouting {
 		if(dist>=0 && distN>=0 && distN > dist){
 			//return direct route
 			Feature rf = new Feature();
-			rf.setGeom( gf.createMultiLineString(new LineString[]{ gf.createLineString(new Coordinate[]{oPos,dPos}) }) );
+			rf.setDefaultGeometry( gf.createMultiLineString(new LineString[]{ gf.createLineString(new Coordinate[]{oPos,dPos}) }) );
 			return rf;
 		}
 
@@ -190,7 +191,7 @@ public class SeaRouting {
 
 		if(path == null) {
 			Feature rf = new Feature();
-			rf.setGeom(null);
+			rf.setDefaultGeometry(null);
 			return rf;
 		}
 
@@ -209,9 +210,9 @@ public class SeaRouting {
 
 		Collection<?> lss = lm.getMergedLineStrings();
 		Feature rf = new Feature();
-		rf.setGeom( gf.createMultiLineString( lss.toArray(new LineString[lss.size()]) ) );
-		rf.getProperties().put("dFromKM", GeoDistanceUtil.getDistanceKM(oPos, oNPos));
-		rf.getProperties().put("dToKM", GeoDistanceUtil.getDistanceKM(dPos, dNPos));
+		rf.setDefaultGeometry( gf.createMultiLineString( lss.toArray(new LineString[lss.size()]) ) );
+		rf.setAttribute("dFromKM", GeoDistanceUtil.getDistanceKM(oPos, oNPos));
+		rf.setAttribute("dToKM", GeoDistanceUtil.getDistanceKM(dPos, dNPos));
 		return rf;
 	}
 
@@ -220,7 +221,7 @@ public class SeaRouting {
 	public Collection<Feature> filterPorts(Collection<Feature> ports, double minDistToNetworkKM) {
 		Collection<Feature> pls = new HashSet<Feature>();
 		for(Feature p : ports)
-			if(getDistanceToNetworkKM(p.getGeom().getCoordinate()) <= minDistToNetworkKM)
+			if(getDistanceToNetworkKM(p.getDefaultGeometry().getCoordinate()) <= minDistToNetworkKM)
 				pls.add(p);
 		return pls;
 	}
@@ -238,12 +239,12 @@ public class SeaRouting {
 			Feature pi = portsL.get(i);
 			for(int j=i+1; j<portsL.size(); j++) {
 				Feature pj = portsL.get(j);
-				System.out.println(pi.getProperties().get(idProp) + " - " + pj.getProperties().get(idProp) + " - " + (100*(cnt++)/nb) + "%");
-				Feature sr = getRoute(pi.getGeom().getCoordinate(), pj.getGeom().getCoordinate(), allowSuez, allowPanama);
-				Geometry geom = sr.getGeom();
-				sr.getProperties().put("dkm", geom==null? -1 : GeoDistanceUtil.getLengthGeoKM(geom));
-				sr.getProperties().put("from", pi.getProperties().get(idProp));
-				sr.getProperties().put("to", pj.getProperties().get(idProp));
+				System.out.println(pi.getAttribute(idProp) + " - " + pj.getAttribute(idProp) + " - " + (100*(cnt++)/nb) + "%");
+				Feature sr = getRoute(pi.getDefaultGeometry().getCoordinate(), pj.getDefaultGeometry().getCoordinate(), allowSuez, allowPanama);
+				Geometry geom = sr.getDefaultGeometry();
+				sr.setAttribute("dkm", geom==null? -1 : GeoDistanceUtil.getLengthGeoKM(geom));
+				sr.setAttribute("from", pi.getAttribute(idProp));
+				sr.setAttribute("to", pj.getAttribute(idProp));
 				srs.add(sr);
 			}
 		}

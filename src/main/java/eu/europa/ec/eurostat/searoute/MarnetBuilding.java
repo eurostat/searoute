@@ -7,11 +7,12 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.locationtech.jts.geom.LineString;
-import org.opencarto.algo.graph.ConnexComponents;
-import org.opencarto.algo.graph.GraphSimplify;
-import org.opencarto.algo.line.DouglasPeuckerRamerFilter;
-import org.opencarto.io.GeoJSONUtil;
-import org.opencarto.util.FeatureUtil;
+
+import eu.europa.ec.eurostat.jgiscotools.algo.line.DouglasPeuckerRamerFilter;
+import eu.europa.ec.eurostat.jgiscotools.feature.FeatureUtil;
+import eu.europa.ec.eurostat.jgiscotools.graph.algo.ConnexComponents;
+import eu.europa.ec.eurostat.jgiscotools.graph.algo.GraphSimplify;
+import eu.europa.ec.eurostat.jgiscotools.io.GeoJSONUtil;
 
 /**
  * Some functions to build maritime networks at different resolutions.
@@ -21,6 +22,12 @@ import org.opencarto.util.FeatureUtil;
  */
 public class MarnetBuilding {
 	public static double[] resDegs = new double[] { 0.5, 0.25, 0.1, 0.05, 0.025 };
+
+	//TODO
+	//add port connections from GISCO DB ?
+	//for thin triangles (with short height), remove the longest segment
+	//publish - document
+	//ensure no land intersection ?
 
 	public static Collection<LineString> make(double res, String... datasources) {
 		//load input lines

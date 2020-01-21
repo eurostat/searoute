@@ -10,20 +10,20 @@ import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.operation.linemerge.LineMerger;
 import org.locationtech.jts.simplify.DouglasPeuckerSimplifier;
-import org.opencarto.algo.base.Union;
-import org.opencarto.algo.distances.HausdorffDistance;
-import org.opencarto.algo.graph.ConnexComponents;
-import org.opencarto.algo.graph.GraphBuilder;
-import org.opencarto.algo.graph.NodeDisplacement;
-import org.opencarto.datamodel.Feature;
-import org.opencarto.datamodel.graph.Edge;
-import org.opencarto.datamodel.graph.Face;
-import org.opencarto.datamodel.graph.Graph;
-import org.opencarto.datamodel.graph.Node;
-import org.opencarto.io.GeoJSONUtil;
-import org.opencarto.io.SHPUtil;
-import org.opencarto.util.JTSGeomUtil;
 
+import eu.europa.ec.eurostat.jgiscotools.algo.base.Union;
+import eu.europa.ec.eurostat.jgiscotools.algo.distances.HausdorffDistance;
+import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
+import eu.europa.ec.eurostat.jgiscotools.graph.GraphBuilder;
+import eu.europa.ec.eurostat.jgiscotools.graph.algo.ConnexComponents;
+import eu.europa.ec.eurostat.jgiscotools.graph.algo.NodeDisplacement;
+import eu.europa.ec.eurostat.jgiscotools.graph.structure.Edge;
+import eu.europa.ec.eurostat.jgiscotools.graph.structure.Face;
+import eu.europa.ec.eurostat.jgiscotools.graph.structure.Graph;
+import eu.europa.ec.eurostat.jgiscotools.graph.structure.Node;
+import eu.europa.ec.eurostat.jgiscotools.io.GeoJSONUtil;
+import eu.europa.ec.eurostat.jgiscotools.io.SHPUtil;
+import eu.europa.ec.eurostat.jgiscotools.util.JTSGeomUtil;
 import eu.europa.ec.eurostat.searoute.SeaRouting;
 
 public class MarnetCheck {
@@ -125,7 +125,7 @@ public class MarnetCheck {
 
 	private static Collection featuresToLines(Collection fs) {
 		Collection lines = new HashSet<Geometry>();
-		for(Object f : fs) lines.add(((Feature)f).getGeom());
+		for(Object f : fs) lines.add(((Feature)f).getDefaultGeometry());
 		return lines;
 	}
 
@@ -134,8 +134,8 @@ public class MarnetCheck {
 		int i=0;
 		for(Object ls : lines) {
 			Feature f = new Feature();
-			f.id = ""+(i++);
-			f.setGeom((Geometry)ls);
+			f.setID(""+(i++));
+			f.setDefaultGeometry((Geometry)ls);
 			fs.add(f);
 		}
 		return fs;

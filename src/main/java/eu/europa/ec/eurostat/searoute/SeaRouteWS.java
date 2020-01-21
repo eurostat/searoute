@@ -18,9 +18,10 @@ import org.geotools.geojson.geom.GeometryJSON;
 import org.geotools.graph.structure.Node;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
-import org.opencarto.datamodel.Feature;
-import org.opencarto.util.GeoDistanceUtil;
-import org.opencarto.util.Util;
+
+import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
+import eu.europa.ec.eurostat.jgiscotools.util.GeoDistanceUtil;
+import eu.europa.ec.eurostat.jgiscotools.util.Util;
 
 public class SeaRouteWS extends HttpServlet {
 	//   /usr/share/tomcat8/bin/catalina.sh start
@@ -244,7 +245,7 @@ public class SeaRouteWS extends HttpServlet {
 
 			//build the maritime route geometry
 			Feature f = sr.getRoute(oPos, oN, dPos, dN, allowSuez, allowPanama);
-			Geometry ls = f.getGeom();
+			Geometry ls = f.getDefaultGeometry();
 			f = null;
 
 
