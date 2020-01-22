@@ -62,7 +62,7 @@ double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
 String rgj = GeoJSONUtil.toGeoJSON(routeGeom);
 ```
 
-For further overview, see [the documentation](https://eurostat.github.io/searoute/apidocs/).
+For further overview, see [the documentation](https://eurostat.github.io/searoute/src/site/apidocs/).
 
 ### As a webservice
 
