@@ -3,6 +3,7 @@
  */
 package eu.europa.ec.eurostat.searoute;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -24,16 +25,39 @@ import eu.europa.ec.eurostat.jgiscotools.graph.algo.GraphSimplify;
  */
 public class MarnetBuilding {
 	private final static Logger LOGGER = LogManager.getLogger(MarnetBuilding.class.getName());
-	public static double[] resDegs = new double[] { 0.5, 0.25, 0.1, 0.05, 0.025 };
+
+
+	public static Collection<LineString>[] makeFromLinearFeatures(Collection<Feature>... fs) {
+		return makeFromLinearFeatures(new double[] { 0.5, 0.25, 0.1, 0.05, 0.025 }, fs);
+	}
+
+
+	/**
+	 * Build a maritime network from a list of linear features representing maritime lines
+	 * for specified resolutions
+	 * 
+	 * @param resDegs The target resolution (in geographical coordinates).
+	 * @param fs Feature collections.
+	 * @return
+	 */
+	public static Collection<LineString>[] makeFromLinearFeatures(double[] resDegs, Collection<Feature>... fs) {
+		Collection<LineString>[] out = new ArrayList[resDegs.length];
+		for(int i=0; i<resDegs.length; i++) {
+			LOGGER.info("Build maritime network for resolution " + resDegs[i]);
+			out[i] = makeFromLinearFeatures(resDegs[i], fs);
+		}
+		return out;
+	}
+
 
 	/**
 	 * Build a maritime network from a list of linear features representing maritime lines.
 	 * 
-	 * @param res The target resolution.
+	 * @param resDeg The target resolution (in geographical coordinates).
 	 * @param fs Feature collections.
 	 * @return
 	 */
-	public static Collection<LineString> makeFromLinearFeatures(double res, Collection<Feature>... fs) {
+	public static Collection<LineString> makeFromLinearFeatures(double resDeg, Collection<Feature>... fs) {
 		//load input lines
 		Collection<LineString> lines = new HashSet<LineString>();
 
@@ -41,10 +65,10 @@ public class MarnetBuilding {
 		for(Collection<Feature> fs_ : fs) {
 			LOGGER.debug(" preparing " + fs_.size());
 			Collection ls = FeatureUtil.featuresToGeometries(fs_);
-			ls = prepare(ls, res);
+			ls = prepare(ls, resDeg);
 			lines.addAll(ls);
 		}
-		return make(res, lines);
+		return make(resDeg, lines);
 	}
 
 	/**
