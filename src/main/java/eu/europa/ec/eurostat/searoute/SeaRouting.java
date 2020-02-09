@@ -48,6 +48,9 @@ import eu.europa.ec.eurostat.jgiscotools.util.GeoDistanceUtil;
 public class SeaRouting {
 	private final static Logger LOGGER = LogManager.getLogger(SeaRouting.class.getName());
 
+	/**
+	 * The possible resolutions, in km.
+	 */
 	public static final int[] RESOLUTION_KM = new int[] { 100, 50, 20, 10, 5 };
 
 	private Graph g;
@@ -101,6 +104,13 @@ public class SeaRouting {
 		noSuezNoPanamaWeighter = buildEdgeWeighter(false, false);
 	}
 
+	/**
+	 * Build the edge weighters, with different possiblities regarding Suez and Panama channels.
+	 * 
+	 * @param allowSuez
+	 * @param allowPanama
+	 * @return
+	 */
 	private EdgeWeighter buildEdgeWeighter(boolean allowSuez, boolean allowPanama) {
 		return new DijkstraIterator.EdgeWeighter() {
 			public double getWeight(Edge e) {
@@ -120,13 +130,28 @@ public class SeaRouting {
 
 
 
+	/**
+	 * Get shortest path between two netork nodes,
+	 * using a predefined edge weighter.
+	 * 
+	 * @param g
+	 * @param sN
+	 * @param dN
+	 * @param weighter
+	 * @return
+	 */
 	private Path getShortestPath(Graph g, Node sN, Node dN, EdgeWeighter weighter){
 		DijkstraShortestPathFinder pf = new DijkstraShortestPathFinder(g, sN, weighter);
 		pf.calculate();
 		return pf.getPath(dN);
 	}
 
-	//lon,lat
+	/**
+	 * Get the (lon,lat) position of a network node.
+	 * 
+	 * @param n
+	 * @return
+	 */
 	private Coordinate getPosition(Node n){
 		if(n==null) return null;
 		Point pt = (Point)n.getObject();
