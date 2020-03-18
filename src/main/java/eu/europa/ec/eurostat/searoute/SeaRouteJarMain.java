@@ -117,7 +117,7 @@ public class SeaRouteJarMain {
 
 		//String marnetSHP = "/marnet.shp";
 		URL marnetURL = null;
-		String marnetPath = "/resources/marnet/marnet_plus_"+res+"KM.shp";
+		String marnetPath = "/resources/marnet/marnet_plus_"+res+"KM.gpkg";
 		try {
 			marnetURL = new SeaRouteJarMain().getClass().getResource(marnetPath).toURI().toURL();
 		} catch (MalformedURLException | URISyntaxException e) {

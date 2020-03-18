@@ -63,7 +63,7 @@ public class SeaRouting {
 	private EdgeWeighter noSuezNoPanamaWeighter;
 
 	public SeaRouting() throws MalformedURLException { this(20); }
-	public SeaRouting(int resKM) throws MalformedURLException { this("src/main/webapp/resources/marnet/marnet_plus_"+resKM+"KM.shp"); }
+	public SeaRouting(int resKM) throws MalformedURLException { this("src/main/webapp/resources/marnet/marnet_plus_"+resKM+"KM.gpkg"); }
 	public SeaRouting(String path) throws MalformedURLException { this(new File(path)); }
 	public SeaRouting(File marnetFile) throws MalformedURLException { this(marnetFile.toURI().toURL()); }
 	public SeaRouting(URL marnetFileURL) {
