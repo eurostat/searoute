@@ -5,24 +5,22 @@ package eu.europa.ec.eurostat.searoute;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
-import org.geotools.feature.FeatureCollection;
+import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geojson.geom.GeometryJSON;
+import org.geotools.geopkg.GeoPkgDataStoreFactory;
 import org.geotools.graph.build.feature.FeatureGraphGenerator;
 import org.geotools.graph.build.line.LineStringGraphGenerator;
 import org.geotools.graph.path.DijkstraShortestPathFinder;
@@ -63,16 +61,41 @@ public class SeaRouting {
 	private EdgeWeighter noSuezNoPanamaWeighter;
 
 	public SeaRouting() throws MalformedURLException { this(20); }
-	public SeaRouting(int resKM) throws MalformedURLException { this("src/main/webapp/resources/marnet/marnet_plus_"+resKM+"KM.gpkg"); }
-	public SeaRouting(String path) throws MalformedURLException { this(new File(path)); }
-	public SeaRouting(File marnetFile) throws MalformedURLException { this(marnetFile.toURI().toURL()); }
-	public SeaRouting(URL marnetFileURL) {
+	public SeaRouting(int resKM) {
+		this("src/main/webapp/resources/marnet/marnet_plus_"+resKM+"km.gpkg",
+				"marnet/marnet_plus_"+resKM+"km.gpkg",
+				"resources/marnet/marnet_plus_"+resKM+"km.gpkg",
+				"webapps/searoute/resources/marnet/marnet_plus_"+resKM+"km.gpkg"
+				);
+	}
+	public SeaRouting(String... possiblePath) { //this(new File(path)); }
+		//public SeaRouting(File marnetFile) throws MalformedURLException { this(marnetFile.toURI().toURL()); }
+		//public SeaRouting(URL marnetFileURL) {
+		//find existing file
+		String path = null;
+		for(String path_ : possiblePath) {
+			if(!new File(path_).exists()) continue;
+			path = path_;
+			break;
+		}
 		try {
-			Map<String, Serializable> map = new HashMap<>();
+			File file = new File(path);
+			HashMap<String, Object> params = new HashMap<>();
+			params.put(GeoPkgDataStoreFactory.DBTYPE.key, "geopkg");
+			params.put(GeoPkgDataStoreFactory.DATABASE.key, file);
+			DataStore store = DataStoreFinder.getDataStore(params);
+			String[] names = store.getTypeNames();
+			if(names.length >1 )
+				LOGGER.warn("Several types found in GPKG " + file.getAbsolutePath() + ". Only " + names[0] + " will be considered.");
+			String name = names[0];
+			LOGGER.debug(name);
+			SimpleFeatureCollection fc = store.getFeatureSource(name).getFeatures();
+
+			/*Map<String, Serializable> map = new HashMap<>();
 			map.put( "url", marnetFileURL );
 			DataStore store = DataStoreFinder.getDataStore(map);
 			FeatureCollection<?,?> fc =  store.getFeatureSource(store.getTypeNames()[0]).getFeatures();
-			store.dispose();
+			store.dispose();*/
 
 			/*InputStream input = marnetFileURL.openStream();
 			FeatureCollection fc = new FeatureJSON().readFeatureCollection(input);
@@ -84,6 +107,7 @@ public class SeaRouting {
 			while(it.hasNext()) gGen.add(it.next());
 			g = gGen.getGraph();
 			it.close();
+			store.dispose();
 		} catch (Exception e) { e.printStackTrace(); }
 
 		//link nodes around the globe

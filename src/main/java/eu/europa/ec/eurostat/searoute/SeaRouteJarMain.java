@@ -4,9 +4,6 @@
 package eu.europa.ec.eurostat.searoute;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Map;
@@ -86,7 +83,14 @@ public class SeaRouteJarMain {
 		if(outFile == null) outFile = Paths.get("").toAbsolutePath().toString() + "/out.json";
 
 		//resolution
-		String res = cmd.getOptionValue("res"); if(res == null) res = "20";
+		String resP = cmd.getOptionValue("res"); if(resP == null) resP = "20";
+		int res = 20;
+		try {
+			res = Integer.parseInt(resP);
+		} catch (NumberFormatException e) {
+			System.out.println("Could not handle resolution: " + resP);
+			res = 20;
+		}
 
 		//column names
 		String olonCol = cmd.getOptionValue("olonCol");   if(olonCol == null) olonCol = "olon";
@@ -113,10 +117,9 @@ public class SeaRouteJarMain {
 			return;
 		}
 
-		System.out.println("Build maritime network (resolution: "+res+"km)...");
+		System.out.println("Build maritime network (resolution: " + res + "km)...");
 
-		//String marnetSHP = "/marnet.shp";
-		URL marnetURL = null;
+		/*URL marnetURL = null;
 		String marnetPath = "/resources/marnet/marnet_plus_"+res+"KM.gpkg";
 		try {
 			marnetURL = new SeaRouteJarMain().getClass().getResource(marnetPath).toURI().toURL();
@@ -124,7 +127,8 @@ public class SeaRouteJarMain {
 			System.err.println("Could not find network data: " + marnetPath);
 			return;
 		}
-		SeaRouting sr = new SeaRouting(marnetURL);
+		SeaRouting sr = new SeaRouting(marnetURL);*/
+		SeaRouting sr = new SeaRouting(res);
 
 		System.out.println("Compute maritime routes (nb: "+data.size()+")...");
 

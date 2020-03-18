@@ -3,8 +3,6 @@
  */
 package eu.europa.ec.eurostat.searoute;
 
-import java.net.MalformedURLException;
-
 import org.locationtech.jts.geom.MultiLineString;
 
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
@@ -48,10 +46,7 @@ public class SeaRoutingTest extends TestCase {
 
 		for(int resKM : new int[] {5, 10, 20, 50, 100}) {		
 			//create the routing object
-			SeaRouting sr = null;
-			try {
-				sr = new SeaRouting(resKM);
-			} catch (MalformedURLException e) { e.printStackTrace(); }
+			SeaRouting sr = new SeaRouting(resKM);
 
 			//get the route
 			Feature route = sr.getRoute(oLon, oLat, dLon, dLat, allowSuez, allowPanama);
