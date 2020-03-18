@@ -245,7 +245,7 @@ public class SeaRouteWS extends HttpServlet {
 
 			//build the maritime route geometry
 			Feature f = sr.getRoute(oPos, oN, dPos, dN, allowSuez, allowPanama);
-			Geometry ls = f.getDefaultGeometry();
+			Geometry ls = f.getGeometry();
 			f = null;
 
 

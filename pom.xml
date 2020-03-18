@@ -105,7 +105,7 @@
 		<dependency>
 			<groupId>eu.europa.ec.eurostat</groupId>
 			<artifactId>JGiscoTools</artifactId>
-			<version>0.6.6</version>
+			<version>0.8.3</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -113,11 +113,6 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.apache.commons</groupId> -->
-<!-- 			<artifactId>commons-csv</artifactId> -->
-<!-- 			<version>1.4</version> -->
-<!-- 		</dependency> -->
 	</dependencies>
 
 	<repositories>

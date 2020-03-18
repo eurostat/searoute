@@ -91,8 +91,8 @@ public class SeaRouting {
 				Node n_ = getNode(new Coordinate(-c.x,c.y));
 				if(LOGGER.isTraceEnabled()) LOGGER.trace(c + " -> " + ((Point)n_.getObject()).getCoordinate());
 				BasicEdge be = new BasicEdge(n, n_);
-				n.getEdges().add(be);
-				n_.getEdges().add(be);
+				n.add(be);
+				n_.add(be);
 				g.getEdges().add(be);
 			}
 		}
@@ -235,7 +235,7 @@ public class SeaRouting {
 		if(dist>=0 && distN>=0 && distN > dist){
 			//return direct route
 			Feature rf = new Feature();
-			rf.setDefaultGeometry( gf.createMultiLineString(new LineString[]{ gf.createLineString(new Coordinate[]{oPos,dPos}) }) );
+			rf.setGeometry( gf.createMultiLineString(new LineString[]{ gf.createLineString(new Coordinate[]{oPos,dPos}) }) );
 			return rf;
 		}
 
@@ -249,7 +249,7 @@ public class SeaRouting {
 
 		if(path == null) {
 			Feature rf = new Feature();
-			rf.setDefaultGeometry(null);
+			rf.setGeometry(null);
 			return rf;
 		}
 
@@ -268,7 +268,7 @@ public class SeaRouting {
 
 		Collection<?> lss = lm.getMergedLineStrings();
 		Feature rf = new Feature();
-		rf.setDefaultGeometry( gf.createMultiLineString( lss.toArray(new LineString[lss.size()]) ) );
+		rf.setGeometry( gf.createMultiLineString( lss.toArray(new LineString[lss.size()]) ) );
 		rf.setAttribute("dFromKM", GeoDistanceUtil.getDistanceKM(oPos, oNPos));
 		rf.setAttribute("dToKM", GeoDistanceUtil.getDistanceKM(dPos, dNPos));
 		return rf;
@@ -286,7 +286,7 @@ public class SeaRouting {
 	public Collection<Feature> filterPorts(Collection<Feature> ports, double minDistToNetworkKM) {
 		Collection<Feature> pls = new HashSet<Feature>();
 		for(Feature p : ports)
-			if(getDistanceToNetworkKM(p.getDefaultGeometry().getCoordinate()) <= minDistToNetworkKM)
+			if(getDistanceToNetworkKM(p.getGeometry().getCoordinate()) <= minDistToNetworkKM)
 				pls.add(p);
 		return pls;
 	}
@@ -332,8 +332,8 @@ public class SeaRouting {
 			for(int j=i+1; j<portsL.size(); j++) {
 				Feature pj = portsL.get(j);
 				if(LOGGER.isDebugEnabled()) LOGGER.debug(pi.getAttribute(idProp) + " - " + pj.getAttribute(idProp) + " - " + (100*(cnt++)/nb) + "%");
-				Feature sr = getRoute(pi.getDefaultGeometry().getCoordinate(), pj.getDefaultGeometry().getCoordinate(), allowSuez, allowPanama);
-				Geometry geom = sr.getDefaultGeometry();
+				Feature sr = getRoute(pi.getGeometry().getCoordinate(), pj.getGeometry().getCoordinate(), allowSuez, allowPanama);
+				Geometry geom = sr.getGeometry();
 				sr.setAttribute("dkm", geom==null? -1 : GeoDistanceUtil.getLengthGeoKM(geom));
 				sr.setAttribute("from", pi.getAttribute(idProp));
 				sr.setAttribute("to", pj.getAttribute(idProp));

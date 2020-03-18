@@ -7,7 +7,7 @@ import java.io.File;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.cli.CommandLine;
@@ -19,7 +19,7 @@ import org.apache.commons.cli.ParseException;
 
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
 import eu.europa.ec.eurostat.jgiscotools.io.CSVUtil;
-import eu.europa.ec.eurostat.jgiscotools.io.GeoJSONUtil;
+import eu.europa.ec.eurostat.jgiscotools.io.GeoData;
 import eu.europa.ec.eurostat.jgiscotools.util.GeoDistanceUtil;
 import eu.europa.ec.eurostat.jgiscotools.util.Util;
 
@@ -97,7 +97,7 @@ public class SeaRouteJarMain {
 		String panama = cmd.getOptionValue("panama");   if(panama == null) panama = "1";
 
 		//load data
-		ArrayList<HashMap<String, String>> data = CSVUtil.load(inFile);
+		ArrayList<Map<String, String>> data = CSVUtil.load(inFile);
 
 		//check input data
 		if(data.size() == 0) {
@@ -120,7 +120,7 @@ public class SeaRouteJarMain {
 		System.out.println("Compute maritime routes (nb: "+data.size()+")...");
 
 		ArrayList<Feature> fs = new ArrayList<Feature>();
-		for( HashMap<String, String> o : data ) {
+		for( Map<String, String> o : data ) {
 			double oLon = get(o, olonCol);
 			double oLat = get(o, olatCol);
 			double dLon = get(o, dlonCol);
@@ -136,14 +136,14 @@ public class SeaRouteJarMain {
 			f.getAttributes().putAll(o);
 
 			//compute distance
-			double d = GeoDistanceUtil.getLengthGeoKM(f.getDefaultGeometry());
+			double d = GeoDistanceUtil.getLengthGeoKM(f.getGeometry());
 			f.setAttribute("distKM", ""+Util.round(d, 2));
 
 			fs.add(f);
 		}
 
 		System.out.println("Save...");
-		GeoJSONUtil.save(fs , outFile, null);
+		GeoData.save(fs , outFile, null);
 
 		/*
 		//compute routes
@@ -177,7 +177,7 @@ public class SeaRouteJarMain {
 	}
 
 
-	private static double get(HashMap<String, String> o, String k) {
+	private static double get(Map<String, String> o, String k) {
 		String d = o.get(k);
 		if(d==null) return Double.NaN;
 		return Double.parseDouble(d);

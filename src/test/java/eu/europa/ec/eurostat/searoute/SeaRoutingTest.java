@@ -29,7 +29,7 @@ public class SeaRoutingTest extends TestCase {
 		Feature route = sr.getRoute(5.3, 43.3, 121.8, 31.2, false, true);
 
 		//compute the distance in km
-		MultiLineString routeGeom = (MultiLineString) route.getDefaultGeometry();
+		MultiLineString routeGeom = (MultiLineString) route.getGeometry();
 		double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
 
 		//export the route in geoJSON format
