@@ -4,6 +4,8 @@
 package eu.europa.ec.eurostat.searoute;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -32,12 +34,12 @@ import eu.europa.ec.eurostat.jgiscotools.util.Util;
  */
 public class SeaRouteJarMain {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 
 		Options options = new Options();
 		options.addOption(Option.builder("i").longOpt("inputFile").desc("Input file (CSV format).")
 				.hasArg().argName("file").build());
-		options.addOption(Option.builder("o").longOpt("outputFile").desc("Optional. Output file (GeoJSON format). Default: 'out.json'.")
+		options.addOption(Option.builder("o").longOpt("outputFile").desc("Optional. Output file (GeoJSON format). Default: 'out.geojson'.")
 				.hasArg().argName("file").build());
 		options.addOption(Option.builder("res").longOpt("resolution").desc("Optional. The resolution of the output geometries, in km. Default: '20'.")
 				.hasArg().argName("5, 10, 20, 50 or 100").build());
@@ -114,7 +116,14 @@ public class SeaRouteJarMain {
 		System.out.println("Build maritime network (resolution: "+res+"km)...");
 
 		//String marnetSHP = "/marnet.shp";
-		URL marnetURL = new SeaRouteJarMain().getClass().getResource("/resources/marnet/marnet_plus_"+res+"KM.shp").toURI().toURL();
+		URL marnetURL = null;
+		String marnetPath = "/resources/marnet/marnet_plus_"+res+"KM.shp";
+		try {
+			marnetURL = new SeaRouteJarMain().getClass().getResource(marnetPath ).toURI().toURL();
+		} catch (MalformedURLException | URISyntaxException e) {
+			System.err.println("Could not find network data: " + marnetPath);
+			return;
+		}
 		SeaRouting sr = new SeaRouting(marnetURL);
 
 		System.out.println("Compute maritime routes (nb: "+data.size()+")...");

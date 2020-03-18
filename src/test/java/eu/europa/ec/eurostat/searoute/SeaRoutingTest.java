@@ -18,9 +18,9 @@ import junit.framework.TestCase;
 public class SeaRoutingTest extends TestCase {
 	//private final static Logger LOGGER = LogManager.getLogger(SeaRoutingTest.class.getName());
 
-	public static void main(String[] args) throws Exception {
+	/*public static void main(String[] args) throws Exception {
 		junit.textui.TestRunner.run(SeaRoutingTest.class);
-	}
+	}*/
 
 	public void testShangaiMarseille() {
 		//Marseille (5.3E,43.3N) and Shanghai (121.8E,31.2N)

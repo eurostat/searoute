@@ -1,7 +1,14 @@
 package eu.europa.ec.eurostat.searoute;
 
-public class SeaRouteJarMainTest {
+import junit.framework.TestCase;
 
-	//TODO
+public class SeaRouteJarMainTest extends TestCase {
 
+	public static void main(String[] args) throws Exception {
+		junit.textui.TestRunner.run(SeaRoutingTest.class);
+	}
+
+	public void test1() {
+		SeaRouteJarMain.main(new String[] {"-i", "src/test/resources/test_input.csv", "-res", "5", "-panama", "0", "-o", "target/testout/out.geojson"});
+	}
 }
