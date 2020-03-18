@@ -119,7 +119,7 @@ public class SeaRouteJarMain {
 		URL marnetURL = null;
 		String marnetPath = "/resources/marnet/marnet_plus_"+res+"KM.shp";
 		try {
-			marnetURL = new SeaRouteJarMain().getClass().getResource(marnetPath ).toURI().toURL();
+			marnetURL = new SeaRouteJarMain().getClass().getResource(marnetPath).toURI().toURL();
 		} catch (MalformedURLException | URISyntaxException e) {
 			System.err.println("Could not find network data: " + marnetPath);
 			return;
