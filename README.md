@@ -40,7 +40,7 @@ and then use it in your Java project as a dependency by adding it to the *pom.xm
 	<dependency>
 		<groupId>eu.europa.ec.eurostat</groupId>
 		<artifactId>searoute</artifactId>
-		<version>1.1</version>
+		<version>1.3</version>
 	</dependency>
 </dependencies>
 ```
@@ -55,11 +55,11 @@ SeaRouting sr = new SeaRouting();
 Feature route = sr.getRoute(5.3, 43.3, 121.8, 31.2);
 
 //compute the route distance in km
-MultiLineString routeGeom = (MultiLineString) route.getGeom();
+MultiLineString routeGeom = (MultiLineString) route.getGeometry();
 double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
 
 //extract the route in geoJSON format
-String rgj = GeoJSONUtil.toGeoJSON(routeGeom);
+String rgj = SeaRoute.toGeoJSON(routeGeom);
 ```
 
 For further overview, see [the documentation](https://eurostat.github.io/searoute/src/site/apidocs/index.html).

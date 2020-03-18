@@ -3,6 +3,7 @@
  */
 package eu.europa.ec.eurostat.searoute;
 
+import org.geotools.geojson.GeoJSONUtil;
 import org.locationtech.jts.geom.MultiLineString;
 
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
@@ -33,7 +34,7 @@ public class SeaRoutingTest extends TestCase {
 		double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
 
 		//export the route in geoJSON format
-		//String rgj = GeoJSONUtil.toGeoJSON(routeGeom);
+		String rgj = SeaRouting.toGeoJSON(routeGeom);
 
 		assertFalse(route.getAttribute("dToKM") == null);
 		assertFalse(route.getAttribute("dFromKM") == null);

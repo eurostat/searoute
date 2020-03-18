@@ -4,7 +4,9 @@
 package eu.europa.ec.eurostat.searoute;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
+import org.geotools.geojson.geom.GeometryJSON;
 import org.geotools.graph.build.feature.FeatureGraphGenerator;
 import org.geotools.graph.build.line.LineStringGraphGenerator;
 import org.geotools.graph.path.DijkstraShortestPathFinder;
@@ -341,6 +344,25 @@ public class SeaRouting {
 			}
 		}
 		return srs;
+	}
+
+	/**
+	 * Return a geometry in GeoJSON format
+	 * 
+	 * @param geom
+	 * @return
+	 */
+	public static String toGeoJSON(Geometry geom){
+		String out = null;
+		try {
+			StringWriter writer = new StringWriter();
+			new GeometryJSON().write(geom, writer);
+			out = writer.toString();
+			writer.close();
+		} catch (IOException e) { e.printStackTrace();
+		} finally {
+		}
+		return out;
 	}
 
 }
