@@ -1,1 +1,0 @@
-typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"eu.europa.ec.eurostat.searoute","l":"MarnetBuilding"},{"p":"eu.europa.ec.eurostat.searoute","l":"SeaRouteJarMain"},{"p":"eu.europa.ec.eurostat.searoute","l":"SeaRouteWS"},{"p":"eu.europa.ec.eurostat.searoute","l":"SeaRouting"}]
