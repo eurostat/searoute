@@ -3,15 +3,26 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>eu.europa.ec.eurostat</groupId>
-		<artifactId>searoute</artifactId>
-		<version>2-SNAPSHOT</version>
-	</parent>
+	<groupId>eu.europa.ec.eurostat</groupId>
 	<artifactId>searoute-jar</artifactId>
+	<version>2-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>searoute-jar</name>
 
+	<properties>
+		<maven.compiler.target>1.9</maven.compiler.target>
+		<maven.compiler.source>1.9</maven.compiler.source>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+
 	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>searoute-core</artifactId>
