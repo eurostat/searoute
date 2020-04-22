@@ -5,7 +5,6 @@ package eu.europa.ec.eurostat.searoute;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,54 +59,18 @@ public class SeaRouting {
 	private EdgeWeighter noPanamaWeighter;
 	private EdgeWeighter noSuezNoPanamaWeighter;
 
-	public SeaRouting() throws MalformedURLException { this(20); }
+	public SeaRouting() { this(20); }
 	public SeaRouting(int resKM) {
-		/*this("src/main/webapp/resources/marnet/marnet_plus_"+resKM+"km.gpkg",
-				"marnet/marnet_plus_"+resKM+"km.gpkg",
-				"searoute/resources/marnet/marnet_plus_"+resKM+"km.gpkg",
-				"webapps/searoute/resources/marnet/marnet_plus_"+resKM+"km.gpkg"
-				);
-	}
-	public SeaRouting(String... possiblePath) {*/ //this(new File(path)); }
-		//public SeaRouting(File marnetFile) throws MalformedURLException { this(marnetFile.toURI().toURL()); }
-		//public SeaRouting(URL marnetFileURL) {
-		//find existing file
 		try {
-
-			/*/try to find marnet path
-			String path = null;
-			for(String path_ : possiblePath) {
-				if(!new File(path_).exists()) continue;
-				path = path_;
-				break;
-			}
-			if(path == null) {
-				LOGGER.warn("Could not find marnet file.");
-				return;
-			}*/
-
 			URL url = getClass().getResource("/marnet/marnet_plus_"+resKM+"km.gpkg");
 
 			//load marnet
 			HashMap<String, Object> map = new HashMap<>();
 			map.put(GeoPkgDataStoreFactory.DBTYPE.key, "geopkg");
 			map.put(GeoPkgDataStoreFactory.DATABASE.key, url.getFile());
-			//map.put(GeoPkgDataStoreFactory.DATABASE.key, new File(path));
-			//map.put("url", new File(path).toURI().toURL());
 			map.put("url", url);
 			DataStore store = DataStoreFinder.getDataStore(map);
-			System.out.println(store);
 			SimpleFeatureCollection fc = store.getFeatureSource(store.getTypeNames()[0]).getFeatures();
-
-			/*Map<String, Serializable> map = new HashMap<>();
-			map.put( "url", marnetFileURL );
-			DataStore store = DataStoreFinder.getDataStore(map);
-			FeatureCollection<?,?> fc =  store.getFeatureSource(store.getTypeNames()[0]).getFeatures();
-			store.dispose();*/
-
-			/*InputStream input = marnetFileURL.openStream();
-			FeatureCollection fc = new FeatureJSON().readFeatureCollection(input);
-			input.close();*/
 
 			//build graph
 			FeatureIterator<?> it = fc.features();

@@ -4,9 +4,9 @@ import junit.framework.TestCase;
 
 public class SeaRouteJarMainTest extends TestCase {
 
-	/*public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 		junit.textui.TestRunner.run(SeaRouteJarMainTest.class);
-	}*/
+	}
 
 	public void test5() { test(5); }
 	public void test10() { test(10); }
