@@ -14,9 +14,11 @@ See below an example from [Marseille (5.3E,43.3N)](https://www.openstreetmap.org
 
 [SeaRoute](https://github.com/eurostat/searoute) requires Java 1.9 or higher. Run `java --version` to check if Java is installed and what is the current version.
 
-Download the lastest release [here](https://github.com/eurostat/searoute/releases), unzip it and run `java -jar searoute.jar -h` to see the help which describes everything you need to know.
+Download the lastest release [here](https://github.com/eurostat/searoute/raw/dev/releases/searoute-2.0.zip) and unzip it somewhere.
 
 Examples of executions for windows users are provided in `searoute.bat` (for linux users, see `searoute.sh`). `test_input.csv` is an example of input file. It is a simple CSV file with origin/destination coordinates of the routes. Note that only geographical coordinates (decimal degrees) are supported. The output file is a [GeoJSON](https://geojson.org/) (\*.geojson), SHP (\*.shp) or [GeoPackage](http://www.geopackage.org/) (\*.gpkg) file. This file can be displayed on any modern GIS software such as [QGIS](https://qgis.org). GeoJSON files can be displayed easily with [geojson.io](http://geojson.io/).
+
+Run `java -jar searoute.jar -h` to see the help which describes everything you need to know.
 
 ![Example](docs/img/example.png)
 
@@ -70,11 +72,11 @@ To deploy [SeaRoute](https://github.com/eurostat/searoute) as a webservice (Java
 
 ```
 git clone https://github.com/eurostat/searoute.git
-cd searoute
+cd modules/searoute-war
 mvn clean package
 ```
 
-and move the servlet `/target/searoute.war` into your `/tomcatX.Y/webapps/` folder. Go then to http://localhost:8080/searoute/ to see the REST-API documentation and some examples.
+and move the servlet `/target/searoute-XXX.war` into your `/tomcatX.Y/webapps/` folder. Go then to http://localhost:8080/searoute/ to see the REST-API documentation and some examples.
 
 ## Some additional information
 
