@@ -1,0 +1,16 @@
+route name,olon,olat,dlon,dlat
+Marseille-Shanghai,5.3,43.3,121.8,31.2
+Marseille-Saint-Petersburg,5.3,43.3,30.2,59.9
+Marseille-Auckland,5.3,43.3,174.8,-36.8
+Marseille-New-York,5.3,43.3,-74.1,40.7
+Marseille-Los Angeles,5.3,43.3,-118.3,33.7
+Shanghai-Saint-Petersburg,121.8,31.2,30.2,59.9
+Shanghai-Auckland,121.8,31.2,174.8,-36.8
+Shanghai-New-York,121.8,31.2,-74.1,40.7
+Shanghai-Los Angeles,121.8,31.2,-118.3,33.7
+Saint-Petersburg-Auckland,30.2,59.9,174.8,-36.8
+Saint-Petersburg-New-York,30.2,59.9,-74.1,40.7
+Saint-Petersburg-Los Angeles,30.2,59.9,-118.3,33.7
+Auckland-New-York,174.8,-36.8,-74.1,40.7
+Auckland-Los Angeles,174.8,-36.8,-118.3,33.7
+New-York-Los Angeles,-74.1,40.7,-118.3,33.7
