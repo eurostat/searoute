@@ -39,8 +39,8 @@ and then use it in your Java project as a dependency by adding it to the *pom.xm
 	...
 	<dependency>
 		<groupId>eu.europa.ec.eurostat</groupId>
-		<artifactId>searoute</artifactId>
-		<version>1.3</version>
+		<artifactId>searoute-core</artifactId>
+		<version>2.0</version>
 	</dependency>
 </dependencies>
 ```
