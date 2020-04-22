@@ -82,7 +82,7 @@ public class SeaRouteJarMain {
 
 		//output file
 		String outFile = cmd.getOptionValue("o");
-		if(outFile == null) outFile = Paths.get("").toAbsolutePath().toString() + "/out.json";
+		if(outFile == null) outFile = Paths.get("").toAbsolutePath().toString() + "/out.geojson";
 
 		//resolution
 		String resP = cmd.getOptionValue("res"); if(resP == null) resP = "20";

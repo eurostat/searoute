@@ -62,15 +62,27 @@ public class SeaRouting {
 	public SeaRouting() { this(20); }
 	public SeaRouting(int resKM) {
 		try {
-			URL url = getClass().getResource("/marnet/marnet_plus_"+resKM+"km.gpkg");
 
 			//load marnet
-			HashMap<String, Object> map = new HashMap<>();
-			map.put(GeoPkgDataStoreFactory.DBTYPE.key, "geopkg");
-			map.put(GeoPkgDataStoreFactory.DATABASE.key, url.getFile());
-			map.put("url", url);
-			DataStore store = DataStoreFinder.getDataStore(map);
-			SimpleFeatureCollection fc = store.getFeatureSource(store.getTypeNames()[0]).getFeatures();
+			DataStore store = null;
+			SimpleFeatureCollection fc = null;
+			try {
+				URL url = getClass().getResource("/marnet/marnet_plus_"+resKM+"km.gpkg");
+				HashMap<String, Object> map = new HashMap<>();
+				map.put(GeoPkgDataStoreFactory.DBTYPE.key, "geopkg");
+				map.put(GeoPkgDataStoreFactory.DATABASE.key, url.getFile());
+				map.put("url", url);
+				store = DataStoreFinder.getDataStore(map);
+				fc = store.getFeatureSource(store.getTypeNames()[0]).getFeatures();
+			} catch (Exception e) {
+				//URL url = new URL(path);
+				HashMap<String, Object> map = new HashMap<>();
+				map.put(GeoPkgDataStoreFactory.DBTYPE.key, "geopkg");
+				map.put(GeoPkgDataStoreFactory.DATABASE.key, "marnet/marnet_plus_"+resKM+"km.gpkg");
+				map.put("url", "marnet/marnet_plus_"+resKM+"km.gpkg");
+				store = DataStoreFinder.getDataStore(map);
+				fc = store.getFeatureSource(store.getTypeNames()[0]).getFeatures();
+			}
 
 			//build graph
 			FeatureIterator<?> it = fc.features();
