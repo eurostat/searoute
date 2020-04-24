@@ -5,7 +5,6 @@ package eu.europa.ec.eurostat.searoute;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
