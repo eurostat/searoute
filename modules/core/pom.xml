@@ -12,8 +12,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>eu.europa.ec.eurostat</groupId>
-			<artifactId>JGiscoTools</artifactId>
-			<version>0.8.6</version>
+			<artifactId>jgiscotools-full</artifactId>
+			<version>0.9.2</version>
 		</dependency>
 	</dependencies>
 
