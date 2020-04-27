@@ -6,7 +6,6 @@ package eu.europa.ec.eurostat.searoute;
 import org.locationtech.jts.geom.MultiLineString;
 
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
-import eu.europa.ec.eurostat.jgiscotools.util.GeoDistanceUtil;
 import junit.framework.TestCase;
 
 /**

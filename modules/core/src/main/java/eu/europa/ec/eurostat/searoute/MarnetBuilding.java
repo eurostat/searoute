@@ -11,7 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.locationtech.jts.geom.LineString;
 
-import eu.europa.ec.eurostat.jgiscotools.algo.line.DouglasPeuckerRamerFilter;
+import eu.europa.ec.eurostat.jgiscotools.algo.base.DouglasPeuckerRamerFilter;
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
 import eu.europa.ec.eurostat.jgiscotools.feature.FeatureUtil;
 import eu.europa.ec.eurostat.jgiscotools.graph.algo.ConnexComponents;

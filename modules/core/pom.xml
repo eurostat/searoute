@@ -10,11 +10,29 @@
 	<name>searoute-core</name>
 
 	<dependencies>
+
 		<dependency>
 			<groupId>eu.europa.ec.eurostat</groupId>
-			<artifactId>jgiscotools-full</artifactId>
-			<version>0.9.2</version>
+			<artifactId>jgiscotools-graph-algo</artifactId>
+			<version>0.9.3</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-geopkg</artifactId>
+			<version>${geotools.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-shapefile</artifactId>
+			<version>${geotools.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-geojson</artifactId>
+			<version>${geotools.version}</version>
+		</dependency>
+
 	</dependencies>
 
 </project>

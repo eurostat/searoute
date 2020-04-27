@@ -17,10 +17,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
-import eu.europa.ec.eurostat.jgiscotools.io.CSVUtil;
+import eu.europa.ec.eurostat.jgiscotools.feature.util.Util;
 import eu.europa.ec.eurostat.jgiscotools.io.geo.GeoData;
-import eu.europa.ec.eurostat.jgiscotools.util.GeoDistanceUtil;
-import eu.europa.ec.eurostat.jgiscotools.util.Util;
 
 /**
  * Main method for executable program.

@@ -70,10 +70,22 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>searoute-core</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>eu.europa.ec.eurostat</groupId>
+			<artifactId>jgiscotools-geo-io</artifactId>
+			<version>0.9.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>1.8</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-cli</groupId>

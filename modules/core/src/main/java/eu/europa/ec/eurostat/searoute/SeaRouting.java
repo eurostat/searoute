@@ -38,7 +38,6 @@ import org.locationtech.jts.operation.linemerge.LineMerger;
 import org.opengis.feature.simple.SimpleFeature;
 
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
-import eu.europa.ec.eurostat.jgiscotools.util.GeoDistanceUtil;
 
 /**
  * @author julien Gaffuri
