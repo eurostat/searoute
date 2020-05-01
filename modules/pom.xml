@@ -8,7 +8,7 @@
 	<packaging>pom</packaging>
 	<name>SeaRoute</name>
 	<url>https://github.com/eurostat/searoute</url>
-	<description>Computation of shortest maritime routes between ports</description>
+	<description>Compute shortest maritime routes between ports</description>
 
 	<licenses>
 		<license>
