@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>eu.europa.ec.eurostat</groupId>
-		<artifactId>searoute</artifactId>
+		<artifactId>searoute-modules</artifactId>
 		<version>2.1</version>
 	</parent>
 	<artifactId>searoute-core</artifactId>
-	<name>searoute-core</name>
+	<name>SeaRoute-core</name>
 
 	<dependencies>
 
