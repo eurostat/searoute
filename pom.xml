@@ -1,0 +1,98 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>eu.europa.ec.eurostat</groupId>
+	<artifactId>searoute</artifactId>
+	<version>2.1</version>
+	<packaging>pom</packaging>
+	<name>searoute</name>
+	<url>https://github.com/eurostat/searoute</url>
+	<description>Computation of shortest maritime routes between ports</description>
+
+	<licenses>
+		<license>
+			<name>European Union Public License, version 1.2 (EUPL-1.2)</name>
+			<url>https://opensource.org/licenses/EUPL-1.2</url>
+		</license>
+	</licenses>
+
+	<scm>
+		<url>https://github.com/eurostat/searoute</url>
+		<connection>scm:git:git://github.com/eurostat/searoute.git</connection>
+		<developerConnection>scm:git:git@github.com:eurostat/searoute.git</developerConnection>
+		<tag>searoute-2.0</tag>
+	</scm>
+
+	<issueManagement>
+		<url>https://github.com/eurostat/searoute/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+
+	<developers>
+		<developer>
+			<id>jgaffuri</id>
+			<name>Julien Gaffuri</name>
+			<url>https://www.linkedin.com/in/juliengaffuri/</url>
+			<email>julien.gaffuri@ec.europa.eu</email>
+			<organization>Eurostat</organization>
+			<organizationUrl>https://ec.europa.eu/eurostat/</organizationUrl>
+		</developer>
+	</developers>
+
+	<properties>
+		<maven.compiler.target>1.9</maven.compiler.target>
+		<maven.compiler.source>1.9</maven.compiler.source>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<geotools.version>22.3</geotools.version>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<source>1.9</source>
+					<target>1.9</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.1.1</version>
+				<configuration>
+					<source>8</source>
+					<reportOutputDirectory>doc/site</reportOutputDirectory>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+		    <id>osgeo</id>
+		    <name>OSGeo Release Repository</name>
+		    <url>https://repo.osgeo.org/repository/release/</url>
+		    <snapshots><enabled>false</enabled></snapshots>
+		    <releases><enabled>true</enabled></releases>
+		</repository>
+	</repositories>
+
+	<modules>
+		<module>modules</module>
+	</modules>
+
+</project>

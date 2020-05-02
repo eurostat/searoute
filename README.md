@@ -4,7 +4,7 @@
 
 See below an example from [Marseille (5.3E,43.3N)](https://www.openstreetmap.org/#map=10/43.3/5.3) to [Shanghai (121.8E,31.2N)](https://www.openstreetmap.org/#map=10/31.2/121.8). The red line is the computed maritime route. The black line is the [great-circle route](https://en.wikipedia.org/wiki/Great-circle_distance).
 
-![From Marseille to Shangai](docs/img/mars_shan.png)
+![From Marseille to Shangai](doc/img/mars_shan.png)
 
 **NEW:** It is now possible to compute maritime routes avoiding the Suez and/or Panama channel.
 
@@ -20,7 +20,7 @@ Examples of executions for windows users are provided in `searoute.bat` (for lin
 
 Run `java -jar searoute.jar -h` to see the help which describes everything you need to know.
 
-![Example](docs/img/example.png)
+![Example](doc/img/example.png)
 
 ### For coders
 
@@ -64,7 +64,7 @@ double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
 String rgj = SeaRoute.toGeoJSON(routeGeom);
 ```
 
-For further overview, see [the documentation](https://eurostat.github.io/searoute/src/site/apidocs/index.html).
+For further overview, see [the documentation](https://eurostat.github.io/searoute/doc/site/apidocs/index.html).
 
 ### As a webservice
 
@@ -82,7 +82,7 @@ and move the servlet `/target/searoute-XXX.war` into your `/tomcatX.Y/webapps/` 
 
 The shortest maritime routes are computed from a network of lines covering the seas and following some of the most frequent martitime routes. This maritime network is based on the *Oak Ridge National Labs CTA Transportation Network Group, Global Shipping Lane Network, World, 2000* (retrieved from [geocommons.com](http://geocommons.com/datasets?id=25) or [github](https://github.com/geoiq/gc_data/blob/master/datasets/25.geojson)), enriched with some additional lines around the European coasts based on [AIS data](https://en.wikipedia.org/wiki/Automatic_identification_system). Simplified versions of this network have been produced for different resolutions (5km, 10km, 20km, 50km, 100km) based on a shrinking of too short edges and a removal of similar edges.
 
-[![Maritime network overview](docs/img/marnet_overview_.png)](docs/img/marnet_overview.png)
+[![Maritime network overview](doc/img/marnet_overview_.png)](doc/img/marnet_overview.png)
 
 [SeaRoute](https://github.com/eurostat/searoute) can be reused with custom maritime networks produced from some other custom maritime line datasets. The class *MarnetBuilding* provides some utilities for the creation and preparation of such maritime network datasets, with generalisation methods. To be able to handle *Suez* and *Panama* channels, the custom maritime sections need to be characterised with a new property *desc_* set with the values *suez* and *panama* for the network sections passing by the Suez and Panama channels. The program will then be able to recognise them and possibly avoid them, on user request.
 
