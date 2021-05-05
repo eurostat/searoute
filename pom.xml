@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.europa.ec.eurostat</groupId>
 	<artifactId>searoute</artifactId>
-	<version>2.1</version>
+	<version>3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>SeaRoute</name>
 	<url>https://github.com/eurostat/searoute</url>
