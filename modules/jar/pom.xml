@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.europa.ec.eurostat</groupId>
 	<artifactId>searoute-jar</artifactId>
-	<version>3.1-SNAPSHOT</version>
+	<version>3.1</version>
 	<packaging>jar</packaging>
 	<name>SeaRoute-jar</name>
 	<url>https://github.com/eurostat/searoute</url>
@@ -20,7 +20,7 @@
 		<url>https://github.com/eurostat/searoute</url>
 		<connection>scm:git:git://github.com/eurostat/searoute.git</connection>
 		<developerConnection>scm:git:git@github.com:eurostat/searoute.git</developerConnection>
-		<tag>searoute-2.0</tag>
+		<tag>searoute-3.1</tag>
 	</scm>
 
 	<issueManagement>
