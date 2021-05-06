@@ -1,5 +1,7 @@
 # SeaRoute
 
+[![Maven Central](https://img.shields.io/maven-central/v/eu.europa.ec.eurostat/searoute.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22eu.europa.ec.eurostat%22%20AND%20a:%22searoute%22)
+
 [SeaRoute](https://github.com/eurostat/searoute) computes shortest maritime routes between two locations.
 
 See below an example from [Marseille (5.3E,43.3N)](https://www.openstreetmap.org/#map=10/43.3/5.3) to [Shanghai (121.8E,31.2N)](https://www.openstreetmap.org/#map=10/31.2/121.8). The red line is the computed maritime route. The black line is the [great-circle route](https://en.wikipedia.org/wiki/Great-circle_distance).
