@@ -14,7 +14,7 @@
 		<dependency>
 			<groupId>eu.europa.ec.eurostat</groupId>
 			<artifactId>jgiscotools-graph-algo</artifactId>
-			<version>0.9.3</version>
+			<version>0.9.7</version>
 		</dependency>
 
 		<dependency>

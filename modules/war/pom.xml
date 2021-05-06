@@ -9,7 +9,6 @@
 	<url>https://github.com/eurostat/searoute</url>
 	<description>Compute shortest maritime routes between ports</description>
 
-
 	<licenses>
 		<license>
 			<name>European Union Public License, version 1.2 (EUPL-1.2)</name>
@@ -72,7 +71,7 @@
 				</configuration>
 			</plugin>
 			
-						<plugin>
+			<plugin>
 				<artifactId>maven-deploy-plugin</artifactId>
 				<version>2.8.2</version>
 				<executions>
@@ -157,7 +156,6 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-
 
 	<repositories>
 		<repository>
