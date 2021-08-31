@@ -16,10 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.geotools.geojson.geom.GeometryJSON;
 import org.geotools.graph.structure.Node;
 import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.Geometry;
 
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
-import eu.europa.ec.eurostat.jgiscotools.util.Util;
 
 public class SeaRouteWS extends HttpServlet {
 	//   /usr/share/tomcat8/bin/catalina.sh start
@@ -241,11 +239,8 @@ public class SeaRouteWS extends HttpServlet {
 
 			//build the maritime route geometry
 			Feature f = sr.getRoute(oPos, oN, dPos, dN, allowSuez, allowPanama);
-			Geometry ls = f.getGeometry();
-			f = null;
 
-
-			if(ls==null){
+			if(f.getGeometry() == null){
 				out.print( "{\"status\":\"error\",\"message\":\"Shortest path not found\"}" );
 				//setInCache(oLocid, dLocid, st);
 				return;
@@ -254,15 +249,15 @@ public class SeaRouteWS extends HttpServlet {
 			String st;
 			st = "{\"status\":\"ok\"";
 			if(distP){
-				double d = GeoDistanceUtil.getLengthGeoKM(ls);
-				d = Util.round(d, 2);
-				st += ",\"dist\":"+d;
+				st += ",\"dist\":" + f.getAttribute("distKM");
+				st += ",\"dFrom\":" + f.getAttribute("dFromKM");
+				st += ",\"dTo\":" + f.getAttribute("dToKM");
 			}
 			if(geomP){
 				//export as geojson
 				st += ",\"geom\":";
 				StringWriter writer = new StringWriter();
-				new GeometryJSON().write(ls, writer);
+				new GeometryJSON().write(f.getGeometry(), writer);
 				st += writer.toString();
 				writer.close();
 			}

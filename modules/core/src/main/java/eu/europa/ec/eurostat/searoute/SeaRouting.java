@@ -38,6 +38,7 @@ import org.locationtech.jts.operation.linemerge.LineMerger;
 import org.opengis.feature.simple.SimpleFeature;
 
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
+import eu.europa.ec.eurostat.jgiscotools.util.Util;
 
 /**
  * @author julien Gaffuri
@@ -73,13 +74,13 @@ public class SeaRouting {
 				store = DataStoreFinder.getDataStore(map);
 				fc = store.getFeatureSource(store.getTypeNames()[0]).getFeatures();
 			} catch (Exception e) {*/
-				//URL url = new URL(path);
-				HashMap<String, Object> map = new HashMap<>();
-				map.put(GeoPkgDataStoreFactory.DBTYPE.key, "geopkg");
-				map.put(GeoPkgDataStoreFactory.DATABASE.key, "marnet/marnet_plus_"+resKM+"km.gpkg");
-				map.put("url", "marnet/marnet_plus_"+resKM+"km.gpkg");
-				store = DataStoreFinder.getDataStore(map);
-				fc = store.getFeatureSource(store.getTypeNames()[0]).getFeatures();
+			//URL url = new URL(path);
+			HashMap<String, Object> map = new HashMap<>();
+			map.put(GeoPkgDataStoreFactory.DBTYPE.key, "geopkg");
+			map.put(GeoPkgDataStoreFactory.DATABASE.key, "marnet/marnet_plus_"+resKM+"km.gpkg");
+			map.put("url", "marnet/marnet_plus_"+resKM+"km.gpkg");
+			store = DataStoreFinder.getDataStore(map);
+			fc = store.getFeatureSource(store.getTypeNames()[0]).getFeatures();
 			//}
 
 			//build graph
@@ -277,11 +278,12 @@ public class SeaRouting {
 		Collection<?> lss = lm.getMergedLineStrings();
 		Feature rf = new Feature();
 		rf.setGeometry( gf.createMultiLineString( lss.toArray(new LineString[lss.size()]) ) );
-		rf.setAttribute("dFromKM", GeoDistanceUtil.getDistanceKM(oPos, oNPos));
-		rf.setAttribute("dToKM", GeoDistanceUtil.getDistanceKM(dPos, dNPos));
+		rf.setAttribute("distKM", "" + Util.round(GeoDistanceUtil.getLengthGeoKM(rf.getGeometry()), 2));
+		rf.setAttribute("dFromKM", Util.round(GeoDistanceUtil.getDistanceKM(oPos, oNPos),2) );
+		rf.setAttribute("dToKM", Util.round(GeoDistanceUtil.getDistanceKM(dPos, dNPos),2) );
+
 		return rf;
 	}
-
 
 
 	/**

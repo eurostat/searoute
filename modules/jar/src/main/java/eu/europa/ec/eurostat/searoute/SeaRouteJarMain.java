@@ -17,7 +17,6 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
-import eu.europa.ec.eurostat.jgiscotools.feature.util.Util;
 import eu.europa.ec.eurostat.jgiscotools.io.geo.GeoData;
 
 /**
@@ -148,10 +147,6 @@ public class SeaRouteJarMain {
 			//set data
 			f.getAttributes().putAll(o);
 
-			//compute distance
-			double d = GeoDistanceUtil.getLengthGeoKM(f.getGeometry());
-			f.setAttribute("distKM", ""+Util.round(d, 2));
-
 			fs.add(f);
 		}
 
@@ -160,7 +155,7 @@ public class SeaRouteJarMain {
 
 		/*
 		//compute routes
-		for( HashMap<String, String> o : data ) {
+		for( HashMap<String, String> o : data ) {	
 			o.put("geom", "na");
 			o.put("distKM", "na");
 

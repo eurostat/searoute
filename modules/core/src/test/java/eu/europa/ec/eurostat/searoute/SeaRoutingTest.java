@@ -6,6 +6,7 @@ package eu.europa.ec.eurostat.searoute;
 import org.locationtech.jts.geom.MultiLineString;
 
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
+import eu.europa.ec.eurostat.jgiscotools.util.Util;
 import junit.framework.TestCase;
 
 /**
@@ -59,6 +60,7 @@ public class SeaRoutingTest extends TestCase {
 			String rgj = SeaRouting.toGeoJSON(routeGeom);
 			assertTrue(rgj.length() > 10);
 
+			assertFalse(route.getAttribute("distKM") == null);
 			assertFalse(route.getAttribute("dToKM") == null);
 			assertFalse(route.getAttribute("dFromKM") == null);
 			assertFalse(routeGeom == null);
