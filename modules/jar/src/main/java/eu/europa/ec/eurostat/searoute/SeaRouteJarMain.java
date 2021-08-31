@@ -33,7 +33,7 @@ public class SeaRouteJarMain {
 		Options options = new Options();
 		options.addOption(Option.builder("i").longOpt("inputFile").desc("Input file (CSV format).")
 				.hasArg().argName("file").build());
-		options.addOption(Option.builder("o").longOpt("outputFile").desc("Optional. Output file (GeoJSON format). Default: 'out.geojson'.")
+		options.addOption(Option.builder("o").longOpt("outputFile").desc("Optional. Output file name. Default: 'out.geojson'.")
 				.hasArg().argName("file").build());
 		options.addOption(Option.builder("res").longOpt("resolution").desc("Optional. The resolution of the output geometries, in km. Default: '20'.")
 				.hasArg().argName("5, 10, 20, 50 or 100").build());

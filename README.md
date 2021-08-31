@@ -18,9 +18,11 @@ See below an example from [Marseille (5.3E,43.3N)](https://www.openstreetmap.org
 
 Download the lastest release [here](https://github.com/eurostat/searoute/raw/dev/releases/searoute-2.1.zip) and unzip it somewhere.
 
-Examples of executions for windows users are provided in `searoute.bat` (for linux users, see `searoute.sh`). `test_input.csv` is an example of input file. It is a simple CSV file with origin/destination coordinates of the routes. Note that only geographical coordinates (decimal degrees) are supported. The output file is a [GeoJSON](https://geojson.org/) (\*.geojson), SHP (\*.shp) or [GeoPackage](http://www.geopackage.org/) (\*.gpkg) file. This file can be displayed on any modern GIS software such as [QGIS](https://qgis.org). GeoJSON files can be displayed easily with [geojson.io](http://geojson.io/).
+Examples of executions for windows users are provided in `searoute.bat` (for linux users, see `searoute.sh`). `test_input.csv` is an example of input file. It is a simple CSV file with origin/destination coordinates of the routes. Note that only geographical coordinates (decimal degrees) are supported. The output file is a [GeoJSON](https://geojson.org/) (\*.geojson) file. This file can be displayed with any modern GIS software such as [QGIS](https://qgis.org), or also with [geojson.io](http://geojson.io/). Each route has the same properties as the input CSV file, with three additional properties: 
+- `distKM`, which is the length of the route, in KM
+- `dFromKM` (respectivelly `dToKM`), which is the distance in KM between the origin (repectivelly destination) position and the closest node of the maritime network. This value measure the approximation arount the origin (respectivelly destination) position. The smaller, the better.
 
-Run `java -jar searoute.jar -h` to see the help which describes everything you need to know.
+Run `java -jar searoute.jar -h` to see the help which describes input parameters.
 
 ![Example](doc/img/example.png)
 
