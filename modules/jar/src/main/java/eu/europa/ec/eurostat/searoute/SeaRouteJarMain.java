@@ -151,6 +151,7 @@ public class SeaRouteJarMain {
 		}
 
 		System.out.println("Save...");
+		//TODO do it for geojson only - use only dependancy geotools-geojson !!!
 		GeoData.save(fs , outFile, null);
 
 		/*
