@@ -151,7 +151,8 @@ public class SeaRouteJarMain {
 		}
 
 		System.out.println("Save...");
-		//TODO do it for geojson only - use only dependancy geotools-geojson !!!
+		//TODO do it for geojson only - and use only dependancy geotools-geojson !!!
+		//TODO or make it work for gpkg and shp as well.
 		GeoData.save(fs , outFile, null);
 
 		/*

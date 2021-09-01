@@ -16,6 +16,7 @@ import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
 import eu.europa.ec.eurostat.jgiscotools.feature.FeatureUtil;
 import eu.europa.ec.eurostat.jgiscotools.graph.algo.ConnexComponents;
 import eu.europa.ec.eurostat.jgiscotools.graph.algo.GraphSimplify;
+import eu.europa.ec.eurostat.jgiscotools.io.geo.GeoData;
 
 /**
  * Some functions to build maritime networks at different resolutions.
@@ -27,9 +28,17 @@ public class MarnetBuilding {
 	private final static Logger LOGGER = LogManager.getLogger(MarnetBuilding.class.getName());
 
 	public static void main(String[] args) {
+		LOGGER.info("Start");
+
+		//load input data
+		ArrayList<Feature> fs = GeoData.getFeatures("src/main/resources/marnet_densified.gpkg");
+		LOGGER.info(fs.size());
+
+		Collection<LineString>[] out = makeFromLinearFeatures(fs);
+
+		//TODO suez and panama surfaces
 		
-		//TODO
-		
+		LOGGER.info("End");
 	}
 	
 	

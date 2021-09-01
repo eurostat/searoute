@@ -16,16 +16,10 @@
 			<artifactId>jgiscotools-graph-algo</artifactId>
 			<version>${jgt.version}</version>
 		</dependency>
-
 		<dependency>
-			<groupId>org.geotools</groupId>
-			<artifactId>gt-epsg-hsql</artifactId>
-			<version>${geotools.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.geotools</groupId>
-			<artifactId>gt-geopkg</artifactId>
-			<version>${geotools.version}</version>
+			<groupId>eu.europa.ec.eurostat</groupId>
+			<artifactId>jgiscotools-geo-io</artifactId>
+			<version>${jgt.version}</version>
 		</dependency>
 
 	</dependencies>
