@@ -57,8 +57,8 @@ public class SeaRoutingTest extends TestCase {
 			double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
 
 			//export the route in geoJSON format
-			String rgj = SeaRouting.toGeoJSON(routeGeom);
-			assertTrue(rgj.length() > 10);
+			//String rgj = SeaRouting.toGeoJSON(routeGeom);
+			//assertTrue(rgj.length() > 10);
 
 			assertFalse(route.getAttribute("distKM") == null);
 			assertFalse(route.getAttribute("dToKM") == null);

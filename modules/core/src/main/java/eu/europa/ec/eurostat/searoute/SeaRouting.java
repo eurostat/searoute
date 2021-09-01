@@ -3,8 +3,6 @@
  */
 package eu.europa.ec.eurostat.searoute;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,7 +15,6 @@ import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.feature.FeatureIterator;
-import org.geotools.geojson.geom.GeometryJSON;
 import org.geotools.geopkg.GeoPkgDataStoreFactory;
 import org.geotools.graph.build.feature.FeatureGraphGenerator;
 import org.geotools.graph.build.line.LineStringGraphGenerator;
@@ -352,23 +349,6 @@ public class SeaRouting {
 			}
 		}
 		return srs;
-	}
-
-	/**
-	 * Return a geometry in GeoJSON format
-	 * 
-	 * @param geom
-	 * @return
-	 */
-	public static String toGeoJSON(Geometry geom){
-		String out = null;
-		try {
-			StringWriter writer = new StringWriter();
-			new GeometryJSON().write(geom, writer);
-			out = writer.toString();
-			writer.close();
-		} catch (IOException e) { e.printStackTrace(); }
-		return out;
 	}
 
 }

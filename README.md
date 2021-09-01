@@ -63,9 +63,6 @@ Feature route = sr.getRoute(5.3, 43.3, 121.8, 31.2);
 //compute the route distance in km
 MultiLineString routeGeom = (MultiLineString) route.getGeometry();
 double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
-
-//extract the route in geoJSON format
-String rgj = SeaRoute.toGeoJSON(routeGeom);
 ```
 
 For further overview, see [the documentation](https://eurostat.github.io/searoute/doc/site/apidocs/index.html).
