@@ -367,9 +367,7 @@ public class SeaRouting {
 			new GeometryJSON().write(geom, writer);
 			out = writer.toString();
 			writer.close();
-		} catch (IOException e) { e.printStackTrace();
-		} finally {
-		}
+		} catch (IOException e) { e.printStackTrace(); }
 		return out;
 	}
 

@@ -9,6 +9,11 @@
 	<artifactId>searoute-core</artifactId>
 	<name>SeaRoute-core</name>
 
+	<properties>
+		<geotools.version>25.2</geotools.version>
+		<jgt.version>0.9.7</jgt.version>
+	</properties>
+
 	<dependencies>
 
 		<dependency>
@@ -25,11 +30,6 @@
 		<dependency>
 			<groupId>org.geotools</groupId>
 			<artifactId>gt-geopkg</artifactId>
-			<version>${geotools.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.geotools</groupId>
-			<artifactId>gt-shapefile</artifactId>
 			<version>${geotools.version}</version>
 		</dependency>
 		<dependency>

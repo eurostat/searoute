@@ -4,7 +4,7 @@
   <groupId>eu.europa.ec.eurostat</groupId>
   <artifactId>searoute-jar</artifactId>
   <name>SeaRoute-jar</name>
-  <version>3.3</version>
+  <version>3.4-SNAPSHOT</version>
   <description>Compute shortest maritime routes between ports</description>
   <url>https://github.com/eurostat/searoute</url>
   <issueManagement>
@@ -30,7 +30,7 @@
   <scm>
     <connection>scm:git:git://github.com/eurostat/searoute.git</connection>
     <developerConnection>scm:git:git@github.com:eurostat/searoute.git</developerConnection>
-    <tag>searoute-3.3</tag>
+    <tag>searoute-2.0</tag>
     <url>https://github.com/eurostat/searoute</url>
   </scm>
   <build>
