@@ -9,8 +9,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.locationtech.jts.geom.LineString;
 
 import eu.europa.ec.eurostat.jgiscotools.algo.base.DouglasPeuckerRamerFilter;
@@ -33,17 +35,20 @@ public class MarnetBuilding {
 	public static void main(String[] args) {
 		LOGGER.info("Start");
 
+		Configurator.setLevel(LogManager.getLogger(MarnetBuilding.class).getName(), Level.DEBUG);
+
 		//load input data
 		ArrayList<Feature> fs = GeoData.getFeatures("src/main/resources/marnet_densified.gpkg");
+		//ArrayList<Feature> fs = GeoData.getFeatures("src/main/resources/marnet_cta.gpkg");
 		LOGGER.info(fs.size());
 
 		//define resolutions
 		HashMap<String,Double> resDegs = new HashMap<String, Double>();
 		resDegs.put("100km", 0.5);
-		resDegs.put("50km", 0.25);
-		resDegs.put("20km", 0.1);
-		resDegs.put("10km", 0.05);
-		resDegs.put("5km", 0.025);
+		//resDegs.put("50km", 0.25);
+		//resDegs.put("20km", 0.1);
+		//resDegs.put("10km", 0.05);
+		//resDegs.put("5km", 0.025);
 
 		for(Entry<String,Double> resDeg : resDegs.entrySet()) {
 			LOGGER.info("Build maritime network for resolution " + resDeg.getKey());
@@ -105,7 +110,9 @@ public class MarnetBuilding {
 			ls = prepare(ls, resDeg);
 			lines.addAll(ls);
 		}
-		return make(resDeg, lines);
+		//TODO
+		//return make(resDeg, lines);
+		return lines;
 	}
 
 	/**
@@ -147,7 +154,10 @@ public class MarnetBuilding {
 		lines = GraphSimplify.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
 		lines = DouglasPeuckerRamerFilter.get(lines, res);						LOGGER.debug(lines.size() + " filterGeom");
 		lines = GraphSimplify.removeSimilarDuplicateEdges(lines, res);	LOGGER.debug(lines.size() + " removeSimilarDuplicateEdges");
+
+		//TODO check that !!!
 		lines = GraphSimplify.collapseTooShortEdgesAndPlanifyLines(lines, res, true, true);				LOGGER.debug(lines.size() + " dtsePlanifyLines");
+
 		lines = GraphSimplify.resPlanifyLines(lines, res*0.01, false);			LOGGER.debug(lines.size() + " resPlanifyLines");
 		return lines;
 	}
