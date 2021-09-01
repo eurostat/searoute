@@ -44,6 +44,7 @@
 		<maven.compiler.source>1.9</maven.compiler.source>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<geotools.version>23.5</geotools.version>
 	</properties>
 
 	<build>
@@ -148,6 +149,11 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>searoute-core</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-geojson</artifactId>
+			<version>${geotools.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
