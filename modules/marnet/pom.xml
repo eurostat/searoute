@@ -6,21 +6,15 @@
 		<artifactId>searoute-modules</artifactId>
 		<version>3.4-SNAPSHOT</version>
 	</parent>
-	<artifactId>searoute-core</artifactId>
-	<name>SeaRoute-core</name>
+	<artifactId>searoute-marnet</artifactId>
+	<name>SeaRoute-marnet</name>
 
 	<dependencies>
 
 		<dependency>
 			<groupId>eu.europa.ec.eurostat</groupId>
-			<artifactId>jgiscotools-feature</artifactId>
+			<artifactId>jgiscotools-graph-algo</artifactId>
 			<version>${jgt.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.geotools</groupId>
-			<artifactId>gt-graph</artifactId>
-			<version>${geotools.version}</version>
 		</dependency>
 
 		<dependency>
@@ -31,11 +25,6 @@
 		<dependency>
 			<groupId>org.geotools</groupId>
 			<artifactId>gt-geopkg</artifactId>
-			<version>${geotools.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.geotools</groupId>
-			<artifactId>gt-geojson</artifactId>
 			<version>${geotools.version}</version>
 		</dependency>
 

@@ -43,6 +43,8 @@
 		<maven.compiler.source>1.9</maven.compiler.source>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<geotools.version>23.5</geotools.version>
+		<jgt.version>0.9.7</jgt.version>
 	</properties>
 
 	<build>
