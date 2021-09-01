@@ -26,6 +26,13 @@ import eu.europa.ec.eurostat.jgiscotools.graph.algo.GraphSimplify;
 public class MarnetBuilding {
 	private final static Logger LOGGER = LogManager.getLogger(MarnetBuilding.class.getName());
 
+	public static void main(String[] args) {
+		
+		//TODO
+		
+	}
+	
+	
 
 	public static Collection<LineString>[] makeFromLinearFeatures(Collection<Feature>... fs) {
 		return makeFromLinearFeatures(new double[] { 0.5, 0.25, 0.1, 0.05, 0.025 }, fs);

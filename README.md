@@ -8,8 +8,6 @@ See below an example from [Marseille (5.3E,43.3N)](https://www.openstreetmap.org
 
 ![From Marseille to Shangai](doc/img/mars_shan.png)
 
-**NEW:** It is now possible to compute maritime routes avoiding the Suez and/or Panama channel.
-
 ## Usage
 
 ### As a program
@@ -85,7 +83,7 @@ The shortest maritime routes are computed from a network of lines covering the s
 
 [![Maritime network overview](doc/img/marnet_overview_.png)](doc/img/marnet_overview.png)
 
-[SeaRoute](https://github.com/eurostat/searoute) can be reused with custom maritime networks produced from some other custom maritime line datasets. The class *MarnetBuilding* provides some utilities for the creation and preparation of such maritime network datasets, with generalisation methods. To be able to handle *Suez* and *Panama* channels, the custom maritime sections need to be characterised with a new property *desc_* set with the values *suez* and *panama* for the network sections passing by the Suez and Panama channels. The program will then be able to recognise them and possibly avoid them, on user request.
+[SeaRoute](https://github.com/eurostat/searoute) can be reused with custom maritime networks produced from some other custom maritime line datasets. The module *marnet* provides some utilities and examples for the creation and preparation of such maritime network datasets, with generalisation methods. To be able to handle *Suez* and *Panama* channels, the custom maritime sections need to be characterised with a new property *desc_* set with the values *suez* and *panama* for the network sections passing by the Suez and Panama channels. The program will then be able to recognise them and possibly avoid them, on user request.
 
 The shortest maritime routes are computed from this network using the [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) implemented in the wonderful [GeoTools](https://geotools.org/) library.
 
