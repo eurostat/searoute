@@ -20,6 +20,9 @@ import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
 import eu.europa.ec.eurostat.jgiscotools.feature.FeatureUtil;
 import eu.europa.ec.eurostat.jgiscotools.graph.algo.ConnexComponents;
 import eu.europa.ec.eurostat.jgiscotools.graph.algo.GraphSimplify;
+import eu.europa.ec.eurostat.jgiscotools.graph.algo.GraphUtils;
+import eu.europa.ec.eurostat.jgiscotools.graph.base.GraphBuilder;
+import eu.europa.ec.eurostat.jgiscotools.graph.base.structure.Graph;
 import eu.europa.ec.eurostat.jgiscotools.io.geo.CRSUtil;
 import eu.europa.ec.eurostat.jgiscotools.io.geo.GeoData;
 
@@ -128,7 +131,7 @@ public class MarnetBuilding {
 		lines = GraphSimplify.planifyLines(lines);						LOGGER.debug(lines.size() + " planifyLines");
 		lines = GraphSimplify.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
 		lines = DouglasPeuckerRamerFilter.get(lines, res);						LOGGER.debug(lines.size() + " filterGeom");
-		lines = GraphSimplify.removeSimilarDuplicateEdges(lines, res);	LOGGER.debug(lines.size() + " removeSimilarDuplicateEdges");
+		lines = removeSimilarDuplicateEdges(lines, res);	LOGGER.debug(lines.size() + " removeSimilarDuplicateEdges");
 		//lines = MeshSimplification.dtsePlanifyLines(lines, res);				LOGGER.debug(lines.size() + " dtsePlanifyLines");
 		lines = GraphSimplify.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
 		lines = GraphSimplify.planifyLines(lines);						LOGGER.debug(lines.size() + " planifyLines");
@@ -153,13 +156,25 @@ public class MarnetBuilding {
 		lines = GraphSimplify.planifyLines(lines);						LOGGER.debug(lines.size() + " planifyLines");
 		lines = GraphSimplify.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
 		lines = DouglasPeuckerRamerFilter.get(lines, res);						LOGGER.debug(lines.size() + " filterGeom");
-		lines = GraphSimplify.removeSimilarDuplicateEdges(lines, res);	LOGGER.debug(lines.size() + " removeSimilarDuplicateEdges");
+		lines = removeSimilarDuplicateEdges(lines, res);	LOGGER.debug(lines.size() + " removeSimilarDuplicateEdges");
 
 		//TODO check that !!!
 		lines = GraphSimplify.collapseTooShortEdgesAndPlanifyLines(lines, res, true, true);				LOGGER.debug(lines.size() + " dtsePlanifyLines");
 
 		lines = GraphSimplify.resPlanifyLines(lines, res*0.01, false);			LOGGER.debug(lines.size() + " resPlanifyLines");
 		return lines;
+	}
+
+
+	/**
+	 * @param lines
+	 * @param haussdorffDistance
+	 * @return
+	 */
+	public static Collection<LineString> removeSimilarDuplicateEdges(Collection<LineString> lines, double haussdorffDistance) {
+		Graph g = GraphBuilder.buildFromLinearGeometriesNonPlanar(lines);
+		GraphUtils.removeSimilarDuplicateEdges(g, haussdorffDistance);
+		return GraphUtils.getEdgeGeometries(g);
 	}
 
 }
