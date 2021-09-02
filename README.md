@@ -26,28 +26,19 @@ Run `java -jar searoute.jar -h` to see the help which describes input parameters
 
 ### For coders
 
-[SeaRoute](https://github.com/eurostat/searoute) can be used as a Java library. To quickly setup a development environment, see [these instructions](https://eurostat.github.io/README/howto/java_eclipse_maven_git_quick_guide).
-
-Download and install [SeaRoute](https://github.com/eurostat/searoute) with:
+[SeaRoute](https://github.com/eurostat/searoute) uses [Apache Maven](http://maven.apache.org/). To use SeaRoute, add it as a dependency to the *pom.xml* file:
 
 ```
-git clone https://github.com/eurostat/searoute.git
-cd searoute
-mvn clean install
+<dependency>
+	<groupId>eu.europa.ec.eurostat</groupId>
+	<artifactId>searoute-core</artifactId>
+	<version>X.Y</version>
+</dependency>
 ```
 
-and then use it in your Java project as a dependency by adding it to the *pom.xml* file:
+Where *X.Y* is the current version number, as available [Maven central repository](https://search.maven.org/artifact/eu.europa.ec.eurostat/searoute).
 
-```
-<dependencies>
-	...
-	<dependency>
-		<groupId>eu.europa.ec.eurostat</groupId>
-		<artifactId>searoute-core</artifactId>
-		<version>X.Y</version>
-	</dependency>
-</dependencies>
-```
+For more information on how to setup a coding environment based on [Eclipse](https://www.eclipse.org/), see [this page](https://github.com/eurostat/README/blob/master/docs/howto/java_eclipse_maven_git_quick_guide.md).
 
 Here is an example of shortest maritime route computation:
 
