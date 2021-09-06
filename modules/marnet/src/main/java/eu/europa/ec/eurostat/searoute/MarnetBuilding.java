@@ -8,10 +8,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.config.Configurator;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.index.strtree.STRtree;
 
@@ -52,8 +50,8 @@ public class MarnetBuilding {
 		LOGGER.info(fs.size() + "   " + passs.size());
 
 		//define resolutions
-		double[] ress = {0.5, 0.25, 0.1, 0.05, 0.025/*, 0.01, 0.005*/};
-		String[] ress_ = {"100km", "50km", "20km", "10km", "5km"/*, "2km", "1km"*/};
+		double[] ress = {/*0.5, 0.25, 0.1, 0.05, 0.025,*/ 0.01};
+		String[] ress_ = {/*"100km", "50km", "20km", "10km", "5km",*/ "2km"};
 
 		for(int i=0; i<ress.length; i++) {
 			LOGGER.info("Build maritime network for resolution " + ress_[i]);
