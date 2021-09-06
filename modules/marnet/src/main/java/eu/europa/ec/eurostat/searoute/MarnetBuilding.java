@@ -52,8 +52,8 @@ public class MarnetBuilding {
 		LOGGER.info(fs.size() + "   " + passs.size());
 
 		//define resolutions
-		double[] ress = {0.5, 0.25, 0.1, 0.05, 0.025};
-		String[] ress_ = {"100km", "50km", "20km", "10km", "5km"};
+		double[] ress = {0.5, 0.25, 0.1, 0.05, 0.025, 0.005};
+		String[] ress_ = {"100km", "50km", "20km", "10km", "5km", "1km"};
 
 		for(int i=0; i<5; i++) {
 			LOGGER.info("Build maritime network for resolution " + ress_[i]);
