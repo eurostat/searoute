@@ -5,9 +5,7 @@ package eu.europa.ec.eurostat.searoute;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map.Entry;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -46,16 +44,12 @@ public class MarnetBuilding {
 		LOGGER.info(fs.size());
 
 		//define resolutions
-		HashMap<String,Double> resDegs = new HashMap<String, Double>();
-		resDegs.put("100km", 0.5);
-		resDegs.put("50km", 0.25);
-		resDegs.put("20km", 0.1);
-		resDegs.put("10km", 0.05);
-		resDegs.put("5km", 0.025);
+		double[] ress = {0.5, 0.25, 0.1, 0.05, 0.025};
+		String[] ress_ = {"100km", "50km", "20km", "10km", "5km"};
 
-		for(Entry<String,Double> resDeg : resDegs.entrySet()) {
-			LOGGER.info("Build maritime network for resolution " + resDeg.getKey());
-			Collection<LineString> out = makeFromLinearFeatures(resDeg.getValue(), fs);
+		for(int i=0; i<5; i++) {
+			LOGGER.info("Build maritime network for resolution " + ress_[i]);
+			Collection<LineString> out = makeFromLinearFeatures(ress[i], fs);
 
 			LOGGER.info("   " + out.size());
 			HashSet<Feature> outFs = FeatureUtil.geometriesToFeatures(out);
@@ -64,7 +58,7 @@ public class MarnetBuilding {
 			//TODO suez and panama surfaces
 
 			LOGGER.info("   Save...");
-			GeoData.save(outFs, "target/out/marnet_plus_" + resDeg.getKey() + ".gpkg", CRSUtil.getWGS_84_CRS());
+			GeoData.save(outFs, "target/out/marnet_plus_" + ress_[i] + ".gpkg", CRSUtil.getWGS_84_CRS());
 		}
 
 		LOGGER.info("End");
