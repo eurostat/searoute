@@ -44,7 +44,7 @@ public class MarnetBuilding {
 	public static void main(String[] args) {
 		LOGGER.info("Start");
 
-		Configurator.setLevel(LogManager.getLogger(MarnetBuilding.class).getName(), Level.DEBUG);
+		//Configurator.setLevel(LogManager.getLogger(MarnetBuilding.class).getName(), Level.DEBUG);
 
 		//load input data
 		ArrayList<Feature> fs = GeoData.getFeatures("src/main/resources/marnet_densified.gpkg");
@@ -52,10 +52,10 @@ public class MarnetBuilding {
 		LOGGER.info(fs.size() + "   " + passs.size());
 
 		//define resolutions
-		double[] ress = {0.5, 0.25, 0.1, 0.05, 0.025, 0.005};
-		String[] ress_ = {"100km", "50km", "20km", "10km", "5km", "1km"};
+		double[] ress = {0.5, 0.25, 0.1, 0.05, 0.025, 0.01, 0.005};
+		String[] ress_ = {"100km", "50km", "20km", "10km", "5km", "2km", "1km"};
 
-		for(int i=0; i<5; i++) {
+		for(int i=0; i<ress.length; i++) {
 			LOGGER.info("Build maritime network for resolution " + ress_[i]);
 			Collection<LineString> out = makeFromLinearFeatures(ress[i], fs);
 
@@ -129,6 +129,8 @@ public class MarnetBuilding {
 		lines = GraphSimplify.collapseTooShortEdgesAndPlanifyLines(lines, res, true, true);				LOGGER.debug(lines.size() + " collapseTooShortEdgesAndPlanifyLines");
 		lines = GraphBuilder.planifyLines(lines);						LOGGER.debug(lines.size() + " planifyLines");
 		lines = GraphBuilder.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
+
+		lines = removeSimilarDuplicateEdges(lines, res);	LOGGER.debug(lines.size() + " removeSimilarDuplicateEdges");
 
 		//run with -Xss4m
 		lines = ConnexComponents.keepOnlyLargestGraphConnexComponents(lines, 50);	LOGGER.debug(lines.size() + " keepOnlyLargestGraphConnexComponents");
