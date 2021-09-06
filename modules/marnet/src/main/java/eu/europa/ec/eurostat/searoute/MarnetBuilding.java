@@ -6,12 +6,14 @@ package eu.europa.ec.eurostat.searoute;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.index.strtree.STRtree;
 
 import eu.europa.ec.eurostat.jgiscotools.algo.base.DouglasPeuckerRamerFilter;
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
@@ -40,8 +42,8 @@ public class MarnetBuilding {
 
 		//load input data
 		ArrayList<Feature> fs = GeoData.getFeatures("src/main/resources/marnet_densified.gpkg");
-		//ArrayList<Feature> fs = GeoData.getFeatures("src/main/resources/marnet_cta.gpkg");
-		LOGGER.info(fs.size());
+		ArrayList<Feature> passs = GeoData.getFeatures("src/main/resources/pass.gpkg");
+		LOGGER.info(fs.size() + "   " + passs.size());
 
 		//define resolutions
 		double[] ress = {0.5, 0.25, 0.1, 0.05, 0.025};
@@ -55,7 +57,22 @@ public class MarnetBuilding {
 			HashSet<Feature> outFs = FeatureUtil.geometriesToFeatures(out);
 			LOGGER.info("   " + outFs.size());
 
-			//TODO suez and panama surfaces
+			//set attribute for passes
+			for(Feature f : outFs)
+				f.setAttribute("desc_", null);
+
+			//spatial index of marnet
+			STRtree ind = FeatureUtil.getSTRtree(outFs);
+			for(Feature pass : passs) {
+				LOGGER.info("Pass " + pass.getAttribute("id") + " " + pass.getAttribute("name"));
+				List edges = ind.query(pass.getGeometry().getEnvelopeInternal());
+				LOGGER.debug("   " + edges.size());
+				for(Object e : edges) {
+					Feature f = (Feature)e;
+					if(! f.getGeometry().intersects(pass.getGeometry())) continue;
+					f.setAttribute("desc_", pass.getAttribute("id"));
+				}
+			}
 
 			LOGGER.info("   Save...");
 			GeoData.save(outFs, "target/out/marnet_plus_" + ress_[i] + ".gpkg", CRSUtil.getWGS_84_CRS());
