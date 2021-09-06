@@ -156,12 +156,19 @@ public class MarnetBuilding {
 		lines = GraphBuilder.planifyLines(lines);						LOGGER.debug(lines.size() + " planifyLines");
 		lines = GraphBuilder.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
 		lines = DouglasPeuckerRamerFilter.get(lines, res);						LOGGER.debug(lines.size() + " filterGeom");
-		lines = removeSimilarDuplicateEdges(lines, res);	LOGGER.debug(lines.size() + " removeSimilarDuplicateEdges");
 
-		//TODO check that !!!
-		lines = GraphSimplify.collapseTooShortEdgesAndPlanifyLines(lines, res, true, true);				LOGGER.debug(lines.size() + " collapseTooShortEdgesAndPlanifyLines");
+		//lines = GraphBuilder.planifyLines(lines);						LOGGER.debug(lines.size() + " planifyLines");
+		//lines = GraphBuilder.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
+		//lines = removeSimilarDuplicateEdges(lines, res);	LOGGER.debug(lines.size() + " removeSimilarDuplicateEdges");
 
 		lines = GraphSimplify.resPlanifyLines(lines, res*0.01, false);			LOGGER.debug(lines.size() + " resPlanifyLines");
+		lines = GraphBuilder.planifyLines(lines);						LOGGER.debug(lines.size() + " planifyLines");
+		lines = GraphBuilder.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
+
+		lines = GraphSimplify.collapseTooShortEdgesAndPlanifyLines(lines, res, true, true);				LOGGER.debug(lines.size() + " collapseTooShortEdgesAndPlanifyLines");
+		lines = GraphBuilder.planifyLines(lines);						LOGGER.debug(lines.size() + " planifyLines");
+		lines = GraphBuilder.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
+
 		return lines;
 	}
 
