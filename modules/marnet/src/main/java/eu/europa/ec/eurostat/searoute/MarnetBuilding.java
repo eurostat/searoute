@@ -48,10 +48,10 @@ public class MarnetBuilding {
 		//define resolutions
 		HashMap<String,Double> resDegs = new HashMap<String, Double>();
 		resDegs.put("100km", 0.5);
-		//resDegs.put("50km", 0.25);
-		//resDegs.put("20km", 0.1);
-		//resDegs.put("10km", 0.05);
-		//resDegs.put("5km", 0.025);
+		resDegs.put("50km", 0.25);
+		resDegs.put("20km", 0.1);
+		resDegs.put("10km", 0.05);
+		resDegs.put("5km", 0.025);
 
 		for(Entry<String,Double> resDeg : resDegs.entrySet()) {
 			LOGGER.info("Build maritime network for resolution " + resDeg.getKey());
@@ -72,51 +72,21 @@ public class MarnetBuilding {
 
 
 
-	public static Collection<LineString>[] makeFromLinearFeatures(Collection<Feature>... fs) {
-		return makeFromLinearFeatures(new double[] { 0.5, 0.25, 0.1, 0.05, 0.025 }, fs);
-	}
-
 
 	/**
 	 * Build a maritime network from a list of linear features representing maritime lines
 	 * for specified resolutions
 	 * 
-	 * @param resDegs The target resolution (in geographical coordinates).
-	 * @param fs Feature collections.
+	 * @param resDeg The target resolution (in geographical coordinates).
+	 * @param fs Feature collection.
 	 * @return
 	 */
-	public static Collection<LineString>[] makeFromLinearFeatures(double[] resDegs, Collection<Feature>... fs) {
-		Collection<LineString>[] out = new ArrayList[resDegs.length];
-		for(int i=0; i<resDegs.length; i++) {
-			LOGGER.info("Build maritime network for resolution " + resDegs[i]);
-			out[i] = makeFromLinearFeatures(resDegs[i], fs);
-		}
+	public static Collection<LineString> makeFromLinearFeatures(double resDeg, Collection<Feature> fs) {
+		Collection lines = FeatureUtil.featuresToGeometries(fs);
+		Collection<LineString> out = make(resDeg, lines);
 		return out;
 	}
 
-
-	/**
-	 * Build a maritime network from a list of linear features representing maritime lines.
-	 * 
-	 * @param resDeg The target resolution (in geographical coordinates).
-	 * @param fs Feature collections.
-	 * @return
-	 */
-	public static Collection<LineString> makeFromLinearFeatures(double resDeg, Collection<Feature>... fs) {
-		//load input lines
-		Collection<LineString> lines = new HashSet<LineString>();
-
-		//data sources preparation
-		for(Collection<Feature> fs_ : fs) {
-			LOGGER.debug(" preparing " + fs_.size());
-			Collection ls = FeatureUtil.featuresToGeometries(fs_);
-			ls = prepare(ls, resDeg);
-			lines.addAll(ls);
-		}
-		//TODO
-		//return make(resDeg, lines);
-		return lines;
-	}
 
 	/**
 	 * Build a maritime network from maritime lines.
@@ -126,25 +96,20 @@ public class MarnetBuilding {
 	 * @return
 	 */
 	public static Collection<LineString> make(double res, Collection<LineString> lines) {
-		LOGGER.debug("Total before integration: " + lines.size());
 
 		lines = GraphBuilder.planifyLines(lines);						LOGGER.debug(lines.size() + " planifyLines");
 		lines = GraphBuilder.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
 		lines = DouglasPeuckerRamerFilter.get(lines, res);						LOGGER.debug(lines.size() + " filterGeom");
 		lines = removeSimilarDuplicateEdges(lines, res);	LOGGER.debug(lines.size() + " removeSimilarDuplicateEdges");
-		//lines = MeshSimplification.dtsePlanifyLines(lines, res);				LOGGER.debug(lines.size() + " dtsePlanifyLines");
-		lines = GraphBuilder.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
-		lines = GraphBuilder.planifyLines(lines);						LOGGER.debug(lines.size() + " planifyLines");
-		lines = GraphBuilder.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
-		//lines = MeshSimplification.dtsePlanifyLines(lines, res);				LOGGER.debug(lines.size() + " dtsePlanifyLines");
-		lines = GraphBuilder.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
-		lines = GraphBuilder.planifyLines(lines);						LOGGER.debug(lines.size() + " planifyLines");
-		lines = GraphBuilder.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
-		//lines = MeshSimplification.dtsePlanifyLines(lines, res);				LOGGER.debug(lines.size() + " dtsePlanifyLines");
-		lines = GraphBuilder.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
+
 		lines = GraphSimplify.resPlanifyLines(lines, res*0.01, false);			LOGGER.debug(lines.size() + " resPlanifyLines");
 		lines = GraphBuilder.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
 		lines = GraphSimplify.resPlanifyLines(lines, res*0.01, false);			LOGGER.debug(lines.size() + " resPlanifyLines");
+		lines = GraphBuilder.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
+
+		lines = GraphSimplify.collapseTooShortEdgesAndPlanifyLines(lines, res, true, true);				LOGGER.debug(lines.size() + " collapseTooShortEdgesAndPlanifyLines");
+		lines = GraphBuilder.planifyLines(lines);						LOGGER.debug(lines.size() + " planifyLines");
+		lines = GraphBuilder.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
 
 		//run with -Xss4m
 		lines = ConnexComponents.keepOnlyLargestGraphConnexComponents(lines, 50);	LOGGER.debug(lines.size() + " keepOnlyLargestGraphConnexComponents");
@@ -152,25 +117,7 @@ public class MarnetBuilding {
 		return lines;
 	}
 
-	private static Collection<LineString> prepare(Collection<LineString> lines, double res) {
-		lines = GraphBuilder.planifyLines(lines);						LOGGER.debug(lines.size() + " planifyLines");
-		lines = GraphBuilder.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
-		lines = DouglasPeuckerRamerFilter.get(lines, res);						LOGGER.debug(lines.size() + " filterGeom");
 
-		//lines = GraphBuilder.planifyLines(lines);						LOGGER.debug(lines.size() + " planifyLines");
-		//lines = GraphBuilder.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
-		//lines = removeSimilarDuplicateEdges(lines, res);	LOGGER.debug(lines.size() + " removeSimilarDuplicateEdges");
-
-		lines = GraphSimplify.resPlanifyLines(lines, res*0.01, false);			LOGGER.debug(lines.size() + " resPlanifyLines");
-		lines = GraphBuilder.planifyLines(lines);						LOGGER.debug(lines.size() + " planifyLines");
-		lines = GraphBuilder.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
-
-		lines = GraphSimplify.collapseTooShortEdgesAndPlanifyLines(lines, res, true, true);				LOGGER.debug(lines.size() + " collapseTooShortEdgesAndPlanifyLines");
-		lines = GraphBuilder.planifyLines(lines);						LOGGER.debug(lines.size() + " planifyLines");
-		lines = GraphBuilder.lineMerge(lines);							LOGGER.debug(lines.size() + " lineMerge");
-
-		return lines;
-	}
 
 
 	/**
