@@ -35,6 +35,12 @@ import eu.europa.ec.eurostat.jgiscotools.io.geo.GeoData;
 public class MarnetBuilding {
 	private final static Logger LOGGER = LogManager.getLogger(MarnetBuilding.class.getName());
 
+	
+	/**
+	 * Run that with option: -Xss4m
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		LOGGER.info("Start");
 
@@ -57,9 +63,10 @@ public class MarnetBuilding {
 			HashSet<Feature> outFs = FeatureUtil.geometriesToFeatures(out);
 			LOGGER.info("   " + outFs.size());
 
-			//set attribute for passes
+
+			//set default attribute value for passes
 			for(Feature f : outFs)
-				f.setAttribute("desc_", null);
+				f.setAttribute("pass", null);
 
 			//spatial index of marnet
 			STRtree ind = FeatureUtil.getSTRtree(outFs);
@@ -70,9 +77,10 @@ public class MarnetBuilding {
 				for(Object e : edges) {
 					Feature f = (Feature)e;
 					if(! f.getGeometry().intersects(pass.getGeometry())) continue;
-					f.setAttribute("desc_", pass.getAttribute("id"));
+					f.setAttribute("pass", pass.getAttribute("id"));
 				}
 			}
+
 
 			LOGGER.info("   Save...");
 			GeoData.save(outFs, "target/out/marnet_plus_" + ress_[i] + ".gpkg", CRSUtil.getWGS_84_CRS());
