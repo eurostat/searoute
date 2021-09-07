@@ -137,10 +137,18 @@ public class SeaRouteWS extends HttpServlet {
 				//distance asked
 				boolean distP = !("0".equals( request.getParameter("d") ));
 
-				//Suez channel allowed
-				boolean allowSuez = "1".equals( request.getParameter("suez") );
-				//Panama channel allowed
-				boolean allowPanama = "1".equals( request.getParameter("panama") );
+				//passes
+				boolean suez = "1".equals( request.getParameter("suez") );
+				boolean panama = "1".equals( request.getParameter("panama") );
+				boolean malacca = "1".equals( request.getParameter("malacca") );
+				boolean gibraltar = "1".equals( request.getParameter("gibraltar") );
+				boolean dover = "1".equals( request.getParameter("dover") );
+				boolean bering = "1".equals( request.getParameter("bering") );
+				boolean magellan = "1".equals( request.getParameter("magellan") );
+				boolean babelmandeb = "1".equals( request.getParameter("babelmandeb") );
+				boolean kiel = "1".equals( request.getParameter("kiel") );
+				boolean corinth = "1".equals( request.getParameter("corinth") );
+				boolean northwest = "1".equals( request.getParameter("northwest") );
 
 				//lat lon
 				double[] oLon=null,oLat=null,dLon=null,dLat=null;
@@ -174,10 +182,14 @@ public class SeaRouteWS extends HttpServlet {
 					out.print("{\"status\":\"empty\"}");
 				else {
 					if(oLon.length>1) out.print("[");
-					returnRoute(out, oLon[0], oLat[0], dLon[0], dLat[0], distP, geomP, sr, allowSuez, allowPanama);
+					returnRoute(out, oLon[0], oLat[0], dLon[0], dLat[0], distP, geomP, sr,
+							suez, panama, malacca, gibraltar, dover, bering,
+							magellan, babelmandeb, kiel, corinth, northwest);
 					for(int i=1; i<oLon.length; i++){
 						out.print(",");
-						returnRoute(out, oLon[i], oLat[i], dLon[i], dLat[i], distP, geomP, sr, allowSuez, allowPanama);
+						returnRoute(out, oLon[i], oLat[i], dLon[i], dLat[i], distP, geomP, sr,
+								suez, panama, malacca, gibraltar, dover, bering,
+								magellan, babelmandeb, kiel, corinth, northwest);
 					}
 					if(oLon.length>1) out.print("]");
 				}
@@ -198,7 +210,10 @@ public class SeaRouteWS extends HttpServlet {
 
 	}
 
-	private void returnRoute(PrintWriter out, double oLon, double oLat, double dLon, double dLat, boolean distP, boolean geomP, SeaRouting sr, boolean allowSuez, boolean allowPanama) {
+	private void returnRoute(PrintWriter out, double oLon, double oLat, double dLon, double dLat, boolean distP, boolean geomP, SeaRouting sr,
+			boolean allowSuez, boolean allowPanama, boolean allowMalacca,
+			boolean allowGibraltar, boolean allowDover, boolean allowBering, boolean allowMagellan,
+			boolean allowBabelmandeb, boolean allowKiel, boolean allowCorinth, boolean allowNorthwest) {
 		try {
 			if(oLon==Double.NaN || oLat==Double.NaN){
 				out.print("{\"status\":\"error\",\"message\":\"Unknown origin location\"");
@@ -238,7 +253,9 @@ public class SeaRouteWS extends HttpServlet {
 
 
 			//build the maritime route geometry
-			Feature f = sr.getRoute(oPos, oN, dPos, dN, allowSuez, allowPanama);
+			Feature f = sr.getRoute(oPos, oN, dPos, dN,
+					allowSuez, allowPanama, allowMalacca, allowGibraltar, allowDover, allowBering,
+					allowMagellan, allowBabelmandeb, allowKiel, allowCorinth, allowNorthwest);
 
 			if(f.getGeometry() == null){
 				out.print( "{\"status\":\"error\",\"message\":\"Shortest path not found\"}" );
