@@ -100,6 +100,15 @@ public class SeaRouteJarMain {
 		//channels
 		String suez = cmd.getOptionValue("suez");   if(suez == null) suez = "1";
 		String panama = cmd.getOptionValue("panama");   if(panama == null) panama = "1";
+		String malacca = cmd.getOptionValue("malacca");   if(malacca == null) malacca = "1";
+		String gibraltar = cmd.getOptionValue("gibraltar");   if(gibraltar == null) gibraltar = "1";
+		String dover = cmd.getOptionValue("dover");   if(dover == null) dover = "1";
+		String bering = cmd.getOptionValue("bering");   if(bering == null) bering = "1";
+		String magellan = cmd.getOptionValue("magellan");   if(magellan == null) magellan = "1";
+		String babelmandeb = cmd.getOptionValue("babelmandeb");   if(babelmandeb == null) babelmandeb = "1";
+		String kiel = cmd.getOptionValue("kiel");   if(kiel == null) kiel = "1";
+		String corinth = cmd.getOptionValue("corinth");   if(corinth == null) corinth = "1";
+		String northwest = cmd.getOptionValue("northwest");   if(northwest == null) northwest = "1";
 
 		//load data
 		ArrayList<Map<String, String>> data = CSVUtil.load(inFile);
@@ -142,7 +151,12 @@ public class SeaRouteJarMain {
 				continue;
 
 			//compute route
-			Feature f = sr.getRoute(oLon, oLat, dLon, dLat, "1".equals(suez), "1".equals(panama));
+			Feature f = sr.getRoute(oLon, oLat, dLon, dLat,
+					"1".equals(suez), "1".equals(panama), "1".equals(malacca),
+					"1".equals(gibraltar), "1".equals(dover), "1".equals(bering),
+					"1".equals(magellan), "1".equals(babelmandeb), "1".equals(kiel),
+					"1".equals(corinth), "1".equals(northwest)
+					);
 
 			//set data
 			f.getAttributes().putAll(o);
