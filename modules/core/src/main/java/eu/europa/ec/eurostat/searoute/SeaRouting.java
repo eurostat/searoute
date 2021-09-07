@@ -51,10 +51,6 @@ public class SeaRouting {
 	public static final int[] RESOLUTION_KM = new int[] { 100, 50, 20, 10, 5 };
 
 	private Graph g;
-	private EdgeWeighter defaultWeighter;
-	private EdgeWeighter noSuezWeighter;
-	private EdgeWeighter noPanamaWeighter;
-	private EdgeWeighter noSuezNoPanamaWeighter;
 
 	public SeaRouting() { this(20); }
 	public SeaRouting(int resKM) {
@@ -103,12 +99,6 @@ public class SeaRouting {
 				g.getEdges().add(be);
 			}
 		}
-
-		//define weighters
-		defaultWeighter = buildEdgeWeighter(true, true);
-		noSuezWeighter = buildEdgeWeighter(false, true);
-		noPanamaWeighter = buildEdgeWeighter(true, false);
-		noSuezNoPanamaWeighter = buildEdgeWeighter(false, false);
 	}
 
 	/**
@@ -118,17 +108,29 @@ public class SeaRouting {
 	 * @param allowPanama
 	 * @return
 	 */
-	private EdgeWeighter buildEdgeWeighter(boolean allowSuez, boolean allowPanama) {
+	private EdgeWeighter getEdgeWeighter(boolean allowSuez, boolean allowPanama, boolean allowMalacca,
+			boolean allowGibraltar, boolean allowDover, boolean allowBering, boolean allowMagellan,
+			boolean allowBabelmandeb, boolean allowKiel, boolean allowCorinth, boolean allowNorthwest) {
 		return new DijkstraIterator.EdgeWeighter() {
 			public double getWeight(Edge e) {
 				//deal with edge around the globe
 				if( e.getObject()==null ) return 0;
 				SimpleFeature f = (SimpleFeature) e.getObject();
-				if(allowSuez && allowPanama)
-					return GeoDistanceUtil.getLengthGeoKM((Geometry)f.getDefaultGeometry());
-				String desc = (String)f.getAttribute("desc_");
-				if(!allowSuez && "suez".equals(desc)) return Double.MAX_VALUE;
-				if(!allowPanama && "panama".equals(desc)) return Double.MAX_VALUE;
+
+				//handle pass
+				String pass = (String)f.getAttribute("pass");
+				if(!allowSuez && "suez".equals(pass)) return Double.MAX_VALUE;
+				if(!allowPanama && "panama".equals(pass)) return Double.MAX_VALUE;
+				if(!allowMalacca && "malacca".equals(pass)) return Double.MAX_VALUE;
+				if(!allowGibraltar && "gibraltar".equals(pass)) return Double.MAX_VALUE;
+				if(!allowDover && "dover".equals(pass)) return Double.MAX_VALUE;
+				if(!allowBering && "bering".equals(pass)) return Double.MAX_VALUE;
+				if(!allowMagellan && "magellan".equals(pass)) return Double.MAX_VALUE;
+				if(!allowBabelmandeb && "babelmandeb".equals(pass)) return Double.MAX_VALUE;
+				if(!allowKiel && "kiel".equals(pass)) return Double.MAX_VALUE;
+				if(!allowCorinth && "corinth".equals(pass)) return Double.MAX_VALUE;
+				if(!allowNorthwest && "northwest".equals(pass)) return Double.MAX_VALUE;
+
 				return GeoDistanceUtil.getLengthGeoKM((Geometry)f.getDefaultGeometry());
 			}
 		};
@@ -195,7 +197,9 @@ public class SeaRouting {
 	 * @param dLat
 	 * @return
 	 */
-	public Feature getRoute(double oLon, double oLat, double dLon, double dLat) { return getRoute(oLon, oLat, dLon, dLat, true, true); }
+	public Feature getRoute(double oLon, double oLat, double dLon, double dLat) {
+		return getRoute(oLon, oLat, dLon, dLat, true, true, true, true, true, true, true, true, false, false, false);
+	}
 
 	/**
 	 * Return the route geometry from origin/destination coordinates
@@ -208,11 +212,21 @@ public class SeaRouting {
 	 * @param allowPanama
 	 * @return
 	 */
-	public Feature getRoute(double oLon, double oLat, double dLon, double dLat, boolean allowSuez, boolean allowPanama) {
-		return getRoute(new Coordinate(oLon,oLat), new Coordinate(dLon,dLat), allowSuez, allowPanama);
+	public Feature getRoute(double oLon, double oLat, double dLon, double dLat,
+			boolean allowSuez, boolean allowPanama, boolean allowMalacca,
+			boolean allowGibraltar, boolean allowDover, boolean allowBering, boolean allowMagellan,
+			boolean allowBabelmandeb, boolean allowKiel, boolean allowCorinth, boolean allowNorthwest) {
+		return getRoute(new Coordinate(oLon,oLat), new Coordinate(dLon,dLat),
+				allowSuez, allowPanama, allowMalacca, allowGibraltar, allowDover, allowBering,
+				allowMagellan, allowBabelmandeb, allowKiel, allowCorinth, allowNorthwest);
 	}
-	public Feature getRoute(Coordinate oPos, Coordinate dPos, boolean allowSuez, boolean allowPanama) {
-		return getRoute(oPos, getNode(oPos), dPos, getNode(dPos), allowSuez, allowPanama);
+	public Feature getRoute(Coordinate oPos, Coordinate dPos,
+			boolean allowSuez, boolean allowPanama, boolean allowMalacca,
+			boolean allowGibraltar, boolean allowDover, boolean allowBering, boolean allowMagellan,
+			boolean allowBabelmandeb, boolean allowKiel, boolean allowCorinth, boolean allowNorthwest) {
+		return getRoute(oPos, getNode(oPos), dPos, getNode(dPos),
+				allowSuez, allowPanama, allowMalacca, allowGibraltar, allowDover, allowBering,
+				allowMagellan, allowBabelmandeb, allowKiel, allowCorinth, allowNorthwest);
 	}
 
 	/**
@@ -226,7 +240,10 @@ public class SeaRouting {
 	 * @param allowPanama
 	 * @return
 	 */
-	public Feature getRoute(Coordinate oPos, Node oN, Coordinate dPos, Node dN, boolean allowSuez, boolean allowPanama) {
+	public Feature getRoute(Coordinate oPos, Node oN, Coordinate dPos, Node dN,
+			boolean allowSuez, boolean allowPanama, boolean allowMalacca,
+			boolean allowGibraltar, boolean allowDover, boolean allowBering, boolean allowMagellan,
+			boolean allowBabelmandeb, boolean allowKiel, boolean allowCorinth, boolean allowNorthwest) {
 		GeometryFactory gf = new GeometryFactory();
 
 		//get node positions
@@ -246,8 +263,11 @@ public class SeaRouting {
 			return rf;
 		}
 
+		//Get weighter
+		EdgeWeighter w = getEdgeWeighter(allowSuez, allowPanama, allowMalacca, allowGibraltar, allowDover, allowBering,
+				allowMagellan, allowBabelmandeb, allowKiel, allowCorinth, allowNorthwest);
+
 		//Compute dijkstra from start node
-		EdgeWeighter w = allowPanama & allowSuez ? defaultWeighter : allowPanama? noSuezWeighter : allowSuez ? noPanamaWeighter : noSuezNoPanamaWeighter;
 		Path path = null;
 		synchronized (g) {
 			path = getShortestPath(g, oN, dN, w);
@@ -328,7 +348,10 @@ public class SeaRouting {
 	 * @param allowPanama
 	 * @return
 	 */
-	public Collection<Feature> getRoutes(Collection<Feature> ports, String idProp, boolean allowSuez, boolean allowPanama) {
+	public Collection<Feature> getRoutes(Collection<Feature> ports, String idProp,
+			boolean allowSuez, boolean allowPanama, boolean allowMalacca,
+			boolean allowGibraltar, boolean allowDover, boolean allowBering, boolean allowMagellan,
+			boolean allowBabelmandeb, boolean allowKiel, boolean allowCorinth, boolean allowNorthwest) {
 		if(idProp == null) idProp = "ID";
 
 		List<Feature> portsL = new ArrayList<Feature>(); portsL.addAll(ports);
@@ -340,7 +363,9 @@ public class SeaRouting {
 			for(int j=i+1; j<portsL.size(); j++) {
 				Feature pj = portsL.get(j);
 				if(LOGGER.isDebugEnabled()) LOGGER.debug(pi.getAttribute(idProp) + " - " + pj.getAttribute(idProp) + " - " + (100*(cnt++)/nb) + "%");
-				Feature sr = getRoute(pi.getGeometry().getCoordinate(), pj.getGeometry().getCoordinate(), allowSuez, allowPanama);
+				Feature sr = getRoute(pi.getGeometry().getCoordinate(), pj.getGeometry().getCoordinate(),
+						allowSuez, allowPanama, allowMalacca, allowGibraltar, allowDover, allowBering,
+						allowMagellan, allowBabelmandeb, allowKiel, allowCorinth, allowNorthwest);
 				Geometry geom = sr.getGeometry();
 				sr.setAttribute("dkm", geom==null? -1 : GeoDistanceUtil.getLengthGeoKM(geom));
 				sr.setAttribute("from", pi.getAttribute(idProp));
