@@ -146,9 +146,9 @@ public class SeaRouteWS extends HttpServlet {
 				boolean bering = "1".equals( request.getParameter("bering") );
 				boolean magellan = "1".equals( request.getParameter("magellan") );
 				boolean babelmandeb = "1".equals( request.getParameter("babelmandeb") );
-				boolean kiel = "1".equals( request.getParameter("kiel") );
-				boolean corinth = "1".equals( request.getParameter("corinth") );
-				boolean northwest = "1".equals( request.getParameter("northwest") );
+				boolean kiel = ! "0".equals( request.getParameter("kiel") );
+				boolean corinth = ! "0".equals( request.getParameter("corinth") );
+				boolean northwest = ! "0".equals( request.getParameter("northwest") );
 
 				//lat lon
 				double[] oLon=null,oLat=null,dLon=null,dLat=null;

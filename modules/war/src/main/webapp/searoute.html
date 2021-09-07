@@ -36,6 +36,15 @@ html { font-family: Arial; }
 		//get channels
 		var suez = getParameterByName("suez") || 1;
 		var panama = getParameterByName("panama") || 1;
+		var malacca = getParameterByName("malacca") || 1;
+		var gibraltar = getParameterByName("gibraltar") || 1;
+		var dover = getParameterByName("dover") || 1;
+		var bering = getParameterByName("bering") || 1;
+		var magellan = getParameterByName("magellan") || 1;
+		var babelmandeb = getParameterByName("babelmandeb") || 1;
+		var kiel = getParameterByName("kiel") || 1;
+		var corinth = getParameterByName("corinth") || 1;
+		var northwest = getParameterByName("northwest") || 1;
 
 		if (!opos) {
 			console.warn("Could not retrieve maritime route: No origin position(s) specified");
@@ -46,7 +55,18 @@ html { font-family: Arial; }
 			return;
 		}
 
-		$.ajax({url : "seaws",data : "opos=" + opos + "&dpos=" + dpos + "&res=" + res + "&suez=" + suez + "&panama=" + panama
+		$.ajax({url : "seaws",data : "opos=" + opos + "&dpos=" + dpos + "&res=" + res
+		 + "&suez=" + suez
+		 + "&panama=" + panama
+		 + "&malacca=" + malacca
+		 + "&gibraltar=" + gibraltar
+		 + "&dover=" + dover
+		 + "&bering=" + bering
+		 + "&magellan=" + magellan
+		 + "&babelmandeb=" + babelmandeb
+		 + "&kiel=" + kiel
+		 + "&corinth=" + corinth
+		 + "&northwest=" + northwest
 		}).done( function(rou) {
 						$("#waitimg").hide();
 
