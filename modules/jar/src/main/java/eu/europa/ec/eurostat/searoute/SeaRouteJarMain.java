@@ -49,6 +49,24 @@ public class SeaRouteJarMain {
 				.hasArg().argName("0 or 1").build());
 		options.addOption(Option.builder("panama").desc("Optional. Set to '1' to allow trips using Panama channel. Default: '1'.")
 				.hasArg().argName("0 or 1").build());
+		options.addOption(Option.builder("malacca").desc("Optional. Set to '1' to allow trips using Malacca strait. Default: '1'.")
+				.hasArg().argName("0 or 1").build());
+		options.addOption(Option.builder("gibraltar").desc("Optional. Set to '1' to allow trips using Gibraltar strait. Default: '1'.")
+				.hasArg().argName("0 or 1").build());
+		options.addOption(Option.builder("dover").desc("Optional. Set to '1' to allow trips using Dover strait. Default: '1'.")
+				.hasArg().argName("0 or 1").build());
+		options.addOption(Option.builder("bering").desc("Optional. Set to '1' to allow trips using Bering strait. Default: '1'.")
+				.hasArg().argName("0 or 1").build());
+		options.addOption(Option.builder("magellan").desc("Optional. Set to '1' to allow trips using Magellan strait. Default: '1'.")
+				.hasArg().argName("0 or 1").build());
+		options.addOption(Option.builder("babelmandeb").desc("Optional. Set to '1' to allow trips using Bab-el-Mandeb strait. Default: '1'.")
+				.hasArg().argName("0 or 1").build());
+		options.addOption(Option.builder("kiel").desc("Optional. Set to '1' to allow trips using Kiel channel. Default: '0'.")
+				.hasArg().argName("0 or 1").build());
+		options.addOption(Option.builder("corinth").desc("Optional. Set to '1' to allow trips using Corinth channel. Default: '0'.")
+				.hasArg().argName("0 or 1").build());
+		options.addOption(Option.builder("northwest").desc("Optional. Set to '1' to allow trips using Northwest passage. Default: '0'.")
+				.hasArg().argName("0 or 1").build());
 		options.addOption(Option.builder("h").desc("Show this help message").build());
 
 		CommandLine cmd = null;

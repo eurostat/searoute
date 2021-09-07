@@ -22,6 +22,7 @@ public class SeaRouteJarMainTest extends TestCase {
 		SeaRouteJarMain.main(new String[] {"-i", "src/test/resources/test_input.csv", "-res", ""+resKM, "-suez", "0", "-panama", "1", "-o", "target/testout/out_01_"+resKM+"."+format});
 		SeaRouteJarMain.main(new String[] {"-i", "src/test/resources/test_input.csv", "-res", ""+resKM, "-suez", "1", "-panama", "0", "-o", "target/testout/out_10_"+resKM+"."+format});
 		SeaRouteJarMain.main(new String[] {"-i", "src/test/resources/test_input.csv", "-res", ""+resKM, "-suez", "0", "-panama", "0", "-o", "target/testout/out_00_"+resKM+"."+format});
+		SeaRouteJarMain.main(new String[] {"-i", "src/test/resources/test_input.csv", "-res", ""+resKM, "-corinth", "1", "-panama", "0", "-kiel", "1", "-northwest", "1", "-malacca", "0", "-o", "target/testout/out_XX_"+resKM+"."+format});
 	}
 
 }

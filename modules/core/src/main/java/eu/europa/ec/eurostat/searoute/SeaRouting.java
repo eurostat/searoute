@@ -3,6 +3,8 @@
  */
 package eu.europa.ec.eurostat.searoute;
 
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,7 +16,7 @@ import org.apache.logging.log4j.Logger;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.simple.SimpleFeatureCollection;
-import org.geotools.feature.FeatureIterator;
+import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.geopkg.GeoPkgDataStoreFactory;
 import org.geotools.graph.build.feature.FeatureGraphGenerator;
 import org.geotools.graph.build.line.LineStringGraphGenerator;
@@ -55,32 +57,30 @@ public class SeaRouting {
 	public SeaRouting() { this(20); }
 	public SeaRouting(int resKM) {
 		try {
-
 			//load marnet
-			DataStore store = null;
-			SimpleFeatureCollection fc = null;
-			/*try {
-				URL url = getClass().getResource("/marnet/marnet_plus_"+resKM+"km.gpkg");
-				HashMap<String, Object> map = new HashMap<>();
-				map.put(GeoPkgDataStoreFactory.DBTYPE.key, "geopkg");
-				map.put(GeoPkgDataStoreFactory.DATABASE.key, url.getFile());
-				map.put("url", url);
-				store = DataStoreFinder.getDataStore(map);
-				fc = store.getFeatureSource(store.getTypeNames()[0]).getFeatures();
-			} catch (Exception e) {*/
-			//URL url = new URL(path);
-			HashMap<String, Object> map = new HashMap<>();
-			map.put(GeoPkgDataStoreFactory.DBTYPE.key, "geopkg");
-			map.put(GeoPkgDataStoreFactory.DATABASE.key, "marnet/marnet_plus_"+resKM+"km.gpkg");
-			map.put("url", "marnet/marnet_plus_"+resKM+"km.gpkg");
-			store = DataStoreFinder.getDataStore(map);
-			fc = store.getFeatureSource(store.getTypeNames()[0]).getFeatures();
-			//}
+			//File file = new File("marnet/marnet_plus_"+resKM+"km.gpkg");
+			URL resource = getClass().getClassLoader().getResource("marnet/marnet_plus_"+resKM+"km.gpkg");
+			File file = new File(resource.toURI());
+
+			//?
+			if(!file.exists()) file = new File("marnet/marnet_plus_"+resKM+"km.gpkg");
+
+			HashMap<String, Object> params = new HashMap<>();
+			params.put(GeoPkgDataStoreFactory.DBTYPE.key, "geopkg");
+			params.put(GeoPkgDataStoreFactory.DATABASE.key, file);
+			DataStore store = DataStoreFinder.getDataStore(params);
+			String[] names = store.getTypeNames();
+			if(names.length >1 )
+				LOGGER.warn("Several types found in GPKG. Only " + names[0] + " will be considered.");
+			String name = names[0];
+			LOGGER.debug(name);
+			SimpleFeatureCollection fc = store.getFeatureSource(name).getFeatures();
 
 			//build graph
-			FeatureIterator<?> it = fc.features();
+			SimpleFeatureIterator it = fc.features();
 			FeatureGraphGenerator gGen = new FeatureGraphGenerator(new LineStringGraphGenerator());
-			while(it.hasNext()) gGen.add(it.next());
+			while(it.hasNext())
+				gGen.add(it.next());
 			g = gGen.getGraph();
 			it.close();
 			store.dispose();
