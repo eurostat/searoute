@@ -45,6 +45,7 @@ html { font-family: Arial; }
 		var kiel = getParameterByName("kiel") || 1;
 		var corinth = getParameterByName("corinth") || 1;
 		var northwest = getParameterByName("northwest") || 1;
+		var northeast = getParameterByName("northeast") || 1;
 
 		if (!opos) {
 			console.warn("Could not retrieve maritime route: No origin position(s) specified");
@@ -67,6 +68,7 @@ html { font-family: Arial; }
 		 + "&kiel=" + kiel
 		 + "&corinth=" + corinth
 		 + "&northwest=" + northwest
+		 + "&northeast=" + northeast
 		}).done( function(rou) {
 						$("#waitimg").hide();
 

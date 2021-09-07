@@ -149,6 +149,7 @@ public class SeaRouteWS extends HttpServlet {
 				boolean kiel = ! "0".equals( request.getParameter("kiel") );
 				boolean corinth = ! "0".equals( request.getParameter("corinth") );
 				boolean northwest = ! "0".equals( request.getParameter("northwest") );
+				boolean northeast = ! "0".equals( request.getParameter("northeast") );
 
 				//lat lon
 				double[] oLon=null,oLat=null,dLon=null,dLat=null;
@@ -184,12 +185,12 @@ public class SeaRouteWS extends HttpServlet {
 					if(oLon.length>1) out.print("[");
 					returnRoute(out, oLon[0], oLat[0], dLon[0], dLat[0], distP, geomP, sr,
 							suez, panama, malacca, gibraltar, dover, bering,
-							magellan, babelmandeb, kiel, corinth, northwest);
+							magellan, babelmandeb, kiel, corinth, northwest, northeast);
 					for(int i=1; i<oLon.length; i++){
 						out.print(",");
 						returnRoute(out, oLon[i], oLat[i], dLon[i], dLat[i], distP, geomP, sr,
 								suez, panama, malacca, gibraltar, dover, bering,
-								magellan, babelmandeb, kiel, corinth, northwest);
+								magellan, babelmandeb, kiel, corinth, northwest, northeast);
 					}
 					if(oLon.length>1) out.print("]");
 				}
@@ -213,7 +214,7 @@ public class SeaRouteWS extends HttpServlet {
 	private void returnRoute(PrintWriter out, double oLon, double oLat, double dLon, double dLat, boolean distP, boolean geomP, SeaRouting sr,
 			boolean allowSuez, boolean allowPanama, boolean allowMalacca,
 			boolean allowGibraltar, boolean allowDover, boolean allowBering, boolean allowMagellan,
-			boolean allowBabelmandeb, boolean allowKiel, boolean allowCorinth, boolean allowNorthwest) {
+			boolean allowBabelmandeb, boolean allowKiel, boolean allowCorinth, boolean allowNorthwest, boolean allowNortheast) {
 		try {
 			if(oLon==Double.NaN || oLat==Double.NaN){
 				out.print("{\"status\":\"error\",\"message\":\"Unknown origin location\"");
@@ -255,7 +256,7 @@ public class SeaRouteWS extends HttpServlet {
 			//build the maritime route geometry
 			Feature f = sr.getRoute(oPos, oN, dPos, dN,
 					allowSuez, allowPanama, allowMalacca, allowGibraltar, allowDover, allowBering,
-					allowMagellan, allowBabelmandeb, allowKiel, allowCorinth, allowNorthwest);
+					allowMagellan, allowBabelmandeb, allowKiel, allowCorinth, allowNorthwest, allowNortheast);
 
 			if(f.getGeometry() == null){
 				out.print( "{\"status\":\"error\",\"message\":\"Shortest path not found\"}" );

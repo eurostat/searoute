@@ -67,6 +67,8 @@ public class SeaRouteJarMain {
 				.hasArg().argName("0 or 1").build());
 		options.addOption(Option.builder("northwest").desc("Optional. Set to '1' to allow trips using Northwest passage. Default: '0'.")
 				.hasArg().argName("0 or 1").build());
+		options.addOption(Option.builder("northeast").desc("Optional. Set to '1' to allow trips using Northeast passage. Default: '0'.")
+				.hasArg().argName("0 or 1").build());
 		options.addOption(Option.builder("h").desc("Show this help message").build());
 
 		CommandLine cmd = null;
@@ -127,6 +129,7 @@ public class SeaRouteJarMain {
 		String kiel = cmd.getOptionValue("kiel");   if(kiel == null) kiel = "1";
 		String corinth = cmd.getOptionValue("corinth");   if(corinth == null) corinth = "1";
 		String northwest = cmd.getOptionValue("northwest");   if(northwest == null) northwest = "1";
+		String northeast = cmd.getOptionValue("northeast");   if(northeast == null) northeast = "1";
 
 		//load data
 		ArrayList<Map<String, String>> data = CSVUtil.load(inFile);
@@ -173,7 +176,7 @@ public class SeaRouteJarMain {
 					"1".equals(suez), "1".equals(panama), "1".equals(malacca),
 					"1".equals(gibraltar), "1".equals(dover), "1".equals(bering),
 					"1".equals(magellan), "1".equals(babelmandeb), "1".equals(kiel),
-					"1".equals(corinth), "1".equals(northwest)
+					"1".equals(corinth), "1".equals(northwest), "1".equals(northeast)
 					);
 
 			//set data
