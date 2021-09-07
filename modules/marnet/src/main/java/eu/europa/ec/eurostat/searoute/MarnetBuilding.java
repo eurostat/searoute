@@ -81,7 +81,6 @@ public class MarnetBuilding {
 				}
 			}
 
-
 			LOGGER.info("   Save...");
 			GeoData.save(outFs, "target/out/marnet_plus_" + ress_[i] + ".gpkg", CRSUtil.getWGS_84_CRS());
 		}
