@@ -14,7 +14,7 @@ See below an example from [Marseille (5.3E,43.3N)](https://www.openstreetmap.org
 
 [SeaRoute](https://github.com/eurostat/searoute) requires Java 1.9 or higher. Run `java --version` to check if Java is installed and what is the current version.
 
-Download the lastest release [here](https://github.com/eurostat/searoute/raw/dev/release/searoute.zip) and unzip it somewhere.
+Download the lastest release [here](https://github.com/eurostat/searoute/raw/master/modules/jar/release/searoute.zip) and unzip it somewhere.
 
 Examples of executions for windows users are provided in `searoute.bat` (for linux users, see `searoute.sh`). `test_input.csv` is an example of input file. It is a simple CSV file with origin/destination coordinates of the routes. Note that only geographical coordinates (decimal degrees) are supported. The output file is a [GeoJSON](https://geojson.org/) (\*.geojson) file. This file can be displayed with any modern GIS software such as [QGIS](https://qgis.org), or also with [geojson.io](http://geojson.io/). Each route has the same properties as the input CSV file, with three additional properties: 
 - `distKM`, which is the length of the route, in KM

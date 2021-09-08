@@ -1,7 +1,6 @@
 package eu.europa.ec.eurostat.searoute;
 
 import junit.framework.TestCase;
-import eu.europa.ec.eurostat.searoute.SeaRouteJarMain;
 
 public class SeaRouteJarMainTest extends TestCase {
 
