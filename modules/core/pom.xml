@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>eu.europa.ec.eurostat</groupId>
 		<artifactId>searoute-modules</artifactId>
-		<version>3.5-SNAPSHOT</version>
+		<version>3.5</version>
 	</parent>
 	<artifactId>searoute-core</artifactId>
 	<name>SeaRoute-core</name>
