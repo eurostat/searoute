@@ -15,7 +15,7 @@ import junit.framework.TestCase;
  */
 public class SeaRoutingTest extends TestCase {
 
-	/*
+
 	public void testShangaiMarseille() {
 		//Marseille (5.3E,43.3N) and Shanghai (121.8E,31.2N)
 		test(5.3, 43.3, 121.8, 31.2, 20, 250, 23000, 28000,
@@ -39,38 +39,39 @@ public class SeaRoutingTest extends TestCase {
 		test(-0.259368, 35.810036, 32.380686, 29.635942, 0, 99999999, 0, 99999999,
 				false, false, true, true, true, true, true, true, false, false, false, false);
 	}
-	 */
 
+
+	/*
 	public void testXXX() {
 		test(
-				-79.4434247, 25.0316704, -81.2500792, -1.9156171,
+				117.470056, 0.101287, 32.380686, 29.635942,
 				0, 99999999, 0, 99999999,
 				//allowSuez   5.3, 43.3, 121.8, 31.2,
 				true,
 				//allowPanama   -79.4434247, 25.0316704, -81.2500792, -1.9156171,
 				false,
 				//allowMalacca  5.3, 43.3, 121.8, 31.2,
-				true,
+				false,
 				//allowGibraltar   -0.259368, 35.810036, -79.904864, 9.34731,
 				true,
 				//allowDover    20.3264682, 59.050991, -0.5654702, 44.8425714,
 				true,
 				//allowBering   5.3, 43.3, 121.8, 31.2,
-				true,
-				//allowMagellan   -79.4434247, 25.0316704, -81.2500792, -1.9156171,
 				false,
-				//allowBabelmandeb  5.3, 43.3, 121.8, 31.2,
+				//allowMagellan   -79.4434247, 25.0316704, -81.2500792, -1.9156171,
 				true,
+				//allowBabelmandeb  5.3, 43.3, 121.8, 31.2,
+				false,
 				//allowKiel    20.3264682, 59.050991, -0.5654702, 44.8425714,
 				true,
 				//allowCorinth   18.988493, 40.2282907, 22.9288012, 40.1072797,
 				true,
 				//allowNorthwest  5.3, 43.3, 121.8, 31.2,
-				true,
+				false,
 				//allowNortheast   117.470056, 0.101287, 32.380686, 29.635942,
 				true
 				);
-	}
+	}*/
 
 
 
@@ -109,8 +110,8 @@ public class SeaRoutingTest extends TestCase {
 
 			//LOGGER.info(route.getAttributes()); //{dToKM=30.434689972094713, dFromKM=4.134285055159354}
 			//LOGGER.info(routeGeom.getLength()); //239.80414982436778
-			System.out.println(d);
-			System.out.println(routeGeom);
+			//System.out.println(d);
+			//System.out.println(routeGeom);
 		}
 	}
 
