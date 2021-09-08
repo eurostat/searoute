@@ -63,14 +63,12 @@ public class SeaRouting {
 				URL resource = getClass().getClassLoader().getResource("marnet/marnet_plus_"+resKM+"km.gpkg");
 				file = new File(resource.toURI());
 			} catch (Exception e) {
-				LOGGER.info("Could not find marnet as resource. Get it from the root.");
-				file = new File("marnet/marnet_plus_"+resKM+"km.gpkg");
+			} finally {
+				if(file == null || !file.exists()) {
+					//LOGGER.info("Could not find marnet as resource. Get it from the root.");
+					file = new File("marnet/marnet_plus_"+resKM+"km.gpkg");
+				}
 			}
-			if(file == null || !file.exists()) {
-				LOGGER.info("Could not find marnet as resource. Get it from the root.");
-				file = new File("marnet/marnet_plus_"+resKM+"km.gpkg");
-			}
-
 
 			HashMap<String, Object> params = new HashMap<>();
 			params.put(GeoPkgDataStoreFactory.DBTYPE.key, "geopkg");
