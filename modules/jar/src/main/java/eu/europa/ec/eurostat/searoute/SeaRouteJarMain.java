@@ -126,10 +126,10 @@ public class SeaRouteJarMain {
 		String bering = cmd.getOptionValue("bering");   if(bering == null) bering = "1";
 		String magellan = cmd.getOptionValue("magellan");   if(magellan == null) magellan = "1";
 		String babelmandeb = cmd.getOptionValue("babelmandeb");   if(babelmandeb == null) babelmandeb = "1";
-		String kiel = cmd.getOptionValue("kiel");   if(kiel == null) kiel = "1";
-		String corinth = cmd.getOptionValue("corinth");   if(corinth == null) corinth = "1";
-		String northwest = cmd.getOptionValue("northwest");   if(northwest == null) northwest = "1";
-		String northeast = cmd.getOptionValue("northeast");   if(northeast == null) northeast = "1";
+		String kiel = cmd.getOptionValue("kiel");   if(kiel == null) kiel = "0";
+		String corinth = cmd.getOptionValue("corinth");   if(corinth == null) corinth = "0";
+		String northwest = cmd.getOptionValue("northwest");   if(northwest == null) northwest = "0";
+		String northeast = cmd.getOptionValue("northeast");   if(northeast == null) northeast = "0";
 
 		//load data
 		ArrayList<Map<String, String>> data = CSVUtil.load(inFile);
