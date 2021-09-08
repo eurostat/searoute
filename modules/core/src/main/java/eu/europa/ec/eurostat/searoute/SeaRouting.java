@@ -58,12 +58,19 @@ public class SeaRouting {
 	public SeaRouting(int resKM) {
 		try {
 			//load marnet
-			//File file = new File("marnet/marnet_plus_"+resKM+"km.gpkg");
-			URL resource = getClass().getClassLoader().getResource("marnet/marnet_plus_"+resKM+"km.gpkg");
-			File file = new File(resource.toURI());
+			File file = null;
+			try {
+				URL resource = getClass().getClassLoader().getResource("marnet/marnet_plus_"+resKM+"km.gpkg");
+				file = new File(resource.toURI());
+			} catch (Exception e) {
+				LOGGER.info("Could not find marnet as resource. Get it from the root.");
+				file = new File("marnet/marnet_plus_"+resKM+"km.gpkg");
+			}
+			if(file == null || !file.exists()) {
+				LOGGER.info("Could not find marnet as resource. Get it from the root.");
+				file = new File("marnet/marnet_plus_"+resKM+"km.gpkg");
+			}
 
-			//?
-			if(!file.exists()) file = new File("marnet/marnet_plus_"+resKM+"km.gpkg");
 
 			HashMap<String, Object> params = new HashMap<>();
 			params.put(GeoPkgDataStoreFactory.DBTYPE.key, "geopkg");

@@ -12,8 +12,6 @@
 	<modules>
 		<module>core</module>
 		<module>marnet</module>
-		<module>jar</module>
-		<module>war</module>
 	</modules>
 
 </project>
