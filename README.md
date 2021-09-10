@@ -54,7 +54,7 @@ MultiLineString routeGeom = (MultiLineString) route.getGeometry();
 double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
 ```
 
-For further overview, see [the documentation](https://eurostat.github.io/searoute/doc/site/apidocs/index.html).
+For further overview, see [the documentation](https://eurostat.github.io/searoute/modules/core/doc/site/apidocs/index.html).
 
 ### As a webservice
 
