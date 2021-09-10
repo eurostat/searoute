@@ -20,7 +20,7 @@ Examples of executions for windows users are provided in `searoute.bat` (for lin
 - `distKM`, which is the length of the route, in KM
 - `dFromKM` (respectivelly `dToKM`), which is the distance in KM between the origin (repectivelly destination) position and the closest node of the maritime network. This value measure the approximation arount the origin (respectivelly destination) position. The smaller, the better.
 
-Run `java -jar searoute.jar -h` to see the help which describes input parameters.
+Run `java -jar searoute.jar -h` to see the help, with a description of all input parameters.
 
 ![Example](doc/img/example.png)
 
