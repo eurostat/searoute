@@ -77,6 +77,7 @@ The shortest maritime routes are computed from a network of lines covering the s
 [SeaRoute](https://github.com/eurostat/searoute) can be reused with custom maritime networks produced from some other custom maritime line datasets. The module [marnet](/modules/marnet) provides some utilities and examples for the creation and preparation of such maritime network datasets, with generalisation methods. To be able to handle channels, straits and passages such as *Suez* and *Panama* channels, the custom maritime sections need to be characterised with a new property *pass* set with the values *suez* and *panama* for the network sections passing by the Suez and Panama channels. The program will then be able to recognise them and possibly avoid them, on user request. The following straits, channels and passages are currently supported:
 -Suez channel
 - Panama channel
+
 And since version v3.5:
 -Malacca strait
 - Gibraltar strait
