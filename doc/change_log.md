@@ -1,4 +1,4 @@
-# v3.5
+# v3.5 (08 Sep 2021)
 
 - Refinement of the maritime network dataset (marnet.gpkg) for all resolution.
 - Inclusion of new straits/channels/passages. It includes now: Suez channel, Panama channel, Malacca strait, Gibraltar strait, Dover strait, Bering strait, Magellan strait, Bab-el-Mandeb strait, Kiel channel, Corinth channel, Northwest passage, Northeast passage.
