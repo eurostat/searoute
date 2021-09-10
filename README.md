@@ -78,8 +78,8 @@ The shortest maritime routes are computed from a network of lines covering the s
 -Suez channel
 - Panama channel
 
-And since version v3.5:
--Malacca strait
+since version v3.5:
+- Malacca strait
 - Gibraltar strait
 - Dover strait
 - Bering strait
