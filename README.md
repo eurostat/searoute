@@ -26,7 +26,7 @@ Run `java -jar searoute.jar -h` to see the help, with a description of all input
 
 ### For coders
 
-[SeaRoute](https://github.com/eurostat/searoute) uses [Apache Maven](http://maven.apache.org/). To use SeaRoute, add it as a dependency to the *pom.xml* file:
+[SeaRoute](https://github.com/eurostat/searoute) can be used as a Java library, which can be retrieved using [Maven](http://maven.apache.org/). For that, simply add it as a dependency to the *pom.xml* file:
 
 ```
 <dependency>
@@ -70,11 +70,24 @@ and move the servlet `/target/searoute-XXX.war` into your `/tomcatX.Y/webapps/` 
 
 ## Some additional information
 
-The shortest maritime routes are computed from a network of lines covering the seas and following some of the most frequent martitime routes. This maritime network is based on the *Oak Ridge National Labs CTA Transportation Network Group, Global Shipping Lane Network, World, 2000* (retrieved from [geocommons.com](http://geocommons.com/datasets?id=25) or [github](https://github.com/geoiq/gc_data/blob/master/datasets/25.geojson)), enriched with some additional lines around the European coasts based on [AIS data](https://en.wikipedia.org/wiki/Automatic_identification_system). Simplified versions of this network have been produced for different resolutions (5km, 10km, 20km, 50km, 100km) based on a shrinking of too short edges and a removal of similar edges.
+The shortest maritime routes are computed from a network of lines covering the seas and following some of the most frequent martitime routes. This maritime network is based on the *Oak Ridge National Labs CTA Transportation Network Group, Global Shipping Lane Network, World, 2000* (retrieved from [geocommons.com](http://geocommons.com/datasets?id=25) or [github](https://github.com/geoiq/gc_data/blob/master/datasets/25.geojson)), enriched with some additional lines around the European coasts based on [AIS data](https://en.wikipedia.org/wiki/Automatic_identification_system). Simplified versions of this network have been produced for different resolutions (5km, 10km, 20km, 50km, 100km) based on a shrinking of too short edges and a removal of similar edges. For more detail on this generalisation algorithm, see the [marnet](/modules/marnet) module based on (JGiscoTools)[https://github.com/eurostat/JGiscoTools].
 
 [![Maritime network overview](doc/img/marnet_overview_.png)](doc/img/marnet_overview.png)
 
-[SeaRoute](https://github.com/eurostat/searoute) can be reused with custom maritime networks produced from some other custom maritime line datasets. The module *marnet* provides some utilities and examples for the creation and preparation of such maritime network datasets, with generalisation methods. To be able to handle *Suez* and *Panama* channels, the custom maritime sections need to be characterised with a new property *desc_* set with the values *suez* and *panama* for the network sections passing by the Suez and Panama channels. The program will then be able to recognise them and possibly avoid them, on user request.
+[SeaRoute](https://github.com/eurostat/searoute) can be reused with custom maritime networks produced from some other custom maritime line datasets. The module [marnet](/modules/marnet) provides some utilities and examples for the creation and preparation of such maritime network datasets, with generalisation methods. To be able to handle channels, straits and passages such as *Suez* and *Panama* channels, the custom maritime sections need to be characterised with a new property *pass* set with the values *suez* and *panama* for the network sections passing by the Suez and Panama channels. The program will then be able to recognise them and possibly avoid them, on user request. The following straits, channels and passages are currently supported:
+-Suez channel
+- Panama channel
+And since version v3.5:
+-Malacca strait
+- Gibraltar strait
+- Dover strait
+- Bering strait
+- Magellan strait
+- Bab-el-Mandeb strait
+- Kiel channel
+- Corinth channel
+- Northwest passage
+- Northeast passage
 
 The shortest maritime routes are computed from this network using the [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) implemented in the wonderful [GeoTools](https://geotools.org/) library.
 
