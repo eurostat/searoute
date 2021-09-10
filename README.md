@@ -92,17 +92,6 @@ since version v3.5:
 
 The shortest maritime routes are computed from this network using the [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) implemented in the wonderful [GeoTools](https://geotools.org/) library.
 
-## Change log
-
-### v3.5
-
-08 Sep 2021
-- Refinement of the maritime network dataset (marnet.gpkg) for all resolution.
-- Inclusion of new straits/channels/passages. It includes now: Suez channel, Panama channel, Malacca strait, Gibraltar strait, Dover strait, Bering strait, Magellan strait, Bab-el-Mandeb strait, Kiel channel, Corinth channel, Northwest passage, Northeast passage.
-- Reorganisation of the modules. There is now a new module "marnet" with the process to create multi-resolution networks.
-- Various improvement of the network simplification algorithm.
-
-
 ## Support and contribution
 
 Feel free to [ask support](https://github.com/eurostat/searoute/issues/new), fork the project or simply star it (it's always a pleasure). If anyone feels like helping fixing the existing issues, you are welcome !
