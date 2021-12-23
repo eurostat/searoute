@@ -216,6 +216,16 @@ public class SeaRouting {
 	 * @param dLat
 	 * @param allowSuez
 	 * @param allowPanama
+	 * @param allowMalacca 
+	 * @param allowGibraltar 
+	 * @param allowDover 
+	 * @param allowBering 
+	 * @param allowMagellan 
+	 * @param allowBabelmandeb 
+	 * @param allowKiel 
+	 * @param allowCorinth 
+	 * @param allowNorthwest 
+	 * @param allowNortheast 
 	 * @return
 	 */
 	public Feature getRoute(double oLon, double oLat, double dLon, double dLat,
@@ -244,6 +254,16 @@ public class SeaRouting {
 	 * @param dN
 	 * @param allowSuez
 	 * @param allowPanama
+	 * @param allowMalacca 
+	 * @param allowGibraltar 
+	 * @param allowDover 
+	 * @param allowBering 
+	 * @param allowMagellan 
+	 * @param allowBabelmandeb 
+	 * @param allowKiel 
+	 * @param allowCorinth 
+	 * @param allowNorthwest 
+	 * @param allowNortheast 
 	 * @return
 	 */
 	public Feature getRoute(Coordinate oPos, Node oN, Coordinate dPos, Node dN,
@@ -352,6 +372,16 @@ public class SeaRouting {
 	 * @param idProp
 	 * @param allowSuez
 	 * @param allowPanama
+	 * @param allowMalacca 
+	 * @param allowGibraltar 
+	 * @param allowDover 
+	 * @param allowBering 
+	 * @param allowMagellan 
+	 * @param allowBabelmandeb 
+	 * @param allowKiel 
+	 * @param allowCorinth 
+	 * @param allowNorthwest 
+	 * @param allowNortheast 
 	 * @return
 	 */
 	public Collection<Feature> getRoutes(Collection<Feature> ports, String idProp,
