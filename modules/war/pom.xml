@@ -45,6 +45,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<geotools.version>26.1</geotools.version>
+		<sr.version>3.6</sr.version>
 	</properties>
 
 	<build>
@@ -148,7 +149,7 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>searoute-core</artifactId>
-			<version>${project.version}</version>
+			<version>${sr.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.geotools</groupId>
