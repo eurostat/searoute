@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.europa.ec.eurostat</groupId>
 	<artifactId>searoute-war</artifactId>
-	<version>3.6</version>
+	<version>3.7-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>SeaRoute-war</name>
 	<url>https://github.com/eurostat/searoute</url>
@@ -20,7 +20,7 @@
 		<url>https://github.com/eurostat/searoute</url>
 		<connection>scm:git:git://github.com/eurostat/searoute.git</connection>
 		<developerConnection>scm:git:git@github.com:eurostat/searoute.git</developerConnection>
-		<tag>searoute-war-3.6</tag>
+		<tag>searoute-2.0</tag>
 	</scm>
 
 	<issueManagement>
