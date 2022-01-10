@@ -44,7 +44,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<geotools.version>26.1</geotools.version>
-		<jgt.version>0.9.14</jgt.version>
+		<jgt.version>0.9.21</jgt.version>
 	</properties>
 
 	<build>
