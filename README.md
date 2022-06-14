@@ -16,7 +16,7 @@ See below an example from [Marseille (5.3E,43.3N)](https://www.openstreetmap.org
 
 Download the lastest release [here](https://github.com/eurostat/searoute/raw/master/modules/jar/release/searoute.zip) and unzip it somewhere.
 
-Examples of executions for windows users are provided in `searoute.bat` (for linux users, see `searoute.sh`). `test_input.csv` is an example of input file. It is a simple CSV file with origin/destination coordinates of the routes. Note that only geographical coordinates (decimal degrees) are supported. The output file is a [GeoJSON](https://geojson.org/) (\*.geojson) file. This file can be displayed with any modern GIS software such as [QGIS](https://qgis.org), or also with [geojson.io](http://geojson.io/). Each route has the same properties as the input CSV file, with three additional properties: 
+Examples of executions for windows users are provided in `searoute.bat` (for linux users, see `searoute.sh`). `test_input.csv` is an example of input file. It is a simple CSV file with origin/destination coordinates of the routes. Note that only geographical coordinates (decimal degrees) are supported. The output file is a [GeoJSON](https://geojson.org/) (\*.geojson) file. This file can be displayed with any modern GIS software such as [QGIS](https://qgis.org), or also with [geojson.io](http://geojson.io/). Each route has the same properties as the input CSV file, with three additional properties:
 - `distKM`, which is the length of the route, in KM
 - `dFromKM` (respectivelly `dToKM`), which is the distance in KM between the origin (repectivelly destination) position and the closest node of the maritime network. This value measure the approximation arount the origin (respectivelly destination) position. The smaller, the better.
 
@@ -38,20 +38,25 @@ Run `java -jar searoute.jar -h` to see the help, with a description of all input
 
 Where *X.Y* is the current version number, as available [Maven central repository](https://search.maven.org/artifact/eu.europa.ec.eurostat/searoute).
 
-For more information on how to setup a coding environment based on [Eclipse](https://www.eclipse.org/), see [this page](https://github.com/eurostat/README/blob/master/docs/howto/java_eclipse_maven_git_quick_guide.md).
+Copy the `modules/core/src/main/resources/marnet` folder from the [project repository](https://github.com/eurostat/searoute/tree/master/modules/core/src/main/resources) to the root folder of your project:
 
-Here is an example of shortest maritime route computation:
+![Marnet local path example](doc/img/marnet_path.png)
+
+
+For more information on how to set up a coding environment based on [Eclipse](https://www.eclipse.org/), see [this page](https://github.com/eurostat/README/blob/master/docs/howto/java_eclipse_maven_git_quick_guide.md).
+
+Here is an example of the shortest maritime route computation:
 
 ```java
 //create the routing object
 SeaRouting sr = new SeaRouting();
 
 //get the route between Marseille (5.3E,43.3N) and Shanghai (121.8E,31.2N)
-Feature route = sr.getRoute(5.3, 43.3, 121.8, 31.2);
+        Feature route = sr.getRoute(5.3, 43.3, 121.8, 31.2);
 
 //compute the route distance in km
-MultiLineString routeGeom = (MultiLineString) route.getGeometry();
-double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
+        MultiLineString routeGeom = (MultiLineString) route.getGeometry();
+        double d = GeoDistanceUtil.getLengthGeoKM(routeGeom);
 ```
 
 For further overview, see [the documentation](https://eurostat.github.io/searoute/modules/core/doc/site/apidocs/index.html).
