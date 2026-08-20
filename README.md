@@ -92,6 +92,13 @@ since version v3.5:
 
 The shortest maritime routes are computed from this network using the [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) implemented in the wonderful [GeoTools](https://geotools.org/) library.
 
+## Other implementations
+
+[SeaRoute](https://github.com/eurostat/searoute) has inspired implementations in other languages, which reuse its maritime network data:
+
+- **Python**: [searoute-py](https://github.com/genthalili/searoute-py) — `pip install searoute`
+- **JavaScript/TypeScript**: [searoute-ts](https://github.com/mayurrawte/searoute-ts) — `npm install searoute-ts`. Uses the marnet v3.5 networks; adds UN/LOCODE port codes, canal/strait restrictions, vessel-draft gating, K-shortest alternatives and ETA/CO₂e estimation. Returns GeoJSON.
+
 ## Support and contribution
 
 Feel free to [ask support](https://github.com/eurostat/searoute/issues/new), fork the project or simply star it (it's always a pleasure). If anyone feels like helping fixing the existing issues, you are welcome !
