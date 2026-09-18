@@ -16,9 +16,11 @@ How the lines were derived:
 
 1. Positions under way (speed ≥ 1.5 kn) were joined into tracks per vessel, split at gaps of
    more than 20 minutes or jumps of more than 6 km, and simplified (Douglas–Peucker, 50 m).
-2. Only stretches more than 5 km from the existing 5 km network were kept, plus stretches
-   3–5 km away where at least two voyages repeat them. This keeps the open-sea lanes the
-   network already has out of the file: of ~300 000 km of tracks, ~19 000 km survived.
+2. Only stretches more than 5 km from the existing 5 km network were kept. This keeps the
+   open-sea lanes the network already has out of the file: of ~300 000 km of tracks,
+   ~10 000 km in 370 pieces survived. (A variant that also added stretches 3–5 km from a
+   lane where two voyages repeated them scored worse: the parallel lines lured the shortest
+   path into detours, e.g. Eidsnes–Utne went from 96 to 142 nm.)
 3. Each stretch's ends were snapped onto the nearest line of `marnet.gpkg` (distance computed
    in kilometres, not degrees) so that `planifyLines` connects them.
 
